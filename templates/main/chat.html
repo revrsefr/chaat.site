@@ -1,0 +1,98 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}tChat - tChatZone{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0 content-wrapper" style="height: 100vh;">
+    <div class="d-flex align-items-center justify-content-center" style="height: 100vh; margin-top: 60px;">
+        <div id="kiwiirc" class="w-100" style="max-width: 1600px; height: 95%; position: relative;">
+            <div id="app"></div>
+        </div>
+    </div>
+</div>
+
+<script name="kiwiconfig" type="application/json">
+    {
+        "windowTitle": "tChatZone - tchat gratuit",
+        "startupScreen": "welcome",
+        "kiwiServer": "https://webchat.t-chat.fr/webirc/kiwiirc/",
+        "restricted": true,
+        "language": "https://webchat.t-chat.fr/static/locales/fr-fr",
+        "sidebarPinned": true,
+        "useMonospace": false,
+        "warnOnExit": true,
+        "showColorPicker": true,
+        "showSendButton": true,
+        "emojiLocation": "https://webchat.t-chat.fr/static/emoticons/",
+        "themes": [
+            {
+                "name": "Default",
+                "url": "https://webchat.t-chat.fr/static/themes/default/theme.css"
+            },
+            {
+                "name": "Dark",
+                "url": "https://webchat.t-chat.fr/static/themes/dark/theme.css"
+            }
+        ],
+        "buffers": {
+            "timestamp_format": "%H:%M:%S",
+            "timestamp_full_format": "false",
+            "messageLayout": "inline",
+            "inline_link_auto_previews": false,
+            "scrollback_size": 250,
+            "coloured_nicklist": true,
+            "show_emoticons": true,
+            "show_timestamps": false,
+            "nicklist_avatars": true,
+            "share_typing": true,
+            "show_nick_changes": true,
+            "show_link_previews": false,
+            "show_message_info": false,
+            "colour_nicknames_in_messages": true,
+            "show_mode_changes": true,
+            "show_joinparts": true,
+            "alert_on": "https://webchat.t-chat.fr/static/highlight.mp3"
+        },
+        "startupOptions": {
+            "encoding": "UTF-8",
+            "autoConnect": true,
+            "server": "irc.t-chat.fr",
+            "port": 8083,
+            "username": "{{ username }}",
+            "tls": true,
+            "gecos": "webclient",
+            "nick": "{{ username }}",
+            "password": "{{ password }}",
+            "channel": "#accueil",
+            "direct": true,
+            "showPassword": false,
+            "showChannel": true,
+            "show_topics": true,
+            "infoBackground": "https://webchat.t-chat.fr/static/bg.jpg",
+            "infoContent": "<p><br>Il s'agit d'une plate-forme virtuelle permettant de créer des fenêtres réelles situées dans un stade stable..</p><p></p>",
+            "greetingText": "Bienvenue sur t-chat, chat gratuit en français:",
+            "footerText": "<div class='fn-sponsor'><i class='fa fa-lock'></i><span>Ce site utilise un certificat SSL<br></span>Émis par <a href='https://letsencrypt.com/' target='_blank'>L'etsencrypt</a></div>",
+            "state_key": false
+        },
+        "embedly": {
+            "key": ""
+        },
+        "plugins": [
+            {
+                "name": "plugin-avatar-upload",
+                "url": "https://webchat.t-chat.fr/static/plugins/plugin-avatar-upload.js"
+            }
+        ],
+        "configOverwrite": {
+            "startWithVideoMuted": false,
+            "startWithAudioMuted": false
+        },
+        "plugin-avatar-upload": {
+            "api_url": "https://webchat.t-chat.fr/upload",
+            "avatars_url": "https://webchat.t-chat.fr/avatars/",
+            "preload_avatars": true,
+            "set_avatars": true
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "frontend/base.html" %}
+
+{% block title %}IRC Controls - T-Chat{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">🔧 IRC Controls</h2>
+
+    <!-- Tab Navigation -->
+    <ul class="nav nav-pills nav-justified mt-3" id="ircTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="nickserv-tab" data-bs-toggle="tab" href="#nickserv" role="tab">NickServ</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="chanserv-tab" data-bs-toggle="tab" href="#chanserv" role="tab">ChanServ</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="hostserv-tab" data-bs-toggle="tab" href="#hostserv" role="tab">HostServ</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-4">
+
+        <!-- NickServ Tab -->
+        <div class="tab-pane fade show active" id="nickserv">
+            <h5 class="text-center">🆔 NickServ Controls</h5>
+            <div class="input-group mb-3">
+                <input type="text" id="nick-input" class="form-control" placeholder="Enter nickname">
+                <button class="btn btn-primary" id="fetch-nickserv-info">Get Info</button>
+            </div>
+            <div class="info-box">
+                <pre id="nickserv-info">Enter a nickname and click "Get Info"</pre>
+            </div>
+        </div>
+
+        <!-- ChanServ Tab -->
+        <div class="tab-pane fade" id="chanserv">
+            <h5 class="text-center">📺 ChanServ Controls</h5>
+            <div class="input-group mb-3">
+                <input type="text" id="chan-input" class="form-control" placeholder="Enter channel name (e.g., #chat)">
+                <button class="btn btn-primary" id="fetch-chanserv-info">Get Info</button>
+            </div>
+            <div class="info-box">
+                <pre id="chanserv-info">Enter a channel and click "Get Info"</pre>
+            </div>
+        </div>
+
+        <!-- HostServ Tab -->
+        <div class="tab-pane fade" id="hostserv">
+            <h5 class="text-center">🌍 HostServ Controls</h5>
+            <div class="input-group mb-3">
+                <input type="text" id="host-input" class="form-control" placeholder="Enter vHost (e.g., my.custom.vhost)">
+                <button class="btn btn-primary" id="request-hostserv">Request vHost</button>
+            </div>
+            <div class="info-box">
+                <pre id="hostserv-response">Enter a vHost and click "Request"</pre>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AJAX Script -->
+    <script>
+        document.getElementById("fetch-nickserv-info").addEventListener("click", function() {
+            let nickname = document.getElementById("nick-input").value.trim();
+            let infoBox = document.getElementById("nickserv-info");
+
+            if (!nickname) {
+                infoBox.textContent = "⚠️ Please enter a nickname!";
+                return;
+            }
+
+            fetch(`/accounts/api/nickserv_info/?nick=${encodeURIComponent(nickname)}`)
+            .then(response => response.json())
+            .then(data => {
+                infoBox.textContent = data.error ? `❌ ${data.error}` : data.info || "No data available.";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                infoBox.textContent = "❌ Failed to fetch data.";
+            });
+        });
+
+        document.getElementById("fetch-chanserv-info").addEventListener("click", function() {
+            let channel = document.getElementById("chan-input").value.trim();
+            let infoBox = document.getElementById("chanserv-info");
+
+            if (!channel.startsWith("#")) {
+                infoBox.textContent = "⚠️ Channel names must start with #!";
+                return;
+            }
+
+            fetch(`/accounts/api/chanserv_info/?channel=${encodeURIComponent(channel)}`)
+            .then(response => response.json())
+            .then(data => {
+                infoBox.textContent = data.error ? `❌ ${data.error}` : data.info || "No data available.";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                infoBox.textContent = "❌ Failed to fetch data.";
+            });
+        });
+
+        document.getElementById("request-hostserv").addEventListener("click", function() {
+            let vhost = document.getElementById("host-input").value.trim();
+            let responseBox = document.getElementById("hostserv-response");
+
+            if (!vhost) {
+                responseBox.textContent = "⚠️ Please enter a vHost!";
+                return;
+            }
+
+            fetch(`/accounts/api/hostserv_request/`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ vhost: vhost })
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseBox.textContent = data.error ? `❌ ${data.error}` : `✅ ${data.message}`;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                responseBox.textContent = "❌ Failed to request vHost.";
+            });
+        });
+    </script>
+
+{% endblock %}

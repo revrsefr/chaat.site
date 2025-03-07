@@ -1,0 +1,74 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+<header class="header header--style2" id="navbar">
+    <div class="header__top d-none d-lg-block">
+        <div class="container">
+            <div class="header__top--area">
+                <div class="header__top--left">
+                    <ul>
+                        <!--<li><i class="fa-solid fa-phone"></i> <span>+800-123-4567 6587</span></li>
+                        <li><i class="fa-solid fa-location-dot"></i> Beverley, New York 224 USA</li>-->
+                    </ul>
+                </div>
+                <div class="header__top--right">
+                    <ul>
+                        <li><a href="#"><i class="fa-brands fa-facebook-messenger"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-vimeo-v"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-skype"></i></a></li>
+                        <li><a href="#"><i class="fa-solid fa-rss"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header__bottom">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logo/logo.png' %}" alt="logo"></a>
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler--icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+                    <div class="navbar-nav mainmenu">
+                        <ul>
+                            <li class="active">
+                                <a href="#">{% trans "Home" %}</a>
+                                <ul>
+                                    <!--<li><a href="index-3.html" class="active">Home</a></li>-->
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">{% trans "Community" %}</a>
+                                <ul>
+                                    <!--<li><a href="#" target="_blank">{% trans "Community" %}</a></li>
+                                    <li><a href="#" target="_blank">{% trans "All Group" %}</a></li>-->
+                                    <li><a href="#" target="_blank">{% trans "All Members" %}</a></li>
+                                    <!--<li><a href="#" target="_blank">{% trans "Activity" %}</a></li>-->
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">{% trans "Blog" %}</a>
+                                <ul>
+                                    <li><a href="#" target="_blank">{% trans "Blog" %}</a></li>
+                                    <!--li><a href="blog-2.html">{% trans "Blog Style Two" %}</a></li>
+                                    <li><a href="#" target="_blank">{% trans "Blog Details" %}</a></li>-->
+                                </ul>
+                            </li>
+                            <li><a href="#" target="_blank">{% trans "Contact" %}</a></li>
+                        </ul>
+                    </div>
+                    <ul class="button-group">
+                        <li><a href="#" class="default-btn login"><i class="fa-solid fa-user"></i> <span>{% trans "LOG IN" %}</span> </a></li>
+                        <li><a href="#" class="default-btn signup"><i class="fa-solid fa-users"></i> <span>{% trans "SIGN UP" %}</span> </a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+  </header>
+</html>

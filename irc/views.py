@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def webchat(request):
+    return render(request, 'irc/webchat.html')

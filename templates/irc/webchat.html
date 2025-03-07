@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block content %}
+
+{% if request.GET.nick %}
+    {% with nick=request.GET.nick sexe=request.GET.sexe age=request.GET.age ville=request.GET.ville channels=request.GET.channel %}
+        <script type="text/javascript">
+            var dispositivo = navigator.userAgent.toLowerCase();
+            if (dispositivo.search(/iphone|ipod|ipad|android/) > -1) {
+                document.location = "https://tchat.tchat.chat/?nick={{ nick }}&sexe={{ sexe }}&age={{ age }}&ville={{ ville }}&channels={{ channels }}&chatnow=1";
+            }
+        </script>
+
+        <div class="wrapper" id="full-width-page-wrapper">
+            <div class="container" id="content">
+                <div class="row">
+                    <div class="col-md-12 content-area" id="primary">
+                        <main class="site-main" id="main" role="main">
+        
+                            <iframe src="https://chat.t-chat.fr/?nick={{ nick }}&sexe={{ sexe }}&age={{ age }}&ville={{ ville }}&channels={{ channels }}&chatnow=1" width="600px" height="700px" border="1"></iframe>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% else %}
+    <p style="text-align: center; font-size: 18px;">⚠️ No nickname provided. Please go back and enter a nickname.</p>
+{% endif %}
+
+{% endblock %}

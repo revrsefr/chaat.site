@@ -1,0 +1,61 @@
+{% extends "frontend/base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="card mx-auto mt-5" style="max-width: 600px;">
+    <div class="card-body text-center">
+        <h2 class="card-title">{{ user.username }}</h2>
+
+        <!-- Avatar Section -->
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" class="img-fluid rounded-circle" width="150">
+        {% else %}
+            <p>No avatar uploaded.</p>
+        {% endif %}
+
+        <!-- User Info Section -->
+        <div class="mt-3">
+            <p><strong>🗓 Age:</strong> {% if user.age %}{{ user.age }}{% else %}Not Set{% endif %}</p>
+            <p><strong>⚧ Gender:</strong> 
+                {% if user.gender == "M" %}Male{% elif user.gender == "F" %}Female{% else %}Not specified{% endif %}
+            </p>
+        </div>
+
+        {% if user.username == request.user.username %}
+    <!-- Update Age & Gender Form (Only if it's the logged-in user) -->
+    <form method="post" action="{% url 'update_profile' %}" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="age" class="form-label">Set Your Age</label>
+            <input type="number" name="age" id="age" class="form-control" value="{{ user.age }}" min="18" max="99">
+        </div>
+
+        <div class="mb-3">
+            <label for="gender" class="form-label">Select Your Gender</label>
+            <select name="gender" id="gender" class="form-control">
+                <option value="" {% if not user.gender %}selected{% endif %}>Not Specified</option>
+                <option value="M" {% if user.gender == "M" %}selected{% endif %}>Male</option>
+                <option value="F" {% if user.gender == "F" %}selected{% endif %}>Female</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+    </form>
+
+
+
+        <!-- Avatar Upload Form -->
+        <form method="post" enctype="multipart/form-data" action="{% url 'upload_avatar' %}" class="mt-3" id="avatar-form">
+            {% csrf_token %}
+            <input type="file" name="avatar" id="avatar-input" class="form-control">
+            <button type="submit" class="btn btn-primary mt-2">Upload Avatar</button>
+        </form>
+
+        <!-- Error Message (Hidden by Default) -->
+        <div id="avatar-error" class="alert alert-danger mt-2 d-none">⚠️ Please select a file before uploading!</div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

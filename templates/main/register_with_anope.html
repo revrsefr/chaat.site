@@ -1,0 +1,125 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load i18n %}
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+{% block title %}Register - tChatZone{% endblock %}
+
+{% block content %}
+	<!-- preloader start here -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+	<!-- preloader ending here -->
+
+	<!-- scrollToTop start here -->
+    <a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
+    <!-- scrollToTop ending here -->
+
+
+    <!-- ================> login section start here <================== -->
+    <section class="log-reg">
+        <div class="top-menu-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-7">
+                        <div class="logo">
+                            <!--<a href="index.html"><img src="assets/images/logo/logo.png" alt="logo"></a>-->
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-5">
+                        <a href="index.html" class="backto-home"><i class="fas fa-chevron-left"></i> {% trans "Back to Home" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="image">
+                </div>
+                <div class="col-lg-7">
+                    <div class="log-reg-inner">
+                        <div class="section-header">
+                            <h2 class="title">{% trans "Welcome to tChatZone" %}</h2>
+                            <p>{% trans "Let's create your profile! Just fill in the fields below, and we’ll get a new account." %} </p>
+                        </div>
+                        <div class="main-content">
+                            <form action="#">
+                                <h4 class="content-title">{% trans "Acount Details" %}</h4>
+                                <div class="form-group">
+                                    <label>{% trans "Username*" %}</label>
+                                    <input type="text" class="my-form-control" placeholder="Enter Your Username">
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "Email Address*" %}</label>
+                                    <input type="email" class="my-form-control" placeholder="Enter Your Email">
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "Password*" %}</label>
+                                    <input type="text" class="my-form-control" placeholder="Enter Your Password">
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "Confirm Password*" %}</label>
+                                    <input type="text" class="my-form-control" placeholder="Enter Your Password">
+                                </div>
+                                <h4 class="content-title mt-5">{% trans "Profile Details" %}</h4>
+                                <div class="form-group">
+                                    <label>{% trans "Name*" %}</label>
+                                    <input type="text" class="my-form-control" placeholder="Enter Your Full Name">
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "Birthday*" %}</label>
+                                    <input type="date" class="my-form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "I am a*" %}</label>
+                                    <div class="banner__inputlist">
+                                        <div class="s-input me-3">
+                                            <input type="radio" name="gender1" id="males1"><label for="males1">{% trans "Man" %}</label>
+                                        </div>
+                                        <div class="s-input">
+                                            <input type="radio" name="gender1" id="females1"><label
+                                                for="females1">{% trans "Woman" %}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "Looking for a*" %}</label>
+                                    <div class="banner__inputlist">
+                                        <div class="s-input me-3">
+                                            <input type="radio" name="gender2" id="males"><label for="males">{% trans "Man" %}</label>
+                                        </div>
+                                        <div class="s-input">
+                                            <input type="radio" name="gender2" id="females"><label
+                                                for="females">{% trans "Woman" %}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "" %}</label>
+                                    <div class="banner__inputlist">
+                                        <select>
+                                            <option value="Single" selected>{% trans "Single" %}</option>
+                                            <option value="Marid">{% trans "Marid" %}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>{% trans "City*" %}</label>
+                                    <input type="text" class="my-form-control" placeholder="Enter Your City">
+                                </div>
+                                <button class="default-btn reverse" data-toggle="modal" data-target="#email-confirm"><span>{% trans "Create Your Profile" %}</span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</html>
+    <!-- ================> login section end here <================== -->
+{% endblock %}

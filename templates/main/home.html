@@ -1,0 +1,586 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load i18n %}
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+{% block title %}home - chaat.site{% endblock %}
+{% block content %}
+    <!-- ================> Banner section start here <================== -->
+    <div class="banner banner--style3 padding-top bg_img"  style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+        
+        <div class="container">
+            <div class="row g-0 justify-content-center justify-content-xl-between">
+                <div class="col-lg-5 col-12 wow fadeInLeft" data-wow-duration="1.5s">
+                    <div class="banner__content">
+                        <div class="banner__title">
+                            <h2>{% trans "Nous sommes des"%} <span>milliers </span>de personnes.</h2>
+                            <p>{% trans "Toujours à la recherche de votre moitié ou juste amitié ? Chaat.site est l'endroit qu'il vous faut, pour rencontrer des hommes et des femmes en France." %}</p>
+                            <a href="#" class="default-btn style-2"><span>tChatter ici c'est rapide, simple et sans inscription.</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 wow fadeInUp" data-wow-duration="1.5s">
+                    <div class="banner__thumb text-xl-end">
+                        <img src="{% static 'images/banner/03.png' %}" alt="banner">
+                        <div class="banner__thumb--shape">
+                            <div class="shapeimg">
+                                <img src="{% static 'images/banner/shape/home3/01.png' %}" alt="dating thumb">
+                            </div>
+                        </div>
+                        <div class="banner__thumb--title">
+                            <h4>{% trans "Qu'attendez-vous pour #tchatter!" %}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================> Banner section end here <================== -->
+
+    <!-- ================> About section start here <================== -->
+    <div class="about about--style3 padding-top pt-xl-0" style="background-image: url('{% static "images/footer/bg-3.jpg" %}');">
+        <div class="container">
+            <div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
+                <form action="{% url 'webchat' %}" method="GET" class="form" id="form-chat">
+                    <div class="banner__list">
+                        <div class="row g-3">
+                            <h3>Connexion au TCh@t..</h3>
+                            <!-- Pseudo Input -->
+                            <div class="col-md-6 col-sm-12">
+                                <div class="inputlist input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" pattern=".{3,}" title="Saisissez un pseudo avec minimum 3 caractères." 
+                                    id="pseudo" name="nick" class="form-control" placeholder="Entrer un pseudo" required="">
+                                </div>
+                            </div>
+                
+                            <!-- Gender Selection -->
+                            <div class="col-md-6 col-sm-12">
+                                
+                                <div class="inputlist input-group">
+                                    <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                                    <select name="sexe" class="form-select">
+                                        <option value="M">Homme</option>
+                                        <option value="F" selected="">Femme</option>
+                                    </select>
+                                </div>
+                            </div>
+                
+                            <!-- Age Input -->
+                            <div class="col-md-6 col-sm-12">
+                                
+                                <div class="inputlist input-group">
+                                    <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                    <input type="number" min="12" max="90" id="age" name="age" class="form-control" placeholder="Âge" required="">
+                                </div>
+                            </div>
+                
+                            <!-- City Input -->
+                            <div class="col-md-6 col-sm-12">
+                                
+                                <div class="inputlist input-group">
+                                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                    <input type="text" id="ville" name="ville" class="form-control" placeholder="Ville (facultatif)">
+                                </div>
+                            </div>
+                
+                            <!-- Submit Button (Centered) -->
+                            <div class="col-12 text-center d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-chat-dots-fill"></i> <span>{% trans "tchatter, sans inscription" %}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <input type="hidden" name="channel" value="Accueil">
+                    <input type="hidden" name="chatnow" value="1">
+                </form>
+                                                                             
+            </div>
+        </div>
+    </div>
+    <!-- ================> About section end here <================== -->
+
+    <!-- ================> Member section start here <================== -->
+    <div class="member member--style3 padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+        <div class="container">
+            <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
+                <h2>{% trans "Only True People" %}</h2>
+                <p>{% trans "Learn from them and try to make it to this board. This will for sure boost you visibility and increase your chances to find you loved one." %}</p>
+            </div>
+            <div class="section__wrapper">
+                <div class="row g-0 mx-12-none justify-content-center wow fadeInUp" data-wow-duration="1.5s">
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/01.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Michelle</h5></a>
+                                <p>Active il a 2 heures</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/02.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Pedro</h5></a>
+                                <p>Active il a 1 heure</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/03.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Arika</h5></a>
+                                <p>Active il a 3 jours</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/04.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Chintoc</h5></a>
+                                <p>Active il a 10 jours</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/05.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Jhon</h5></a>
+                                <p>Active il a 23 jours</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/06.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Armelle</h5></a>
+                                <p>Active il a 2 heures</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/07.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Mike</h5></a>
+                                <p>Active il a 2 heures</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member__item">
+                        <div class="member__inner">
+                            <div class="member__thumb">
+                                <img src="{% static 'images/member/home3/08.jpg' %}" alt="member-img">
+                            </div>
+                            <div class="member__content">
+                                <a href="#"><h5>Clara</h5></a>
+                                <p>Active il a 2 minutes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4 wow fadeInUp" data-wow-duration="2s">
+                    <a href="#" class="default-btn"><span>{% trans "View More Popular" %} <i class="ms-2 fas fa-users"></i></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================> Member section end here <================== -->
+
+    <!-- ================> About section start here <================== -->
+    <div class="about about--style4 padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+        
+        <div class="container">
+            <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
+                <h2>{% trans "Tout commence dans le tchat.." %}</h2>
+                <p>{% trans "Apprenez d'eux et essayez de figurer sur ce forum. Cela augmentera à coup sûr votre visibilité et augmentera vos chances de retrouver l'être cher." %}</p>
+            </div>
+            <div class="section__wrapper">
+                <div class="row g-4 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-sm-2 row-cols-1 wow fadeInUp" data-wow-duration="1.5s">
+                    <div class="col">
+                        <div class="about__item text-center">
+                            <div class="about__inner">
+                                <div class="about__thumb">
+                                    <img src="{% static 'images/about/icon/home3/01.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="about__content">
+                                    <h3><span class="counter" data-to="2500" data-speed="1500"></span></h3>
+                                    <p>{% trans "Membres au total" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="about__item text-center">
+                            <div class="about__inner">
+                                <div class="about__thumb">
+                                    <img src="{% static 'images/about/icon/home3/02.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="about__content">
+                                    <h3><span class="counter" data-to="803" data-speed="1500"></span></h3>
+                                    <p>{% trans "Membres en ligne" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="about__item text-center">
+                            <div class="about__inner">
+                                <div class="about__thumb">
+                                    <img src="{% static 'images/about/icon/home3/03.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="about__content">
+                                    <h3><span class="counter" data-to="600" data-speed="1500"></span></h3>
+                                    <p>{% trans "Hommes en ligne" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="about__item text-center">
+                            <div class="about__inner">
+                                <div class="about__thumb">
+                                    <img src="{% static 'images/about/icon/home3/04.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="about__content">
+                                    <h3><span class="counter" data-to="203" data-speed="1500"></span></h3>
+                                    <p>{% trans "Femmes en ligne" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-5 wow fadeInUp" data-wow-duration="2s">
+                    <a href="#" class="default-btn" data-rel="lightcase"><span>{% trans "Our TV Commercial" %} <i class="fas fa-video"></i></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================> About section end here <================== -->
+
+    <!-- ================> Meet section start here <================== -->
+    <div class="meet meet--style2 padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+        <div class="container">
+            <div class="section__wrapper">
+                <div class="row g-4 justify-content-center align-items-center">
+                    <div class="col-lg-6 col-12 wow fadeInUp" data-wow-duration="1.5s">
+                        <div class="section__header">
+                            <h2>{% trans "Meet Singles in Your Area" %}</h2>
+                            <p>{% trans "Find your match in the most popular cities across the globe. Be adventurous and finds someone from others parts of the globe, you never know where love is hiding." %} </p>
+                            <a href="#" class="default-btn"><span>{% trans "Search Near You" %} <i class="fas fa-map-marker-alt ms-2"></i></span></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.6s">
+                        <div class="meet__item">
+                            <div class="meet__inner">
+                                <div class="meet__thumb">
+                                    <a href="#"><img src="{% static 'images/meet/02.jpg' %}" alt="dating thumb"></a>
+                                </div>
+                                <div class="meet__content">
+                                    <img src="{% static 'images/meet/icon/02.jpg' %}" alt="dating thumb">
+                                    <a href="#"><h4>Lyon</h4></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.7s">
+                        <div class="meet__item">
+                            <div class="meet__inner">
+                                <div class="meet__thumb">
+                                    <a href="#"><img src="{% static 'images/meet/03.jpg' %}" alt="dating thumb"></a>
+                                </div>
+                                <div class="meet__content">
+                                    <img src="{% static 'images/meet/icon/03.jpg' %}" alt="dating thumb">
+                                    <a href="#"><h4>Marseilles</h4></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.8s">
+                        <div class="meet__item">
+                            <div class="meet__inner">
+                                <div class="meet__thumb">
+                                    <a href="#"><img src="{% static 'images/meet/04.jpg' %}" alt="dating thumb"></a>
+                                </div>
+                                <div class="meet__content">
+                                    <img src="{% static 'images/meet/icon/04.jpg' %}" alt="dating thumb">
+                                    <a href="#"><h4>Lille</h4></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.9s">
+                        <div class="meet__item">
+                            <div class="meet__inner">
+                                <div class="meet__thumb">
+                                    <a href="#"><img src="{% static 'images/meet/05.jpg' %}" alt="dating thumb"></a>
+                                </div>
+                                <div class="meet__content">
+                                    <img src="{% static 'images/meet/icon/05.jpg' %}" alt="dating thumb">
+                                    <a href="#"><h4>Nantes</h4></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 wow fadeInUp" data-wow-duration="2s">
+                        <div class="meet__item">
+                            <div class="meet__inner">
+                                <div class="meet__thumb">
+                                    <a href="#"><img src="{% static 'images/meet/06.jpg' %}" alt="dating thumb"></a>
+                                </div>
+                                <div class="meet__content">
+                                    <img src="{% static 'images/meet/icon/06.jpg' %}" alt="dating thumb">
+                                    <a href=""><h4>Paris</h4></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================> Meet section end here <================== -->
+
+    <!-- ================> Work section start here <================== -->
+    <div class="work padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+        <div class="container">
+            <div class="section__header text-center wow fadeInUp" data-wow-duration="1.5s">
+                <h2>{% trans "Pourquoi choisir chaat.site?" %}</h2>
+            </div>
+            <div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
+                <div class="d-xl-flex align-items-start work__area">
+                    <div class="nav flex-xl-column nav-pills me-xl-4 work__tablist" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <button class="nav-link" id="work__tab1-tab" data-bs-toggle="pill" data-bs-target="#work__tab1" type="button" role="tab" aria-controls="work__tab1" aria-selected="true"><img src="{% static 'images/work/01.png' %}" alt="dating thumb" class="me-3"><span>Trouvez votre moitie</span></button>
+                        <button class="nav-link active" id="work__tab2-tab" data-bs-toggle="pill" data-bs-target="#work__tab2" type="button" role="tab" aria-controls="work__tab2" aria-selected="false"><img src="{% static 'images/work/02.png' %}" alt="dating thumb" class="me-3"><span>100% Match de gens</span></button>
+                        <button class="nav-link" id="work__tab3-tab" data-bs-toggle="pill" data-bs-target="#work__tab3" type="button" role="tab" aria-controls="work__tab3" aria-selected="false"><img src="{% static 'images/work/03.png' %}" alt="dating thumb" class="me-3"><span>Trouvez un/une amie</span></button>
+                        <button class="nav-link" id="work__tab4-tab" data-bs-toggle="pill" data-bs-target="#work__tab4" type="button" role="tab" aria-controls="work__tab4" aria-selected="false"><img src="{% static 'images/work/04.png' %}" alt="dating thumb" class="me-3"><span>Vivre des histoires</span></button>
+                    </div>
+                    <div class="tab-content work__tabcontent" id="v-pills-tabContent">
+                        <div class="tab-pane fade" id="work__tab1" role="tabpanel" aria-labelledby="work__tab1-tab">
+                            <div class="work__item">
+                                <div class="work__inner">
+                                    <div class="work__thumb">
+                                        <img src="{% static 'images/work/05.png' %}" alt="dating thumb">
+                                    </div>
+                                    <div class="work__content">
+                                        <h3>{% trans "Trouvez votre moitie" %}</h3>
+                                        <p>{% trans "Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de chaat.site. tout ce que vous avez à faire est de suivre votre instinct et de faire vibrer votre cœur !" %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show active" id="work__tab2" role="tabpanel" aria-labelledby="work__tab2-tab">
+                            <div class="work__item">
+                                <div class="work__inner">
+                                    <div class="work__thumb">
+                                        <img src="{% static 'images/work/06.png' %}" alt="dating thumb">
+                                    </div>
+                                    <div class="work__content">
+                                        <h3>{% trans "100% Match de gens" %}</h3>
+                                        <p>{% trans "Nos utilisateurs son réel, chaat.site et libre de bots et fake users." %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="work__tab3" role="tabpanel" aria-labelledby="work__tab3-tab">
+                            <div class="work__item">
+                                <div class="work__inner">
+                                    <div class="work__thumb">
+                                        <img src="{% static 'images/work/07.png' %}" alt="dating thumb">
+                                    </div>
+                                    <div class="work__content">
+                                        <h3>{% trans "Trouvez une amie" %}</h3>
+                                        <p>{% trans "Parce que l'amitié est aussi très importante pour nous, et devrait l'être aussi pour vous." %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="work__tab4" role="tabpanel" aria-labelledby="work__tab4-tab">
+                            <div class="work__item">
+                                <div class="work__inner">
+                                    <div class="work__thumb">
+                                        <img src="{% static 'images/work/08.png' %}" alt="dating thumb">
+                                    </div>
+                                    <div class="work__content">
+                                        <h3>{% trans "Live The Story" %}</h3>
+                                        <p>{% trans "Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de chaat.site. tout ce que tu as à faire c'est de suivre ton instinct et de surprendre ton cœur!" %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================> Work section end here <================== -->
+
+    <!-- ================> Story section start here <================== -->
+    <div class="story padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+        <div class="container">
+            <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
+                <h2>{% trans "chaat.site blogs" %}</h2>
+                <p>{% trans "Listen and learn from our community members and find out tips and tricks to meet your love. Join us and be part of a bigger family." %}</p>
+            </div>
+            <div class="section__wrapper wow fadeInUp" data-wow-duration="2s">
+                <div class="row g-4 justify-content-center row-cols-lg-3 row-cols-sm-2 row-cols-1">
+                    <div class="col">
+                        <div class="story__item">
+                            <div class="story__inner">
+                                <div class="story__thumb">
+                                    <a href="#"><img src="{% static 'images/story/01.jpg' %}" alt="dating thumb"></a>
+                                    <span class="member__activity member__activity--offline">{% trans "Entertainment" %}</span>
+                                </div>
+                                <div class="story__content">
+                                    <a href="#"><h4>Des lieux de rêve et des lieux à visiter en 2025</h4></a>
+                                    <div class="story__content--author">
+                                        <div class="story__content--thumb">
+                                            <img src="{% static 'images/story/author/01.jpg' %}" alt="dating thumb">
+                                        </div>
+                                        <div class="story__content--content">
+                                            <h6>Hester</h6>
+                                            <p>Janvier 16, 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="story__item">
+                            <div class="story__inner">
+                                <div class="story__thumb">
+                                    <a href="#"><img src="{% static 'images/story/02.jpg' %}" alt="dating thumb"></a>
+                                    <span class="member__activity member__activity--offline">Love Stories</span>
+                                </div>
+                                <div class="story__content">
+                                    <a href="#"><h4>Réalisez vos rêves et monétisez rapidement</h4></a>
+                                    <div class="story__content--author">
+                                        <div class="story__content--thumb">
+                                            <img src="{% static 'images/story/author/02.jpg' %}" alt="dating thumb">
+                                        </div>
+                                        <div class="story__content--content">
+                                            <h6>Arika</h6>
+                                            <p>Janvier 5, 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="story__item">
+                            <div class="story__inner">
+                                <div class="story__thumb">
+                                    <a href="#"><img src="{% static 'images/story/03.jpg' %}" alt="dating thumb"></a>
+                                    <span class="member__activity member__activity--offline">Attraction</span>
+                                </div>
+                                <div class="story__content">
+                                    <a href="#"><h4>L'amour ne regarde pas avec les yeux, mais avec l'esprit.</h4></a>
+                                    <div class="story__content--author">
+                                        <div class="story__content--thumb">
+                                            <img src="{% static 'images/story/author/03.jpg' %}" alt="dating thumb">
+                                        </div>
+                                        <div class="story__content--content">
+                                            <h6>Margot</h6>
+                                            <p>Février 18, 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================> Story section end here <================== -->
+
+    <!-- ================> Work section start here <================== -->
+    <div class="work work--style2 padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+        <div class="container">
+            <div class="section__wrapper">
+                <div class="row g-4 justify-content-center">
+                    <div class="col-xl-6 col-lg-8 col-12 wow fadeInLeft" data-wow-duration="1.5s">
+                        <div class="work__item">
+                            <div class="work__inner">
+                                <div class="work__thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="work__content">
+                                    <h3>{% trans "Confiance et sécurité" %}</h3>
+                                    <p>{% trans "Notre tchat utilise la technologie SSL ce qui permet au site de sécuriser les échanges de données par chiffrement." %}</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-8 col-12 wow fadeInRight" data-wow-duration="1.5s">
+                        <div class="work__item">
+                            <div class="work__inner">
+                                <div class="work__thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="work__content">
+                                    <h3>{% trans "De nombreux thèmes" %}</h3>
+                                    <p>{% trans "Retrouvez de nombreux salons de discussions sur des sujets divers et variés." %}</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-8 col-12 wow fadeInRight" data-wow-duration="1.5s">
+                        <div class="work__item">
+                            <div class="work__inner">
+                                <div class="work__thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="work__content">
+                                    <h3>{% trans "Des milliers d'utilisateurs" %}</h3>
+                                    <p>{% trans "À toute heure du jour ou de la nuit vous pouvez discuter avec des milliers d'utilisateurs qui sont toujours au rendez-vous !" %}</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-8 col-12 wow fadeInRight" data-wow-duration="1.5s">
+                        <div class="work__item">
+                            <div class="work__inner">
+                                <div class="work__thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                </div>
+                                <div class="work__content">
+                                    <h3>{% trans "Avec un tchat totalement gratuit" %}</h3>
+                                    <p>{% trans "Un lieu de rencontre pour un échange convivial sans interruption et sans prise de tête 24h/24 7j/7. C'est rapide, simple et sans inscription." %}</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>
+    <!-- ================> Work section end here <================== -->
+{% endblock %}

@@ -1,0 +1,173 @@
+{% load static %}
+{% load i18n %}
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+<footer class="footer footer--style3">
+    <div class="footer__top bg_img wow fadeInUp" data-wow-duration="1.5s" style="background-image: url('/static/images/footer/bg-2.jpg');">
+        <div class="footer__toparea padding-top padding-bottom">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="footer__item footer--about">
+                            <div class="footer__inner">
+                                <div class="footer__content">
+                                    <div class="footer__content--title">
+                                        <h4>Chaat.site</h4>
+                                    </div>
+                                    <div class="footer__content--info">
+                                        <!--<p><b>Address :</b> Suite-13 Tropical Center New Elephant Road 1205</p>-->
+                                        <p><b>Contacte:</b> admin@chaat.site</p>
+                                    </div>
+                                    <div class="footer__content--info">
+                                        <!--<p><b>Address :</b> Suite-13 Tropical Center New Elephant Road 1205</p>-->
+                                        <p><b>info:</b> info@chaat.site</p>
+                                    </div>
+                                    <div class="footer__content--info">
+                                        <!--<p><b>Address :</b> Suite-13 Tropical Center New Elephant Road 1205</p>-->
+                                        <p><b>IRC:</b> irc.chaat.site</p>
+                                        <p><b>Port:</b> ssl(tls) +6697</p>
+                                        <p><b>Port:</b> sans ssl(tls) (pas recommandé) 6667</p>
+                                    </div>
+                                    <div class="footer__content--info">
+                                        <!--<p><b>Address :</b> Suite-13 Tropical Center New Elephant Road 1205</p>-->
+                                        <p><b>Aide:</b> salon #aide</p>
+                                        <p>Nos opérateurs serons ravis de vous aidée</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="footer__item footer--feature">
+                            <div class="footer__inner">
+                                <div class="footer__content">
+                                    <div class="footer__content--title">
+                                        <h4>{% trans "Featured Members"%}</h4>
+                                    </div>
+                                    <div class="footer__content--desc">
+                                        <ul>
+                                            <li>
+                                                <div class="thumb position-relative">
+                                                    <img src="{% static 'images/footer/feature/01.jpg' %}" alt="member-img">
+                                                    <span class="feature__activity"></span>
+                                                </div>
+                                                <div class="content">
+                                                    <a href="#"><h6>Samantha</h6></a>
+                                                    
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="thumb position-relative">
+                                                    <img src="{% static 'images/footer/feature/02.jpg' %}" alt="member-img">
+                                                    <span class="feature__activity feature__activity--ofline"></span>
+                                                </div>
+                                                <div class="content">
+                                                    <a href="#"><h6>Mike</h6></a>
+
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="thumb position-relative">
+                                                    <img src="{% static 'images/footer/feature/03.jpg' %}" alt="member-img">
+                                                    <span class="feature__activity"></span>
+                                                </div>
+                                                <div class="content">
+                                                    <a href="#"><h6>Tluagtea</h6></a>
+                                                    
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="footer__item footer--support">
+                            <div class="footer__inner">
+                                <div class="footer__content">
+                                    <div class="footer__content--title">
+                                        <h4>{% trans "Contacts & Support"%}</h4>
+                                    </div>
+                                    <div class="footer__content--desc">
+                                        <ul>
+                                            <li><a href="#"><i class="fa-solid fa-angle-right"></i>{% trans "About Us"%}</a></li>
+                                            <li><a href="#"><i class="fa-solid fa-angle-right"></i>{% trans "Our Team"%}</a></li>
+                                            <li><a href="#"><i class="fa-solid fa-angle-right"></i>{% trans "Testimonials"%}</a></li>
+                                            <li><a href="#"><i class="fa-solid fa-angle-right"></i>{% trans "Get in Touch"%}</a></li>
+                                            <li><a href="#"><i class="fa-solid fa-angle-right"></i>{% trans "FAQ"%}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="footer__item footer--activity">
+                            <div class="footer__inner">
+                                <div class="footer__content">
+                                    <div class="footer__content--title">
+                                        <h4>Nos salons plus active</h4>
+                                    </div>
+                                    <div class="footer__content--desc">
+                                        <ul>
+                                            <li>
+                                                <div class="thumb">
+                                                    <a href="#"><img src="{% static 'images/footer/activity/01.jpg' %}" alt="dating thumb"></a>
+                                                </div>
+                                                <div class="content">
+                                                    <a href="#"><h6>#accueil</h6></a>
+                                                    
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="thumb">
+                                                    <a href="#"><img src="{% static 'images/footer/activity/02.jpg' %}" alt="dating thumb"></a>
+                                                </div>
+                                                <div class="content">
+                                                    <a href="#"><h6>#chat</h6></a>
+                                                    
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="thumb">
+                                                    <a href="#"><img src="{% static 'images/footer/activity/03.jpg' %}" alt="dating thumb"></a>
+                                                </div>
+                                                <div class="content">
+                                                    <a href="#"><h6>#aide</h6></a>
+                                                    
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer__bottom wow fadeInUp" data-wow-duration="1.5s" style="visibility: visible; animation-duration: 1.5s; animation-name: fadeInUp;">
+            <div class="container">
+                <div class="row g-4 g-lg-0 justify-content-lg-between align-items-center">
+                    <div class="col-lg-6 col-12">
+                        <div class="footer__content text-center">
+                            <p class="mb-0">{% trans "All Rights Reserved" %} &copy; <a href="index.html">chaat.site</a> || {% trans "Design By: reverse" %}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12">
+                        <div class="footer__newsletter--social">
+                            <ul class="justify-content-center justify-content-lg-end">
+                                <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-twitch"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-dribbble"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-facebook-messenger"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </footer>
+</html>

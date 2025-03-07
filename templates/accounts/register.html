@@ -1,0 +1,102 @@
+
+{% extends "frontend/base.html" %}
+
+{% block title %}Register - Chaat.site{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="register-container">
+            <h3 class="text-center mb-4">📝 Register on T-Chat</h3>
+
+            <div id="alert-box"></div> <!-- Area to display alerts -->
+
+            <form id="register-form">
+                <div class="mb-3 text-start">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" required>
+                </div>
+
+                <div class="mb-3 text-start">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" id="email" class="form-control" required>
+                </div>
+
+                <div class="mb-3 text-start">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required>
+                </div>
+
+                <div class="mb-3 text-start">
+                    <label for="password2" class="form-label">Repeat Password</label>
+                    <input type="password" name="password2" id="password2" class="form-control" required>
+                </div>
+
+                <!-- Centered reCAPTCHA -->
+                <div class="mb-3 d-flex justify-content-center">
+                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <small>Already have an account? <a href="/accounts/login/">Login here</a></small>
+            </div>
+        </div>
+    </div>
+
+    <!-- AJAX Script for Registration -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("register-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                let username = document.getElementById("username").value;
+                let password = document.getElementById("password").value;
+                let password2 = document.getElementById("password2").value;
+                let email = document.getElementById("email").value;
+                let recaptchaResponse = grecaptcha.getResponse();
+
+                let alertBox = document.getElementById("alert-box");
+                alertBox.innerHTML = "";
+
+                if (!recaptchaResponse) {
+                    alertBox.innerHTML = `<div class="alert alert-danger">Please complete the reCAPTCHA.</div>`;
+                    return;
+                }
+
+                if (password !== password2) {
+                    alertBox.innerHTML = `<div class="alert alert-danger">Passwords do not match.</div>`;
+                    return;
+                }
+
+                fetch("/accounts/api/register/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({
+                        "username": username,
+                        "password": password,
+                        "password2": password2,
+                        "email": email,
+                        "g-recaptcha-response": recaptchaResponse
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alertBox.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                    } else {
+                        alertBox.innerHTML = `<div class="alert alert-success">
+                            Registration successful! <a href="/accounts/login/">Login now</a></div>`;
+                        document.getElementById("register-form").reset();
+                        grecaptcha.reset();
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+    </script>
+{% endblock %}

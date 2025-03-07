@@ -1,0 +1,34 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Register - tChatZone{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Enregistrez un compte</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% elif success %}
+        <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Nom d'utilisateur</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">E-mail</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password1" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="password1" name="password1" required>
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">Répétez votre mot de passe</label>
+            <input type="password" class="form-control" id="password2" name="password2" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+</div>
+{% endblock %}
