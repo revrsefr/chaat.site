@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
@@ -5,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from .utils import verify_recaptcha
 
 # ✅ Generate JWT Tokens
 def get_tokens_for_user(user):
@@ -14,17 +16,25 @@ def get_tokens_for_user(user):
         "access": str(refresh.access_token),
     }
 
-# ✅ API Register (Public Access)
+# ✅ API Register (Uses Secure reCAPTCHA Verification)
 @api_view(["POST"])
 def register(request):
-    if request.user.is_authenticated:  # Prevent logged-in users from registering
+    if request.user.is_authenticated:
         return Response({"error": "You are already registered"}, status=status.HTTP_400_BAD_REQUEST)
 
     username = request.data.get("username")
     email = request.data.get("email")
     password1 = request.data.get("password1")
     password2 = request.data.get("password2")
+    recaptcha_token = request.data.get("g_recaptcha_response")  # From frontend
 
+    # ✅ Secure reCAPTCHA Verification
+    is_valid, recaptcha_error = verify_recaptcha(recaptcha_token)
+
+    if not is_valid:
+        return Response({"error": f"reCAPTCHA failed: {recaptcha_error}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # ✅ Check if username & email already exist
     if User.objects.filter(username=username).exists():
         return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -34,6 +44,7 @@ def register(request):
     if password1 != password2:
         return Response({"error": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
 
+    # ✅ Create user
     user = User.objects.create_user(username=username, email=email, password=password1)
     user.save()
 
