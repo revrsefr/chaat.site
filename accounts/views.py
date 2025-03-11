@@ -111,6 +111,11 @@ def forgot_password_view(request):
 def profile_view(request, username):
     user_profile = get_object_or_404(CustomUser, username=username)
 
+    # ✅ Restrict access: Only the owner can access & update their profile
+    if request.user != user_profile:
+        messages.error(request, "Vous n'avez pas la permission d'accéder à ce profil.")
+        return redirect("home")  # Redirect unauthorized users
+
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
@@ -126,7 +131,11 @@ def profile_view(request, username):
     })
 
 @login_required
-def account_settings_view(request):
+def account_settings_view(request, username):
+    user_profile = get_object_or_404(CustomUser, username=username)
+    if request.user != user_profile:
+        messages.error(request, "Vous n'avez pas la permission d'accéder à ce profil.")
+        return redirect("home")  # Redirect unauthorized users
     return render(request, "accounts/profile.html")
 
 @login_required

@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import community  # Import the correct function
+from .views import community_membres
 
 urlpatterns = [
-    path('', community, name='community'),  # URL will be /community/
+    path("membres/", community_membres, name="community_membres"),
 ]

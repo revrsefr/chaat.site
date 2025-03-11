@@ -1,0 +1,170 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Membres - chaat.site{% endblock %}
+
+{% block content %}
+<!-- ================> Community Members Section <================== -->
+<div class="community story padding-top padding-bottom">
+    <div class="container">
+        <div class="section__wrapper">
+            <div class="member__info mb-4">
+                <div class="member__info--left">
+                    <div class="member__info--filter">
+                        <div class="default-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <span>Filtrer la recherche <i class="fa-solid fa-sliders"></i></span>
+                        </div>
+                    </div>
+                    <div class="member__info--count">
+                        <div class="default-btn"><span>Nombre total :</span></div>
+                        <p>{{ members.count }}</p>
+                    </div>
+                </div>
+                <div class="member__info--right">
+                    <div class="member__info--customselect right w-100">
+                        <div class="default-btn"><span>Order By:</span></div>
+                        <div class="banner__inputlist">
+                            <select id="sort-order">
+                                <option value="last_active">Dernière activité</option>
+                                <option value="oldest">Anciens membres</option>
+                                <option value="popular">Les plus populaires</option>
+                                <option value="most_active">Les plus actifs</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ✅ Display Real Members -->
+            <div class="row g-4 justify-content-center mx-12-none row-cols-lg-3 row-cols-sm-2 row-cols-1">
+                {% for member in members %}
+                <div class="col">
+                    <div class="story__item">
+                        <div class="story__inner">
+                            <div class="story__thumb">
+                                <a href="{% url 'profile' username=member.username %}">
+                                    <img src="{{ member.avatar.url|default:'/static/images/default-avatar.jpg' }}" alt="Avatar">
+                                </a>
+                                <span class="member__activity {% if member.is_online %}member__activity--online{% else %}member__activity--offline{% endif %}">
+                                    {{ member.city|default:"Inconnu" }}
+                                </span>
+                            </div>
+                            <div class="story__content">
+                                <a href="{% url 'profile' username=member.username %}">
+                                    <h4>{{ member.username }}</h4>
+                                </a>
+                                <div class="story__content--author">
+                                    <div class="story__content--thumb">
+                                        <img src="{{ member.avatar.url|default:'/static/images/default-avatar.jpg' }}" alt="Avatar">
+                                    </div>
+                                    <div class="story__content--content">
+                                        <h6>{{ member.gender_display }}</h6>
+                                        <p>Membre depuis : {{ member.date_joined|date:"d/m/Y" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>Aucun membre trouvé.</p>
+                {% endfor %}
+            </div>
+
+            <!-- ✅ Pagination -->
+            {% if members.has_other_pages %}
+            <div class="member__pagination mt-4">
+                <div class="member__pagination--left">
+                    <p>Affichage {{ members.start_index }} - {{ members.end_index }} de {{ members.paginator.count }} membres</p>
+                </div>
+                <div class="member__pagination--right">
+                    <ul class="default-pagination">
+                        {% if members.has_previous %}
+                        <li><a href="?page={{ members.previous_page_number }}"><i class="fas fa-chevron-left"></i></a></li>
+                        {% endif %}
+                        {% for num in members.paginator.page_range %}
+                        <li><a href="?page={{ num }}" class="{% if members.number == num %}active{% endif %}">{{ num }}</a></li>
+                        {% endfor %}
+                        {% if members.has_next %}
+                        <li><a href="?page={{ members.next_page_number }}"><i class="fas fa-chevron-right"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- ================> End Community Members Section <================== -->
+
+<!-- ✅ Filter Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Filtrer votre recherche</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'community_membres' %}">
+                    <div class="banner__list">
+                        <div class="row align-items-center row-cols-1">
+                            <div class="col">
+                                <label>Je suis</label>
+                                <div class="banner__inputlist">
+                                    <select name="gender">
+                                        <option value="">Sélectionner</option>
+                                        <option value="M">Homme</option>
+                                        <option value="F">Femme</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label>Âge</label>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="banner__inputlist">
+                                            <select name="age_min">
+                                                {% for i in "0123456789"|make_list %}
+                                                <option value="{{ i }}">{{ i }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="banner__inputlist">
+                                            <select name="age_max">
+                                                {% for i in "0123456789"|make_list %}
+                                                <option value="{{ i }}">{{ i }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label>Pays</label>
+                                <div class="banner__inputlist">
+                                    <select name="country">
+                                        <option value="">Sélectionner</option>
+                                        <option value="France">France</option>
+                                        <option value="Algerie">Algérie</option>
+                                        <option value="Canada">Canada</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="default-btn reverse d-block">
+                                    <span>Rechercher</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ✅ End Modal -->
+{% endblock %}
