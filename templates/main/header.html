@@ -37,17 +37,17 @@
                     <div class="navbar-nav mainmenu">
                         <ul>
                             <li class="active">
-                                <a href="#">{% trans "Home" %}</a>
+                                <a href="#">{% trans "home" %}</a>
                                 <ul>
-                                    <!--<li><a href="index-3.html" class="active">Home</a></li>-->
+                                    <li><a href="#" class="active">home</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="#">{% trans "Community" %}</a>
+                                <a href="#">{% trans "Communauté" %}</a>
                                 <ul>
                                     <!--<li><a href="#" target="_blank">{% trans "Community" %}</a></li>
                                     <li><a href="#" target="_blank">{% trans "All Group" %}</a></li>-->
-                                    <li><a href="#" target="_blank">{% trans "All Members" %}</a></li>
+                                    <li><a href="{% url 'community_membres' %}" target="_blank">{% trans "Membres" %}</a></li>
                                     <!--<li><a href="#" target="_blank">{% trans "Activity" %}</a></li>-->
                                 </ul>
                             </li>

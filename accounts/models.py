@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.html import format_html
+from django.utils.timezone import now
 
 class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to="avatars/", default="avatars/default.jpg", blank=True, null=True)
@@ -8,6 +9,8 @@ class CustomUser(AbstractUser):
     gender = models.CharField(max_length=1, choices=[("M", "Homme"), ("F", "Femme")], default="M")
     city = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    popularity_score = models.IntegerField(default=0)
+    last_login = models.DateTimeField(default=now, null=True, blank=True)
 
     # ✅ Fix conflicts with Django auth.User model
     groups = models.ManyToManyField(

@@ -1,133 +1,164 @@
 {% extends "main/base.html" %}
 {% load static %}
-{% load i18n %}
 
-{% block title %}Membres - chaat.site{% endblock %}
+{% block title %}Membres - Chaat.site{% endblock %}
 
 {% block content %}
-<!-- ================> Community Members Section <================== -->
-<div class="community story padding-top padding-bottom">
+
+<!-- preloader start here -->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="preloader-icon">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<!-- preloader ending here -->
+
+<!-- scrollToTop start here -->
+<a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
+<!-- scrollToTop ending here -->
+
+ <!-- ================> Page Header section start here <================== -->
+ <div class="pageheader bg_img" style="background-image: url(static/images/bg-img/pageheader.jpg);">
+    <div class="container">
+        <div class="pageheader__content text-center">
+            <h2>La famille TChatZone</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center mb-0">
+                  <li class="breadcrumb-item"><a href="{% url 'home' %}">home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Communauté</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- ================> Page Header section end here <================== -->
+
+<!-- ================> Member section start here <================== -->
+<div class="member member--style2 padding-top padding-bottom">
     <div class="container">
         <div class="section__wrapper">
             <div class="member__info mb-4">
                 <div class="member__info--left">
                     <div class="member__info--filter">
                         <div class="default-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <span>Filtrer la recherche <i class="fa-solid fa-sliders"></i></span>
+                            <span>Filter Your Search <i class="fa-solid fa-sliders"></i></span>
                         </div>
                     </div>
                     <div class="member__info--count">
-                        <div class="default-btn"><span>Nombre total :</span></div>
-                        <p>{{ members.count }}</p>
+                        <div class="default-btn"><span>All Members</span></div>
+                        <p>{{ members.paginator.count }}</p> <!-- ✅ Dynamic count -->
                     </div>
                 </div>
                 <div class="member__info--right">
                     <div class="member__info--customselect right w-100">
                         <div class="default-btn"><span>Order By:</span></div>
                         <div class="banner__inputlist">
-                            <select id="sort-order">
-                                <option value="last_active">Dernière activité</option>
-                                <option value="oldest">Anciens membres</option>
-                                <option value="popular">Les plus populaires</option>
-                                <option value="most_active">Les plus actifs</option>
+                            <select id="order-by" onchange="window.location.href='?order=' + this.value">
+                                <option value="last_active" {% if order == "last_active" %}selected{% endif %}>Last Active</option>
+                                <option value="oldest" {% if order == "oldest" %}selected{% endif %}>Oldest</option>
+                                <option value="popular" {% if order == "popular" %}selected{% endif %}>Popular</option>
+                                <option value="most_active" {% if order == "most_active" %}selected{% endif %}>Most Active</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ✅ Display Real Members -->
-            <div class="row g-4 justify-content-center mx-12-none row-cols-lg-3 row-cols-sm-2 row-cols-1">
+            <div class="row g-0 justify-content-center mx-12-none">
                 {% for member in members %}
-                <div class="col">
-                    <div class="story__item">
-                        <div class="story__inner">
-                            <div class="story__thumb">
-                                <a href="{% url 'profile' username=member.username %}">
-                                    <img src="{{ member.avatar.url|default:'/static/images/default-avatar.jpg' }}" alt="Avatar">
-                                </a>
-                                <span class="member__activity {% if member.is_online %}member__activity--online{% else %}member__activity--offline{% endif %}">
-                                    {{ member.city|default:"Inconnu" }}
-                                </span>
-                            </div>
-                            <div class="story__content">
-                                <a href="{% url 'profile' username=member.username %}">
-                                    <h4>{{ member.username }}</h4>
-                                </a>
-                                <div class="story__content--author">
-                                    <div class="story__content--thumb">
-                                        <img src="{{ member.avatar.url|default:'/static/images/default-avatar.jpg' }}" alt="Avatar">
-                                    </div>
-                                    <div class="story__content--content">
-                                        <h6>{{ member.gender_display }}</h6>
-                                        <p>Membre depuis : {{ member.date_joined|date:"d/m/Y" }}</p>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="member__item">
+                    <div class="member__inner">
+                        <div class="member__thumb">
+                            <img src="{{ member.avatar.url }}" alt="{{ member.username }}">
+                            <span class="member__activity 
+                                {% if member.last_login and member.last_login > active_threshold %} online 
+                                {% else %} member__activity--ofline 
+                                {% endif %}">
+                            </span>
+                        </div>
+                        <div class="member__content">
+                            <a href="{% url 'profile' username=member.username %}"><h5>{{ member.username }}</h5></a>
+                            <p>
+                                {% if member.last_login %}
+                                    {% if member.last_login > now %}
+                                        Active
+                                    {% else %}
+                                        {{ member.last_login|timesince }} ago
+                                    {% endif %}
+                                {% else %}
+                                    Inactive
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <p>Aucun membre trouvé.</p>
+                <p>No members found.</p>
                 {% endfor %}
             </div>
 
-            <!-- ✅ Pagination -->
-            {% if members.has_other_pages %}
+            <!-- ✅ Fixed Pagination -->
             <div class="member__pagination mt-4">
                 <div class="member__pagination--left">
-                    <p>Affichage {{ members.start_index }} - {{ members.end_index }} de {{ members.paginator.count }} membres</p>
+                    <p>Viewing {{ members.start_index }} - {{ members.end_index }} of {{ members.paginator.count }} Members</p>
                 </div>
                 <div class="member__pagination--right">
                     <ul class="default-pagination">
                         {% if members.has_previous %}
-                        <li><a href="?page={{ members.previous_page_number }}"><i class="fas fa-chevron-left"></i></a></li>
+                            <li><a href="?page={{ members.previous_page_number }}"><i class="fas fa-chevron-left"></i></a></li>
                         {% endif %}
+                        
                         {% for num in members.paginator.page_range %}
-                        <li><a href="?page={{ num }}" class="{% if members.number == num %}active{% endif %}">{{ num }}</a></li>
+                            <li>
+                                <a href="?page={{ num }}" class="{% if num == members.number %}active{% endif %}">{{ num|stringformat:"02d" }}</a>
+                            </li>
                         {% endfor %}
+                        
                         {% if members.has_next %}
-                        <li><a href="?page={{ members.next_page_number }}"><i class="fas fa-chevron-right"></i></a></li>
+                            <li><a href="?page={{ members.next_page_number }}"><i class="fas fa-chevron-right"></i></a></li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
-            {% endif %}
         </div>
     </div>
 </div>
-<!-- ================> End Community Members Section <================== -->
+<!-- ================> Member section end here <================== -->
 
 <!-- ✅ Filter Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Filtrer votre recherche</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Filter your search</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="GET" action="{% url 'community_membres' %}">
+                <form action="{% url 'community_membres' %}" method="get">
                     <div class="banner__list">
                         <div class="row align-items-center row-cols-1">
                             <div class="col">
-                                <label>Je suis</label>
+                                <label>I am a</label>
                                 <div class="banner__inputlist">
                                     <select name="gender">
-                                        <option value="">Sélectionner</option>
-                                        <option value="M">Homme</option>
-                                        <option value="F">Femme</option>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="others">Others</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col">
-                                <label>Âge</label>
+                                <label>Age</label>
                                 <div class="row g-3">
                                     <div class="col-6">
                                         <div class="banner__inputlist">
                                             <select name="age_min">
-                                                {% for i in "0123456789"|make_list %}
-                                                <option value="{{ i }}">{{ i }}</option>
+                                                {% for age in ages %}
+                                                    <option value="{{ age }}">{{ age }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -135,8 +166,8 @@
                                     <div class="col-6">
                                         <div class="banner__inputlist">
                                             <select name="age_max">
-                                                {% for i in "0123456789"|make_list %}
-                                                <option value="{{ i }}">{{ i }}</option>
+                                                {% for age in ages %}
+                                                    <option value="{{ age }}">{{ age }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -144,20 +175,18 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <label>Pays</label>
+                                <label>Country</label>
                                 <div class="banner__inputlist">
                                     <select name="country">
-                                        <option value="">Sélectionner</option>
-                                        <option value="France">France</option>
-                                        <option value="Algerie">Algérie</option>
-                                        <option value="Canada">Canada</option>
+                                        <option value="">Select Country</option>
+                                        <option value="Bangladesh">Bangladesh</option>
+                                        <option value="USA">USA</option>
+                                        <option value="UK">UK</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col">
-                                <button type="submit" class="default-btn reverse d-block">
-                                    <span>Rechercher</span>
-                                </button>
+                                <button type="submit" class="default-btn reverse d-block"><span>Find Your Partner</span></button>
                             </div>
                         </div>
                     </div>
@@ -166,5 +195,5 @@
         </div>
     </div>
 </div>
-<!-- ✅ End Modal -->
+<!-- ✅ Modal end -->
 {% endblock %}
