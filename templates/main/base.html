@@ -36,6 +36,7 @@
 	<link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/lightcase.css' %}">
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     
     <!-- Google Fonts -->
@@ -71,6 +72,21 @@
     <script src="{% static 'js/plugins.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/locations/get-cities/')
+            .then(response => response.json())
+            .then(data => {
+                let citySelect = document.getElementById("city-select");
+                data.cities.forEach(city => {
+                    let option = document.createElement("option");
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            });
+        });
+        </script>      
     {% endblock %}
 </body>
 </html>

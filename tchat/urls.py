@@ -13,7 +13,8 @@ urlpatterns = [
     path('irc/', include('irc.urls')),    # IRC app URLs
     path('community/', include('community.urls')),
     path('main/', include('main.urls')), 
-    path('blog/', include('blog.urls')), 
+    path('blog/', include('blog.urls')),
+    path('locations/', include('locations.urls')), 
 ]
 # ✅ Static & Media URLs must NOT be inside i18n_patterns!
 if settings.DEBUG:  

@@ -12,8 +12,8 @@
                 <div class="col-lg-5 col-12 wow fadeInLeft" data-wow-duration="1.5s">
                     <div class="banner__content">
                         <div class="banner__title">
-                            <h2>{% trans "Nous sommes des"%} <span>milliers </span>de personnes.</h2>
-                            <p>{% trans "Toujours à la recherche de votre moitié ou juste amitié ? Chaat.site est l'endroit qu'il vous faut, pour rencontrer des hommes et des femmes en France." %}</p>
+                            <h2>Tchatter<span> avec </span>des personnes proche de vous...</h2>
+                            <p>{% trans "Serveur de tchat francophone gratuit, sans inscription obligatoire..." %}</p>
                             <a href="#" class="default-btn style-2"><span>tChatter ici c'est rapide, simple et sans inscription.</span></a>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="banner__thumb--title">
-                            <h4>{% trans "Qu'attendez-vous pour #tchatter!" %}</h4>
+                            <h4>{% trans "#Coucou?, c'est gratuit.." %}</h4>
                         </div>
                     </div>
                 </div>
@@ -36,69 +36,233 @@
     </div>
     <!-- ================> Banner section end here <================== -->
 
-    <!-- ================> About section start here <================== -->
-    <div class="about about--style3 padding-top pt-xl-0" style="background-image: url('{% static "images/footer/bg-3.jpg" %}');">
-        <div class="container">
-            <div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
-                <form action="{% url 'webchat' %}" method="GET" class="form" id="form-chat">
-                    <div class="banner__list">
-                        <div class="row g-3">
-                            <h3>Connexion au TCh@t..</h3>
-                            <!-- Pseudo Input -->
-                            <div class="col-md-6 col-sm-12">
-                                <div class="inputlist input-group">
-                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                    <input type="text" pattern=".{3,}" title="Saisissez un pseudo avec minimum 3 caractères." 
-                                    id="pseudo" name="nick" class="form-control" placeholder="Entrer un pseudo" required="">
-                                </div>
-                            </div>
-                
-                            <!-- Gender Selection -->
-                            <div class="col-md-6 col-sm-12">
-                                
-                                <div class="inputlist input-group">
-                                    <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
-                                    <select name="sexe" class="form-select">
-                                        <option value="M">Homme</option>
-                                        <option value="F" selected="">Femme</option>
-                                    </select>
-                                </div>
-                            </div>
-                
-                            <!-- Age Input -->
-                            <div class="col-md-6 col-sm-12">
-                                
-                                <div class="inputlist input-group">
-                                    <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                                    <input type="number" min="12" max="90" id="age" name="age" class="form-control" placeholder="Âge" required="">
-                                </div>
-                            </div>
-                
-                            <!-- City Input -->
-                            <div class="col-md-6 col-sm-12">
-                                
-                                <div class="inputlist input-group">
-                                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                                    <input type="text" id="ville" name="ville" class="form-control" placeholder="Ville (facultatif)">
-                                </div>
-                            </div>
-                
-                            <!-- Submit Button (Centered) -->
-                            <div class="col-12 text-center d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-chat-dots-fill"></i> <span>{% trans "tchatter, sans inscription" %}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <input type="hidden" name="channel" value="Accueil">
-                    <input type="hidden" name="chatnow" value="1">
-                </form>
-                                                                             
-            </div>
-        </div>
-    </div>
+    <div class="about about--style2 padding-top pt-xl-0">
+		<div class="container">
+			<div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
+				<div class="row g-0 justify-content-center row-cols-lg-2 row-cols-1">
+					<div class="col">
+						<div class="about__left">
+							<div class="about__top">
+								<div class="about__content">
+									<h3>TchatZone</h3>
+									<p>C'est là où il est facile de discuter gratuitement avec des milliers de personnes.</p>
+								</div>
+							</div>
+							<div class="about__bottom">
+								<div class="about__bottom--head">
+									<h5>Derniers membres inscrits</h5>
+									<div class="about__bottom--navi">
+										<div class="ragi-prev"><i class="fa-solid fa-chevron-left"></i></div>
+										<div class="ragi-next active"><i class="fa-solid fa-chevron-right"></i></div>
+									</div>
+								</div>
+								<div class="about__bottom--body">
+									<div class="ragi__slider overflow-hidden">
+										<div class="swiper-wrapper">
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/01.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/02.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/03.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/04.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/05.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/01.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/02.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/03.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+											<div class="swiper-slide">
+												<div class="ragi__thumb">
+													<a href="member-single.html"><img src="{% static 'images/ragi/04.jpg' %}" alt="dating thumb"></a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="about__right">
+							<div class="about__title">
+								<h3>Entrer sans inscription</h3>
+							</div>
+							<form action="{% url 'webchat' %}" method="GET" class="form" target="_blank" id="form-desktop">
+								<div class="banner__list">
+									<div class="row">
+										<div class="col-6">
+											<div class="form-group">
+                                              <strong><label >Pseudo</label></strong>
+                                              <input type="text" pattern=".{3,}" title="Saisissez un pseudo avec minimum 3 caractères." id="pseudo" name="nick" class="my-form-control" placeholder="Entrer un pseudo" required="">
+                                            </div>
+                                            <style> 
+                                                .my-form-control::-webkit-input-placeholder {color:    rgb(0, 0, 0);  }
+                                                .my-form-control::-moz-placeholder { color:  rgb(0, 0, 0); }
+                                                .my-form-control:-ms-input-placeholder { color:  rgb(0, 0, 0);  }
+                                                .my-form-control::placeholder { color:  rgb(0, 0, 0);  }
+                                            </style>
+										</div>
+                                        <div class="col-lg-6 col-12">
+											<strong><label>Sexe</label></strong>
+											<div class="banner__inputlist">
+												<select>
+													<option value="homme">Homme</option>
+													<option value="femme" selected>Femme</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="banner__list">
+									<div class="row">
+										<div class="col-lg-6 col-12">
+											<strong><label>Âge</label></strong>
+											<div class="row g-3">
+												<div class="col-6">
+													<div class="banner__inputlist">
+														<select>
+															<option value="18" selected>18</option>
+															<option value="19">19</option>
+															<option value="20">20</option>
+															<option value="21">21</option>
+															<option value="22">22</option>
+															<option value="23">23</option>
+															<option value="24">24</option>
+															<option value="25">25</option>
+															<option value="26">26</option>
+															<option value="27">27</option>
+															<option value="28">28</option>
+															<option value="29">29</option>
+															<option value="30">30</option>
+															<option value="31">31</option>
+															<option value="32">32</option>
+															<option value="33">33</option>
+															<option value="34">34</option>
+															<option value="35">35</option>
+															<option value="36">36</option>
+															<option value="37">37</option>
+															<option value="38">38</option>
+															<option value="39">39</option>
+															<option value="40">40</option>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 col-12">
+											<strong><label>Ville</label></strong>
+											<div class="banner__inputlist">
+												<select name="ville">
+                                                    <option value="">Sélectionner une ville</option>
+                                                    {% for city in cities %}
+                                                        <option value="{{ city.name }}">{{ city.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<button type="submit" class="default-btn reverse d-block"><span>tchatter..</span></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="about padding-top padding-bottom">
+		<div class="container">
+			<div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
+				<h2>Tout commence dans le tchat...</h2>
+				<p>Apprenez d'eux et essayez de vous faire remarquer sur ce forum. Cela augmentera à coup sûr votre visibilité et vos chances de retrouver l'être aimé.</p>
+			</div>
+			<div class="section__wrapper">
+				<div class="row g-4 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-sm-2 row-cols-1">
+					<div class="col wow fadeInUp" data-wow-duration="1.5s">
+						<div class="about__item text-center">
+							<div class="about__inner">
+								<div class="about__thumb">
+									<img src="{% static 'images/about/icon/01.png' %}" alt="dating thumb">
+								</div>
+								<div class="about__content">
+									<h3><span class="counter" data-to="990960" data-speed="1500"></span></h3>
+									<p>Members in Total</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col wow fadeInUp" data-wow-duration="1.6s">
+						<div class="about__item text-center">
+							<div class="about__inner">
+								<div class="about__thumb">
+									<img src="{% static 'images/about/icon/02.png' %}" alt="dating thumb">
+								</div>
+								<div class="about__content">
+									<h3><span class="counter" data-to="628590" data-speed="1500"></span></h3>
+									<p>Members Online</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col wow fadeInUp" data-wow-duration="1.7s">
+						<div class="about__item text-center">
+							<div class="about__inner">
+								<div class="about__thumb">
+									<img src="{% static 'images/about/icon/03.png' %}" alt="dating thumb">
+								</div>
+								<div class="about__content">
+									<h3><span class="counter" data-to="314587" data-speed="1500"></span></h3>
+									<p>Women Online</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col wow fadeInUp" data-wow-duration="1.8s">
+						<div class="about__item text-center">
+							<div class="about__inner">
+								<div class="about__thumb">
+									<img src="{% static 'images/about/icon/04.png' %}" alt="dating thumb">
+								</div>
+								<div class="about__content">
+									<h3><span class="counter" data-to="102369" data-speed="1500"></span></h3>
+									<p>Men Online</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
     <!-- ================> About section end here <================== -->
 
     <!-- ================> Member section start here <================== -->
@@ -207,77 +371,6 @@
     </div>
     <!-- ================> Member section end here <================== -->
 
-    <!-- ================> About section start here <================== -->
-    <div class="about about--style4 padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
-        
-        <div class="container">
-            <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
-                <h2>{% trans "Tout commence dans le tchat.." %}</h2>
-                <p>{% trans "Apprenez d'eux et essayez de figurer sur ce forum. Cela augmentera à coup sûr votre visibilité et augmentera vos chances de retrouver l'être cher." %}</p>
-            </div>
-            <div class="section__wrapper">
-                <div class="row g-4 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-sm-2 row-cols-1 wow fadeInUp" data-wow-duration="1.5s">
-                    <div class="col">
-                        <div class="about__item text-center">
-                            <div class="about__inner">
-                                <div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/home3/01.png' %}" alt="dating thumb">
-                                </div>
-                                <div class="about__content">
-                                    <h3><span class="counter" data-to="2500" data-speed="1500"></span></h3>
-                                    <p>{% trans "Membres au total" %}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="about__item text-center">
-                            <div class="about__inner">
-                                <div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/home3/02.png' %}" alt="dating thumb">
-                                </div>
-                                <div class="about__content">
-                                    <h3><span class="counter" data-to="803" data-speed="1500"></span></h3>
-                                    <p>{% trans "Membres en ligne" %}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="about__item text-center">
-                            <div class="about__inner">
-                                <div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/home3/03.png' %}" alt="dating thumb">
-                                </div>
-                                <div class="about__content">
-                                    <h3><span class="counter" data-to="600" data-speed="1500"></span></h3>
-                                    <p>{% trans "Hommes en ligne" %}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="about__item text-center">
-                            <div class="about__inner">
-                                <div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/home3/04.png' %}" alt="dating thumb">
-                                </div>
-                                <div class="about__content">
-                                    <h3><span class="counter" data-to="203" data-speed="1500"></span></h3>
-                                    <p>{% trans "Femmes en ligne" %}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-5 wow fadeInUp" data-wow-duration="2s">
-                    <a href="#" class="default-btn" data-rel="lightcase"><span>{% trans "Our TV Commercial" %} <i class="fas fa-video"></i></span></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ================> About section end here <================== -->
-
     <!-- ================> Meet section start here <================== -->
     <div class="meet meet--style2 padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
         <div class="container">
@@ -285,9 +378,9 @@
                 <div class="row g-4 justify-content-center align-items-center">
                     <div class="col-lg-6 col-12 wow fadeInUp" data-wow-duration="1.5s">
                         <div class="section__header">
-                            <h2>{% trans "Meet Singles in Your Area" %}</h2>
-                            <p>{% trans "Find your match in the most popular cities across the globe. Be adventurous and finds someone from others parts of the globe, you never know where love is hiding." %} </p>
-                            <a href="#" class="default-btn"><span>{% trans "Search Near You" %} <i class="fas fa-map-marker-alt ms-2"></i></span></a>
+                            <h2>{% trans "Rencontrez des future amies dans votre région" %}</h2>
+                            <p>{% trans "Trouvez votre âme sœur dans les villes les plus populaires de France. Soyez aventureux et trouvez quelqu'un dans d'autres parties de la France, vous ne savez jamais où se cache l'amour." %} </p>
+                            <a href="#" class="default-btn"><span>{% trans "France" %} <i class="fas fa-map-marker-alt ms-2"></i></span></a>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.6s">
