@@ -17,6 +17,7 @@ urlpatterns = [
     path("profile/<str:username>/", profile_view, name="profile"),
     path("settings/", account_settings_view, name="account_settings"),
     path("delete/", delete_account_view, name="delete_account"),
+    
 
     # ✅ API Endpoints
     path("api/register/", register, name="api_register"),

@@ -5,6 +5,7 @@ from django.urls import path, include
 from django.contrib.sitemaps.views import sitemap
 from main.sitemaps import StaticViewSitemap, UserSitemap, BlogSitemap
 from django.shortcuts import redirect
+from accounts.admin import AdminLoginView
 
 
 
@@ -22,6 +23,7 @@ sitemaps = {
 # Non-translated URLs (DO NOT use i18n_patterns for static!)
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("admin/login/", AdminLoginView.as_view(), name="admin_login"),
     path('', home_redirect, name='home_redirect'),  # ✅ Redirect from `/` to `/main/home/`
     path("main/", include("main.urls", namespace="main")), 
     path('accounts/', include('accounts.urls')), 

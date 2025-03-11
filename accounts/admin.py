@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.views import LoginView
 from .models import CustomUser
+from django.conf import settings
 
 # ✅ Register CustomUser in Django Admin
 @admin.register(CustomUser)
@@ -26,3 +28,10 @@ class CustomUserAdmin(UserAdmin):
     avatar_tag.allow_tags = True
     avatar_tag.short_description = "Avatar"
 
+
+class AdminLoginView(LoginView):
+    """ Custom admin login view with reCAPTCHA """
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["RECAPTCHA_SITE_KEY"] = settings.RECAPTCHA_SITE_KEY  # ✅ Pass site key to template
+        return context
