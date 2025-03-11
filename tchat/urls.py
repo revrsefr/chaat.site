@@ -2,19 +2,35 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls.i18n import i18n_patterns
+from django.contrib.sitemaps.views import sitemap
+from main.sitemaps import StaticViewSitemap, UserSitemap, BlogSitemap
+from django.shortcuts import redirect
+
+
+
+def home_redirect(request):
+    return redirect('/main/home/', permanent=True)  # ✅ 301 Redirect
+
+
+sitemaps = {
+    'static': StaticViewSitemap(),
+    'profiles': UserSitemap(),
+    'blog': BlogSitemap(),
+}
 
 
 # Non-translated URLs (DO NOT use i18n_patterns for static!)
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('i18n/', include('django.conf.urls.i18n')),
+    path('', home_redirect, name='home_redirect'),  # ✅ Redirect from `/` to `/main/home/`
+    path("main/", include("main.urls", namespace="main")), 
     path('accounts/', include('accounts.urls')), 
     path('irc/', include('irc.urls')),    # IRC app URLs
     path('community/', include('community.urls')),
-    path('main/', include('main.urls')), 
     path('blog/', include('blog.urls')),
-    path('locations/', include('locations.urls')), 
+    path('locations/', include('locations.urls')),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    
 ]
 # ✅ Static & Media URLs must NOT be inside i18n_patterns!
 if settings.DEBUG:  

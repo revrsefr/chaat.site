@@ -4,27 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Chattez en ligne gratuitement avec des amis et de nouvelles personnes ! Discuter en temps réel sans inscription sur notre plateforme interactive. Chattez en direct sur notre plateforme basée sur IRC. Rejoignez des salons thématiques et discutez anonymement avec la communauté !" />
+    <meta name="description" content="Rejoignez dès maintenant votre tchat gratuit sans inscription et discuter avec des milliers d'utilisateurs sur le tchatche. Rencontre amicale gratuit sans inscription chez tchatzone!">
+    <meta name="classification" content="Internet, Chat, Communaute, Portail, Services, Chat, Rencontres">
+    <meta name="type" content="chat">
+    <meta name="robots" content="index, follow">
+    <meta name="distribution" content="global">
+    <meta name="identifier-url" content="https://chaat.site/">
+    <meta name="rating" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="chat en ligne, discussion instantanée, tchat gratuit, rencontres, chat sans inscription" />
     <meta name="author" content="chaat.site" />
-    <meta name="robots" content="index, follow" />
-
-    <meta property="og:title" content="Chat en ligne - Discuter gratuitement en temps réel" />
+    <link rel="apple-touch-icon" sizes="120x120" href="../images/apple-touch-icon-120x120-precomposed.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../images/apple-touch-icon-152x152-precomposed.png">
+    <meta property="og:title" content="Rejoignez dès maintenant votre tchat gratuit sans inscription et discuter avec des milliers d'utilisateurs du monde entier. bon tchatche sur votre site de discussion !">
     <meta property="og:description" content="Rejoignez notre chat gratuit pour discuter en direct avec de nouvelles personnes. Aucune inscription requise !" />
     <meta property="og:image" content="{% static 'images/banner/shape/home3/01.png' %}" />
     <meta property="og:url" content="https://chaat.site/" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Nom de votre site" />
-    <meta property="og:locale" content="fr_FR" />
-
+    <meta property="og:site_name" content="Chaat.site" />
+    <meta property="og:locale" content="fr_FR">
     <meta itemprop="name" content="Chat en ligne - Discuter gratuitement" />
-    <meta itemprop="description" content="Un chat en ligne simple et rapide pour discuter avec d'autres utilisateurs sans inscription." />
     <meta itemprop="image" content="{% static 'images/banner/shape/home3/01.png' %}" />
-
-    <link rel="canonical" href="https://chaat.site/" />
+    <link rel="canonical" href="https://chaat.site/main/home/">
 
 
     <title>{% block title %}home - chaat.site{% endblock %}</title>
@@ -71,22 +72,7 @@
     <script src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/plugins.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch('/locations/get-cities/')
-            .then(response => response.json())
-            .then(data => {
-                let citySelect = document.getElementById("city-select");
-                data.cities.forEach(city => {
-                    let option = document.createElement("option");
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            });
-        });
-        </script>      
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>    
     {% endblock %}
 </body>
 </html>

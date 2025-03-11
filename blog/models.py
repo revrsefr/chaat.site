@@ -12,6 +12,7 @@ class BlogPost(models.Model):
     keywords = models.TextField(blank=True)  # Added for SEO
     category = models.CharField(max_length=255, blank=True)  # Added for categories
     tags = models.TextField(blank=True)  # Added for tags
+    is_active = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

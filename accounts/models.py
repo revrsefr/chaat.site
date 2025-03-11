@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     description = models.TextField(blank=True, null=True)
     popularity_score = models.IntegerField(default=0)
     last_login = models.DateTimeField(default=now, null=True, blank=True)
+    public = models.BooleanField(default=True)  
 
     # ✅ Fix conflicts with Django auth.User model
     groups = models.ManyToManyField(

@@ -27,7 +27,7 @@
     <div class="header__bottom">
         <div class="container">
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logo/logo.png' %}" alt="logo"></a>
+                <a class="navbar-brand" href="{% url 'main:home' %}"><img src="{% static 'images/logo/logo.png' %}" alt="logo"></a>
                 <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
                             <li>
                                 <a href="#">{% trans "Blog" %}</a>
                                 <ul>
-                                    <li><a href="{% url 'blog_list' %}" target="_blank">{% trans "Blog" %}</a></li>
+                                    <li><a href="{% url 'blog:blog_list' %}" target="_blank">{% trans "Blog" %}</a></li>
                                     <!--li><a href="blog-2.html">{% trans "Blog Style Two" %}</a></li>
                                     <li><a href="#" target="_blank">{% trans "Blog Details" %}</a></li>-->
                                 </ul>

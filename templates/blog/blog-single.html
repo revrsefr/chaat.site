@@ -15,7 +15,7 @@
 <!-- scrollToTop start here -->
 <a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
 <!-- scrollToTop ending here -->
- 
+
 <!-- ================> Page Header section start here <================== -->
 <div class="pageheader bg_img" style="background-image: url(assets/images/bg-img/pageheader.jpg);">
 	<div class="container">
@@ -23,7 +23,7 @@
 			<h2>Blog</h2>
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb justify-content-center mb-0">
-				  <li class="breadcrumb-item"><a href="{% url 'home' %}">home</a></li>
+				  <li class="breadcrumb-item"><a href="{% url 'main:home' %}">home</a></li>
 				  <li class="breadcrumb-item active" aria-current="page">Blog</li>
 				</ol>
 			</nav>
@@ -102,7 +102,7 @@
 					<div class="comment-respond">
 						<h4>Leave a Comment</h4>
 						<div class="add-comment">
-							<form action="{% url 'blog_detail' slug=post.slug %}" method="POST" class="comment-form">
+							<form action="{% url 'blog:blog_detail' slug=post.slug %}" method="POST" class="comment-form">
 								{% csrf_token %}
 								{{ form.non_field_errors }}
 					
@@ -128,7 +128,7 @@
 							<div class="widget-header">
 								<h5>Search keywords</h5>
 							</div>
-							<form action="{% url 'blog_list' %}" method="GET" class="search-wrapper">
+							<form action="{% url 'blog:blog_list' %}" method="GET" class="search-wrapper">
 								<input type="text" name="q" placeholder="Search Here..." value="{{ query }}">
 								<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
 							</form>
@@ -142,7 +142,7 @@
 							<ul class="lab-ul widget-wrapper list-bg-none">
 								<!-- ✅ "Show All" at the top -->
 								<li>
-									<a href="{% url 'blog_list' %}" class="d-flex flex-wrap justify-content-between">
+									<a href="{% url 'blog:blog_list' %}" class="d-flex flex-wrap justify-content-between">
 										<span><i class="fa-solid fa-angles-right"></i> Show all</span>
 										<span>{{ categories|length }}</span>
 									</a>
@@ -169,12 +169,12 @@
 								{% for recent in recent_posts %}
 								<li class="d-flex flex-wrap justify-content-between">
 									<div class="post-thumb">
-										<a href="{% url 'blog_detail' slug=recent.slug %}">
+										<a href="{% url 'blog:blog_detail' slug=recent.slug %}">
 											<img src="{{ recent.image.url }}" alt="{{ recent.title }}">
 										</a>
 									</div>
 									<div class="post-content ps-4">
-										<a href="{% url 'blog_detail' slug=recent.slug %}">
+										<a href="{% url 'blog:blog_detail' slug=recent.slug %}">
 											<h6>{{ recent.title }}</h6>
 										</a>
 										<p>{{ recent.created_at|date:"d F Y" }}</p>
