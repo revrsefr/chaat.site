@@ -1,50 +1,40 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-import asyncio
+from django.utils.html import format_html
 
-class CustomUserManager(BaseUserManager):
-    async def create_user(self, username, authcookie=None, password=None):
-        if not username:
-            raise ValueError("Users must have a username")
+class CustomUser(AbstractUser):
+    avatar = models.ImageField(upload_to="avatars/", default="avatars/default.jpg", blank=True, null=True)
+    age = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=1, choices=[("M", "Homme"), ("F", "Femme")], default="M")
+    city = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
-        user = self.model(username=username, authcookie=authcookie)
-        if password:
-            user.set_password(password)
-        await user.asave()
-        return user
-
-    async def create_superuser(self, username, password):
-        user = await self.create_user(username, password=password)
-        user.is_staff = True
-        user.is_superuser = True
-        await user.asave()
-        return user
-
-class CustomUser(AbstractUser):  # ✅ Fix: Keep AbstractUser to avoid admin errors
-    username = models.CharField(max_length=150, unique=True)
-    authcookie = models.CharField(max_length=64, blank=True, null=True)  # ✅ Ensure authcookie exists
-    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
-    age = models.PositiveIntegerField(blank=True, null=True)
-    gender = models.CharField(max_length=1, choices=[("M", "Male"), ("F", "Female")], blank=True, null=True)
-    online = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-
-    # ✅ Fix group & permission conflicts
+    # ✅ Fix conflicts with Django auth.User model
     groups = models.ManyToManyField(
         "auth.Group",
-        related_name="customuser_groups",  # ✅ Prevent reverse accessor clash
-        blank=True
+        related_name="customuser_set",
+        blank=True,
+        help_text="The groups this user belongs to.",
     )
+
     user_permissions = models.ManyToManyField(
         "auth.Permission",
-        related_name="customuser_permissions",  # ✅ Prevent reverse accessor clash
-        blank=True
+        related_name="customuser_set",
+        blank=True,
+        help_text="Specific permissions for this user.",
     )
 
-    objects = CustomUserManager()
+    def avatar_url(self):
+            """Return a default avatar if the user hasn't uploaded one."""
+            if self.avatar:
+                return self.avatar.url
+            return "/static/users/avatars/default-avatar.jpg"  # Default avatar path
+    
+    @property
+    def avatar_tag(self):
+            """Show avatar in Django Admin."""
+            if self.avatar:
+                return format_html('<img src="{}" style="width: 50px; height: 50px; border-radius: 50%;" />', self.avatar.url)
+            return "No Avatar"
 
-    def __str__(self):
-        return self.username
-
+    avatar_tag.fget.short_description = "Avatar"  # ✅ Label for Admin Panel

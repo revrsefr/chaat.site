@@ -1,0 +1,181 @@
+{% extends "main/base.html" %}
+{% block content %}
+
+<!-- ================> Blog section start here <================== -->
+<div class="blog blog--style2 padding-top padding-bottom aside-bg">
+	<div class="container">
+		<div class="section-wrapper">
+			<div class="row justify-content-center pb-15">
+				<div class="col-lg-9 col-12">
+					<article>
+						<div class="blog__item">
+							<div class="blog__inner">
+								<div class="blog__thumb">
+									<img src="{{ post.image.url }}" alt="{{ post.title }}">
+								</div>
+								<div class="blog__content">
+									<h2>{{ post.title }}</h2>
+									<ul class="blog__date">
+										<li><span><i class="fa-solid fa-calendar-days"></i> {{ post.created_at|date:"d F Y" }}</span></li>
+										<li><span><i class="fa-solid fa-user"></i> <a href="#">{{ post.author }}</a></span></li>
+										<li><span><i class="fa-solid fa-comments"></i> <a href="#"> {{ comments.count }} Comments</a></span></li>
+									</ul>
+									<p>{{ post.content }}</p>
+
+									<!-- ✅ Tags Display -->
+									<div class="tags-area">
+										<ul class="tags lab-ul justify-content-center">
+											{% for tag in post_tags %}
+												<li><a href="#">{{ tag }}</a></li>
+											{% empty %}
+												<li>No tags available</li>
+											{% endfor %}
+										</ul>
+										<ul class="share lab-ul justify-content-center">
+											<li><a href="#" class="facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
+											<li><a href="#" class="dribble"><i class="fa-brands fa-dribbble"></i></a></li>
+											<li><a href="#" class="twitter"><i class="fa-brands fa-twitter"></i></a></li>
+											<li><a href="#" class="google"><i class="fa-brands fa-google"></i></a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</article>
+					<!-- ✅ COMMENTS SECTION -->
+					<div class="comments">
+						<h4 class="comment-title">{{ post.comments.count }} Comments</h4>
+						<ul class="lab-ul comment-list">
+							{% for comment in post.comments.all %}
+								<li class="comment">
+									<div class="com-item">
+										<div class="com-thumb">
+											<img src="https://www.gravatar.com/avatar/{{ comment.email|lower|make_list|join:'' }}" alt="user">
+										</div>
+										<div class="com-content">
+											<div class="com-title">
+												<div class="com-title-meta">
+													<a href="#">{{ comment.name }}</a>
+													<span> {{ comment.created_at|date:"d F Y H:i" }} </span>
+												</div>
+											</div>
+											<p>{{ comment.content }}</p>
+										</div>
+									</div>
+								</li>
+							{% empty %}
+								<li>No comments yet.</li>
+							{% endfor %}
+						</ul>
+					</div>
+					<!-- ✅ COMMENT FORM -->
+					<div class="comment-respond">
+						<h4>Leave a Comment</h4>
+						<div class="add-comment">
+							<form action="{% url 'blog_detail' slug=post.slug %}" method="POST" class="comment-form">
+								{% csrf_token %}
+								{{ form.non_field_errors }}
+					
+								<input name="name" type="text" placeholder="Name*" required value="{{ form.name.value|default_if_none:'' }}">
+								<input name="email" type="email" placeholder="Email*" required value="{{ form.email.value|default_if_none:'' }}">
+								<input name="website" type="text" placeholder="Website*" class="w-100" value="{{ form.website.value|default_if_none:'' }}">
+								<textarea name="content" rows="7" placeholder="Type Here Your Comment*" required>{{ form.comment.value|default_if_none:'' }}</textarea>
+								
+								<!-- ✅ reCAPTCHA widget -->
+								<div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+					
+								<button type="submit" class="default-btn reverse"><span>Send Comment</span></button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- ✅ SIDEBAR -->
+				<div class="col-lg-3 col-md-7 col-12">
+					<aside>
+
+						<!-- ✅ Search Bar -->
+						<div class="widget widget-search">
+							<div class="widget-header">
+								<h5>Search keywords</h5>
+							</div>
+							<form action="{% url 'blog_list' %}" method="GET" class="search-wrapper">
+								<input type="text" name="q" placeholder="Search Here..." value="{{ query }}">
+								<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+							</form>
+						</div>
+
+						<!-- ✅ Post Categories (SHOW ALL FIXED) -->
+						<div class="widget widget-category">
+							<div class="widget-header">
+								<h5>Post Categories</h5>
+							</div>
+							<ul class="lab-ul widget-wrapper list-bg-none">
+								<!-- ✅ "Show All" at the top -->
+								<li>
+									<a href="{% url 'blog_list' %}" class="d-flex flex-wrap justify-content-between">
+										<span><i class="fa-solid fa-angles-right"></i> Show all</span>
+										<span>{{ categories|length }}</span>
+									</a>
+								</li>
+								{% for category in categories %}
+									<li>
+										<a href="#" class="d-flex flex-wrap justify-content-between">
+											<span><i class="fa-solid fa-angles-right"></i> {{ category.category }}</span>
+											<span>{{ category.count }}</span>
+										</a>
+									</li>
+								{% empty %}
+									<li>No categories available</li>
+								{% endfor %}
+							</ul>							
+						</div>
+
+						<!-- ✅ Recent Posts -->
+						<div class="widget widget-post">
+							<div class="widget-header">
+								<h5>Recent Posts</h5>
+							</div>
+							<ul class="lab-ul widget-wrapper">
+								{% for recent in recent_posts %}
+								<li class="d-flex flex-wrap justify-content-between">
+									<div class="post-thumb">
+										<a href="{% url 'blog_detail' slug=recent.slug %}">
+											<img src="{{ recent.image.url }}" alt="{{ recent.title }}">
+										</a>
+									</div>
+									<div class="post-content ps-4">
+										<a href="{% url 'blog_detail' slug=recent.slug %}">
+											<h6>{{ recent.title }}</h6>
+										</a>
+										<p>{{ recent.created_at|date:"d F Y" }}</p>
+									</div>
+								</li>
+								{% empty %}
+									<li>No recent posts available</li>
+								{% endfor %}
+							</ul>
+						</div>
+
+						<!-- ✅ Tags -->
+						<div class="widget widget-tags">
+							<div class="widget-header">
+								<h5>Our Popular tags</h5>
+							</div>
+							<ul class="lab-ul widget-wrapper">
+								{% for tag in post_tags %}
+									<li><a href="#">{{ tag }}</a></li>
+								{% empty %}
+									<li>No tags available</li>
+								{% endfor %}
+							</ul>
+						</div>
+
+					</aside>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ================> Blog section end here <================== -->
+
+{% endblock %}

@@ -4,17 +4,33 @@
 {% block title %}Registre - chaat.site{% endblock %}
 
 {% block content %}
+
+<!-- preloader start here -->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="preloader-icon">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<!-- preloader ending here -->
+
+<!-- scrollToTop start here -->
+<a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
+<!-- scrollToTop ending here -->
+
 <section class="log-reg">
     <div class="top-menu-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-7">
-                    <div class="logo">
-                        <a href="{% url 'home' %}"><img src="{% static 'assets/images/logo/logo.png' %}" alt="logo"></a>
-                    </div>
+                   <!---- <div class="logo">
+                        <a href="{% url 'home' %}"><img src="{% static 'images/logo/logo.png' %}" alt="logo"></a>
+                    </div>-->
                 </div>
                 <div class="col-lg-4 col-5">
-                    <a href="{% url 'home' %}" class="backto-home"><i class="fas fa-chevron-left"></i> Back to Home</a>
+                    <a href="{% url 'home' %}" class="backto-home"><i class="fas fa-chevron-left"></i> home</a>
                 </div>
             </div>
         </div>
@@ -25,36 +41,35 @@
             <div class="col-lg-7">
                 <div class="log-reg-inner">
                     <div class="section-header">
-                        <h2 class="title">Bienvenue a tChatZone</h2>
-                        <p>Créons votre profil ! Remplissez simplement les champs ci-dessous.</p>
+                        <h2 class="title">Créez votre compte</h2><br>
                     </div>
                     <div class="main-content">
                         <form id="register-form">
-                            <h4 class="content-title">Détails du compte</h4>
+                            <!--<h4 class="content-title">Détails du compte</h4>-->
                             <div class="form-group">
-                                <label>Nom d'utilisateur*</label>
-                                <input type="text" class="my-form-control" id="username" placeholder="Entrez votre nom d'utilisateur" required>
+                                <label>Pseudo</label>
+                                <input type="text" class="my-form-control" id="username" placeholder="Entrer un pseudo" required>
                             </div>
                             <div class="form-group">
-                                <label>Adresse email*</label>
-                                <input type="email" class="my-form-control" id="email" placeholder="Entrez votre email" required>
+                                <label>Email</label>
+                                <input type="email" class="my-form-control" id="email" placeholder="Entrer votre email" required>
                             </div>
                             <div class="form-group">
-                                <label>Mot de passe*</label>
+                                <label>Mot de passe</label>
                                 <input type="password" class="my-form-control" id="password1" placeholder="Entrez votre mot de passe" required>
                             </div>
                             <div class="form-group">
-                                <label>Confirmez le mot de passe*</label>
+                                <label>Confirmer le mot de passe</label>
                                 <input type="password" class="my-form-control" id="password2" placeholder="Confirmez votre mot de passe" required>
                             </div>
                         
-                            <h4 class="content-title mt-5">Détails du profil</h4>
+                            <!--<h4 class="content-title mt-5">Détails du profil</h4>
                             <div class="form-group">
                                 <label>Nom*</label>
                                 <input type="text" class="my-form-control" id="full_name" placeholder="Entrez votre nom complet" required>
-                            </div>
+                            </div>-->
                             <div class="form-group">
-                                <label>Anniversaire*</label>
+                                <label>Date de naissance</label>
                                 <input type="date" class="my-form-control" id="birthday" required>
                             </div>
                             <div class="form-group">
@@ -94,7 +109,7 @@
                                 <input type="text" class="my-form-control" id="city" placeholder="Entrez votre ville" required>
                             </div>
                         
-                            <button type="submit" class="default-btn reverse"><span>Créez votre profil</span></button>
+                            <button type="submit" class="default-btn reverse"><span>Créez votre compte</span></button>
                         
                             <div id="register-message"></div> <!-- Display success/error messages here -->
                         </form>
@@ -113,12 +128,7 @@
             email: document.getElementById("email").value,
             password1: document.getElementById("password1").value,
             password2: document.getElementById("password2").value,
-            full_name: document.getElementById("full_name").value,
-            birthday: document.getElementById("birthday").value,
-            gender: document.querySelector("input[name='gender']:checked").value,
-            looking_for: document.querySelector("input[name='looking_for']:checked").value,
-            marital_status: document.getElementById("marital_status").value,
-            city: document.getElementById("city").value
+            g_recaptcha_response: grecaptcha.getResponse()
         };
 
         fetch("/accounts/api/register/", {
@@ -134,6 +144,7 @@
             let messageDiv = document.getElementById("register-message");
             if (data.error) {
                 messageDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                grecaptcha.reset(); // Reset reCAPTCHA on error
             } else {
                 messageDiv.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
                 setTimeout(() => {

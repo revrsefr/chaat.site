@@ -1,0 +1,98 @@
+{% extends "main/base.html" %}
+{% block content %}
+
+<!-- ================> Blog section start here <================== -->
+<div class="blog blog--style2 padding-top padding-bottom aside-bg">
+    <div class="container">
+        <div class="section-wrapper">
+            <div class="row justify-content-center pb-15">
+                <div class="col-lg-9 col-12">
+                    {% for post in posts %}
+                        <article>
+                            <div class="blog__item">
+                                <div class="blog__inner">
+                                    <div class="blog__thumb">
+                                        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                    </div>
+                                    <div class="blog__content">
+                                        <h2><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h2>
+                                        <ul class="blog__date">
+                                            <li><span><i class="fa-solid fa-calendar-days"></i>{{ post.created_at|date:"d F Y" }}</span></li>
+                                            <li><span><i class="fa-solid fa-user"></i><a href="#">{{ post.author }}</a></span></li>
+                                        </ul>
+                                        <p>{{ post.content|truncatewords:50 }}</p>
+                                        <a href="{% url 'blog_detail' post.slug %}" class="default-btn reverse"><span>Read More</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <p>No blog posts available.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-3 col-md-7 col-12">
+                    <aside>
+                        <!-- ✅ SEARCH KEYWORDS (Now Works) -->
+                        <div class="widget widget-search">
+                            <div class="widget-header">
+                                <h5>Search keywords</h5>
+                            </div>
+                            <form action="{% url 'blog_list' %}" method="GET" class="search-wrapper">
+                                <input type="text" name="q" placeholder="Search Here..." value="{{ query }}">
+                                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>
+                        </div>
+
+                        <!-- ✅ POST CATEGORIES (With Post Count) -->
+                        <div class="widget widget-category">
+                            <div class="widget-header">
+                                <h5>Post Categories</h5>
+                            </div>
+                            <ul class="lab-ul widget-wrapper list-bg-none">
+                                {% for category in categories %}
+                                    <li>
+                                        <a href="#" class="d-flex flex-wrap justify-content-between">
+                                            <span><i class="fa-solid fa-angles-right"></i>{{ category.category }}</span>
+                                            <span>{{ category.count }}</span>
+                                        </a>
+                                    </li>
+                                {% empty %}
+                                    <li>No categories available</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- ✅ RECENT POSTS -->
+                        <div class="widget widget-post">
+                            <div class="widget-header">
+                                <h5>Recent Posts</h5>
+                            </div>
+                            <ul class="lab-ul widget-wrapper">
+                                {% for recent in recent_posts %}
+                                    <li class="d-flex flex-wrap justify-content-between">
+                                        <div class="post-thumb">
+                                            <a href="{% url 'blog_detail' recent.slug %}"><img src="{{ recent.image.url }}" alt="{{ recent.title }}"></a>
+                                        </div>
+                                        <div class="post-content ps-4">
+                                            <a href="{% url 'blog_detail' recent.slug %}">
+                                                <h6>{{ recent.title }}</h6>
+                                            </a>
+                                            <p>{{ recent.created_at|date:"d F Y" }}</p>
+                                        </div>
+                                    </li>
+                                {% empty %}
+                                    <li>No recent posts available.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ================> Blog section end here <================== -->
+
+{% endblock %}

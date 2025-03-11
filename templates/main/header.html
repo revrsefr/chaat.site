@@ -54,7 +54,7 @@
                             <li>
                                 <a href="#">{% trans "Blog" %}</a>
                                 <ul>
-                                    <li><a href="#" target="_blank">{% trans "Blog" %}</a></li>
+                                    <li><a href="{% url 'blog_list' %}" target="_blank">{% trans "Blog" %}</a></li>
                                     <!--li><a href="blog-2.html">{% trans "Blog Style Two" %}</a></li>
                                     <li><a href="#" target="_blank">{% trans "Blog Details" %}</a></li>-->
                                 </ul>
@@ -63,8 +63,8 @@
                         </ul>
                     </div>
                     <ul class="button-group">
-                        <li><a href="#" class="default-btn login"><i class="fa-solid fa-user"></i> <span>{% trans "LOG IN" %}</span> </a></li>
-                        <li><a href="#" class="default-btn signup"><i class="fa-solid fa-users"></i> <span>{% trans "SIGN UP" %}</span> </a></li>
+                        <li><a href="{% url 'login' %}" class="default-btn login"><i class="fa-solid fa-user"></i> <span>{% trans "S'identifier" %}</span> </a></li>
+                        <li><a href="{% url 'register' %}" class="default-btn signup"><i class="fa-solid fa-users"></i> <span>{% trans "Créer un compte" %}</span> </a></li>
                     </ul>
                 </div>
             </nav>
