@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<!-- preloader start here -->
+<!-- Preloader -->
 <div class="preloader">
     <div class="preloader-inner">
         <div class="preloader-icon">
@@ -14,21 +14,15 @@
         </div>
     </div>
 </div>
-<!-- preloader ending here -->
 
-<!-- scrollToTop start here -->
+<!-- Scroll to Top -->
 <a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
-<!-- scrollToTop ending here -->
 
 <section class="log-reg">
     <div class="top-menu-area">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-7">
-                   <!---- <div class="logo">
-                        <a href="{% url 'main:home' %}"><img src="{% static 'images/logo/logo.png' %}" alt="logo"></a>
-                    </div>-->
-                </div>
+                <div class="col-lg-8 col-7"></div>
                 <div class="col-lg-4 col-5">
                     <a href="{% url 'main:home' %}" class="backto-home"><i class="fas fa-chevron-left"></i> home</a>
                 </div>
@@ -44,8 +38,7 @@
                         <h2 class="title">Créez votre compte</h2><br>
                     </div>
                     <div class="main-content">
-                        <form id="register-form">
-                            <!--<h4 class="content-title">Détails du compte</h4>-->
+                        <form id="register-form" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label>Pseudo</label>
                                 <input type="text" class="my-form-control" id="username" placeholder="Entrer un pseudo" required>
@@ -62,56 +55,38 @@
                                 <label>Confirmer le mot de passe</label>
                                 <input type="password" class="my-form-control" id="password2" placeholder="Confirmez votre mot de passe" required>
                             </div>
-                        
-                            <!--<h4 class="content-title mt-5">Détails du profil</h4>
-                            <div class="form-group">
-                                <label>Nom*</label>
-                                <input type="text" class="my-form-control" id="full_name" placeholder="Entrez votre nom complet" required>
-                            </div>-->
                             <div class="form-group">
                                 <label>Date de naissance</label>
-                                <input type="date" class="my-form-control" id="birthday" required>
+                                <input type="date" class="my-form-control" id="age" required>
                             </div>
                             <div class="form-group">
                                 <label>Je suis un/e*</label>
                                 <div class="banner__inputlist">
                                     <div class="s-input me-3">
-                                        <input type="radio" name="gender" value="male" id="male" required><label for="male">Homme</label>
+                                        <input type="radio" name="gender" value="M" id="male" required>
+                                        <label for="male">Homme</label>
                                     </div>
                                     <div class="s-input">
-                                        <input type="radio" name="gender" value="female" id="female" required><label for="female">Femme</label>
+                                        <input type="radio" name="gender" value="F" id="female" required>
+                                        <label for="female">Femme</label>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>À la recherche d'un/e*</label>
-                                <div class="banner__inputlist">
-                                    <div class="s-input me-3">
-                                        <input type="radio" name="looking_for" value="male" id="looking_male" required><label for="looking_male">Homme</label>
-                                    </div>
-                                    <div class="s-input">
-                                        <input type="radio" name="looking_for" value="female" id="looking_female" required><label for="looking_female">Femme</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>État matrimonial*</label>
-                                <div class="banner__inputlist">
-                                    <select id="marital_status" required>
-                                        <option value="single" selected>Célibataire</option>
-                                        <option value="married">Mariée</option>
-                                        <option value="married">RAS</option>
-                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Ville*</label>
                                 <input type="text" class="my-form-control" id="city" placeholder="Entrez votre ville" required>
                             </div>
-                        
-                            <button type="submit" class="default-btn reverse"><span>Créez votre compte</span></button>
-                        
-                            <div id="register-message"></div> <!-- Display success/error messages here -->
+                            <div class="form-group">
+                                <label>Avatar</label>
+                                <input type="file" class="my-form-control" id="avatar">
+                            </div>
+                            <!-- Google reCAPTCHA -->
+                            <div class="form-group">
+                                <br><div class="g-recaptcha" data-sitekey="6Lc3cl4aAAAAAPzQYUICPgVfCXC6mqlBqe4ueu0L"></div>
+                            </div>
+
+                            <button type="submit" class="default-btn reverse"><span>Créez votre compte</span></button> 
+                            <div id="register-message"></div>
                         </form>
                     </div>
                 </div>
@@ -121,38 +96,36 @@
 </section>
 <script>
     document.getElementById("register-form").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent form submission
-
-        const formData = {
-            username: document.getElementById("username").value,
-            email: document.getElementById("email").value,
-            password1: document.getElementById("password1").value,
-            password2: document.getElementById("password2").value,
-            g_recaptcha_response: grecaptcha.getResponse()
-        };
-
+        event.preventDefault(); 
+    
+        let formData = new FormData();
+        formData.append("username", document.getElementById("username").value);
+        formData.append("email", document.getElementById("email").value);
+        formData.append("password1", document.getElementById("password1").value);
+        formData.append("password2", document.getElementById("password2").value);
+        formData.append("birthday", document.getElementById("birthday").value);  // ✅ Fix `age` → `birthday`
+        formData.append("gender", document.querySelector('input[name="gender"]:checked').value);
+        formData.append("city", document.getElementById("city").value);
+        formData.append("avatar", document.getElementById("avatar").files[0]);  // ✅ Upload file
+        formData.append("g_recaptcha_response", grecaptcha.getResponse());
+    
         fetch("/accounts/api/register/", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify(formData)
+            body: formData,
+            headers: { "X-CSRFToken": "{{ csrf_token }}" }
         })
         .then(response => response.json())
         .then(data => {
-            let messageDiv = document.getElementById("register-message");
             if (data.error) {
-                messageDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
-                grecaptcha.reset(); // Reset reCAPTCHA on error
+                document.getElementById("register-message").innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                grecaptcha.reset();
             } else {
-                messageDiv.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
-                setTimeout(() => {
-                    window.location.href = "/accounts/login/";
-                }, 2000);
+                document.getElementById("register-message").innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                setTimeout(() => { window.location.href = "/accounts/login/"; }, 2000);
             }
         })
         .catch(error => console.error("Error:", error));
-    });
+    });    
 </script>
+
 {% endblock %}

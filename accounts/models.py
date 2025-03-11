@@ -4,13 +4,13 @@ from django.utils.html import format_html
 from django.utils.timezone import now
 
 class CustomUser(AbstractUser):
-    avatar = models.ImageField(upload_to="avatars/", default="avatars/default.jpg", blank=True, null=True)
-    age = models.DateField(null=True, blank=True)
+    avatar = models.ImageField(upload_to="media/avatars/", default="avatars/default.jpg", blank=True, null=True)
+    age = models.DateField(null=True, blank=True) 
     gender = models.CharField(max_length=1, choices=[("M", "Homme"), ("F", "Femme")], default="M")
     city = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     popularity_score = models.IntegerField(default=0)
-    last_login = models.DateTimeField(default=now, null=True, blank=True)
+    last_login = models.DateTimeField(default=now, null=False, blank=False)
     public = models.BooleanField(default=True)  
 
     # ✅ Fix conflicts with Django auth.User model
@@ -29,10 +29,10 @@ class CustomUser(AbstractUser):
     )
 
     def avatar_url(self):
-            """Return a default avatar if the user hasn't uploaded one."""
-            if self.avatar:
-                return self.avatar.url
-            return "/static/users/avatars/default-avatar.jpg"  # Default avatar path
+        """Return a default avatar if the user hasn't uploaded one."""
+        if self.avatar:
+            return self.avatar.url
+        return "/static/users/avatars/default-avatar.jpg"  # Default avatar path
     
     @property
     def avatar_tag(self):
