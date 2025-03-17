@@ -138,7 +138,11 @@ venv.bak/
 static/
 media/
 staticfiles/
-
+node_modules/
+package-lock.json
+package.json
+dist/
+build/
 # mypy
 .mypy_cache/
 .dmypy.json

@@ -211,12 +211,12 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/01.png' %}" alt="dating thumb">
+									<img src="{% static 'images/about/icon/serveur.png' %}"  height="100px" width="100px" alt="serveur thumb">
 								</div>
 								<div class="about__content">
-									<h3><span class="counter" data-to="990960" data-speed="1500"></span></h3>
-									<p>Members in Total</p>
-								</div>
+                                    <h3><span class="counter" data-to="{{ server_count }}" data-speed="1500">{{ server_count }}</span></h3>
+                                    <p>Serveurs</p>
+                                </div>
 							</div>
 						</div>
 					</div>
@@ -224,12 +224,12 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/02.png' %}" alt="dating thumb">
+									<img src="{% static 'images/about/icon/utilisateurs.png' %}" height="100px" width="100px" alt="dating thumb">
 								</div>
 								<div class="about__content">
-									<h3><span class="counter" data-to="628590" data-speed="1500"></span></h3>
-									<p>Members Online</p>
-								</div>
+                                    <h3><span class="counter" data-to="{{ user_count }}" data-speed="1500">{{ user_count }}</span></h3>
+                                    <p>Utilisateurs</p>
+                                </div>
 							</div>
 						</div>
 					</div>
@@ -237,12 +237,12 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/03.png' %}" alt="dating thumb">
+									<img src="{% static 'images/about/icon/operateurs.png' %}" height="100px" width="100px" alt="dating thumb">
 								</div>
 								<div class="about__content">
-									<h3><span class="counter" data-to="314587" data-speed="1500"></span></h3>
-									<p>Women Online</p>
-								</div>
+                                    <h3><span class="counter" data-to="{{ oper_count }}" data-speed="1500">{{ oper_count }}</span></h3>
+                                    <p>Opérateurs IRC</p>
+                                </div>                                
 							</div>
 						</div>
 					</div>
@@ -250,12 +250,12 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/04.png' %}" alt="dating thumb">
+									<img src="{% static 'images/about/icon/channels.png' %}" height="100px" width="100px"  alt="dating thumb">
 								</div>
 								<div class="about__content">
-									<h3><span class="counter" data-to="102369" data-speed="1500"></span></h3>
-									<p>Men Online</p>
-								</div>
+                                    <h3><span class="counter" data-to="{{ channel_count }}" data-speed="1500">{{ channel_count }}</span></h3>
+                                    <p>Salons</p>
+                                </div>                                
 							</div>
 						</div>
 					</div>
@@ -269,8 +269,8 @@
     <div class="member member--style3 padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
         <div class="container">
             <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
-                <h2>{% trans "Only True People" %}</h2>
-                <p>{% trans "Learn from them and try to make it to this board. This will for sure boost you visibility and increase your chances to find you loved one." %}</p>
+                <h2>{% trans "Nos membres" %}</h2>
+                <p>En tant que membre, tu peux donner un peu plus d'infos sur toi en créant tes albums photos pour provoquer des rencontres plus rapides...</p>
             </div>
             <div class="section__wrapper">
                 <div class="row g-0 mx-12-none justify-content-center wow fadeInUp" data-wow-duration="1.5s">
@@ -364,95 +364,14 @@
                     </div>
                 </div>
                 <div class="text-center mt-4 wow fadeInUp" data-wow-duration="2s">
-                    <a href="#" class="default-btn"><span>{% trans "View More Popular" %} <i class="ms-2 fas fa-users"></i></span></a>
+                    <a href="{% url 'community_membres' %}" class="default-btn"><span>{% trans "Commu" %} <i class="ms-2 fas fa-users"></i></span></a>
                 </div>
             </div>
         </div>
     </div>
     <!-- ================> Member section end here <================== -->
 
-    <!-- ================> Meet section start here <================== -->
-    <div class="meet meet--style2 padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
-        <div class="container">
-            <div class="section__wrapper">
-                <div class="row g-4 justify-content-center align-items-center">
-                    <div class="col-lg-6 col-12 wow fadeInUp" data-wow-duration="1.5s">
-                        <div class="section__header">
-                            <h2>{% trans "Rencontrez des future amies dans votre région" %}</h2>
-                            <p>{% trans "Trouvez votre âme sœur dans les villes les plus populaires de France. Soyez aventureux et trouvez quelqu'un dans d'autres parties de la France, vous ne savez jamais où se cache l'amour." %} </p>
-                            <a href="#" class="default-btn"><span>{% trans "France" %} <i class="fas fa-map-marker-alt ms-2"></i></span></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.6s">
-                        <div class="meet__item">
-                            <div class="meet__inner">
-                                <div class="meet__thumb">
-                                    <a href="#"><img src="{% static 'images/meet/02.jpg' %}" alt="dating thumb"></a>
-                                </div>
-                                <div class="meet__content">
-                                    <img src="{% static 'images/meet/icon/02.jpg' %}" alt="dating thumb">
-                                    <a href="#"><h4>Lyon</h4></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.7s">
-                        <div class="meet__item">
-                            <div class="meet__inner">
-                                <div class="meet__thumb">
-                                    <a href="#"><img src="{% static 'images/meet/03.jpg' %}" alt="dating thumb"></a>
-                                </div>
-                                <div class="meet__content">
-                                    <img src="{% static 'images/meet/icon/03.jpg' %}" alt="dating thumb">
-                                    <a href="#"><h4>Marseilles</h4></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.8s">
-                        <div class="meet__item">
-                            <div class="meet__inner">
-                                <div class="meet__thumb">
-                                    <a href="#"><img src="{% static 'images/meet/04.jpg' %}" alt="dating thumb"></a>
-                                </div>
-                                <div class="meet__content">
-                                    <img src="{% static 'images/meet/icon/04.jpg' %}" alt="dating thumb">
-                                    <a href="#"><h4>Lille</h4></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12 wow fadeInUp" data-wow-duration="1.9s">
-                        <div class="meet__item">
-                            <div class="meet__inner">
-                                <div class="meet__thumb">
-                                    <a href="#"><img src="{% static 'images/meet/05.jpg' %}" alt="dating thumb"></a>
-                                </div>
-                                <div class="meet__content">
-                                    <img src="{% static 'images/meet/icon/05.jpg' %}" alt="dating thumb">
-                                    <a href="#"><h4>Nantes</h4></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-12 wow fadeInUp" data-wow-duration="2s">
-                        <div class="meet__item">
-                            <div class="meet__inner">
-                                <div class="meet__thumb">
-                                    <a href="#"><img src="{% static 'images/meet/06.jpg' %}" alt="dating thumb"></a>
-                                </div>
-                                <div class="meet__content">
-                                    <img src="{% static 'images/meet/icon/06.jpg' %}" alt="dating thumb">
-                                    <a href=""><h4>Paris</h4></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ================> Meet section end here <================== -->
+   
 
     <!-- ================> Work section start here <================== -->
     <div class="work padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
@@ -528,86 +447,50 @@
     </div>
     <!-- ================> Work section end here <================== -->
 
-    <!-- ================> Story section start here <================== -->
-    <div class="story padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
-        <div class="container">
-            <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
-                <h2>{% trans "chaat.site blogs" %}</h2>
-                <p>{% trans "Listen and learn from our community members and find out tips and tricks to meet your love. Join us and be part of a bigger family." %}</p>
-            </div>
-            <div class="section__wrapper wow fadeInUp" data-wow-duration="2s">
-                <div class="row g-4 justify-content-center row-cols-lg-3 row-cols-sm-2 row-cols-1">
-                    <div class="col">
-                        <div class="story__item">
-                            <div class="story__inner">
-                                <div class="story__thumb">
-                                    <a href="#"><img src="{% static 'images/story/01.jpg' %}" alt="dating thumb"></a>
-                                    <span class="member__activity member__activity--offline">{% trans "Entertainment" %}</span>
-                                </div>
-                                <div class="story__content">
-                                    <a href="#"><h4>Des lieux de rêve et des lieux à visiter en 2025</h4></a>
-                                    <div class="story__content--author">
-                                        <div class="story__content--thumb">
-                                            <img src="{% static 'images/story/author/01.jpg' %}" alt="dating thumb">
-                                        </div>
-                                        <div class="story__content--content">
-                                            <h6>Hester</h6>
-                                            <p>Janvier 16, 2025</p>
-                                        </div>
-                                    </div>
-                                </div>
+   <!-- ================> Story section start here <================== -->
+<div class="story padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+    <div class="container">
+        <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
+            <h2>{% trans "blog" %}</h2>
+            <p>Le partage c'est la vie..</p>
+        </div>
+        <div class="section__wrapper wow fadeInUp" data-wow-duration="2s">
+            <div class="row g-4 justify-content-center row-cols-lg-3 row-cols-sm-2 row-cols-1">
+                {% for post in posts %}
+                <div class="col">
+                    <div class="story__item">
+                        <div class="story__inner">
+                            <div class="story__thumb">
+                                <a href="{% url 'blog_detail' post.slug %}">
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                </a>
+                                <span class="member__activity member__activity--offline">{{ post.category }}</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="story__item">
-                            <div class="story__inner">
-                                <div class="story__thumb">
-                                    <a href="#"><img src="{% static 'images/story/02.jpg' %}" alt="dating thumb"></a>
-                                    <span class="member__activity member__activity--offline">Love Stories</span>
-                                </div>
-                                <div class="story__content">
-                                    <a href="#"><h4>Réalisez vos rêves et monétisez rapidement</h4></a>
-                                    <div class="story__content--author">
-                                        <div class="story__content--thumb">
-                                            <img src="{% static 'images/story/author/02.jpg' %}" alt="dating thumb">
-                                        </div>
-                                        <div class="story__content--content">
-                                            <h6>Arika</h6>
-                                            <p>Janvier 5, 2025</p>
-                                        </div>
+                            <div class="story__content">
+                                <a href="{% url 'blog_detail' post.slug %}">
+                                    <h4>{{ post.title }}</h4>
+                                </a>
+                                <div class="story__content--author">
+                                    <div class="story__content--thumb">
+                                        <img src="{{ post.author.avatar_url }}" alt="{{ post.author.username }}">
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="story__item">
-                            <div class="story__inner">
-                                <div class="story__thumb">
-                                    <a href="#"><img src="{% static 'images/story/03.jpg' %}" alt="dating thumb"></a>
-                                    <span class="member__activity member__activity--offline">Attraction</span>
-                                </div>
-                                <div class="story__content">
-                                    <a href="#"><h4>L'amour ne regarde pas avec les yeux, mais avec l'esprit.</h4></a>
-                                    <div class="story__content--author">
-                                        <div class="story__content--thumb">
-                                            <img src="{% static 'images/story/author/03.jpg' %}" alt="dating thumb">
-                                        </div>
-                                        <div class="story__content--content">
-                                            <h6>Margot</h6>
-                                            <p>Février 18, 2025</p>
-                                        </div>
+                                    <div class="story__content--content">
+                                        <h6>{{ post.author.username }}</h6>
+                                        <p>{{ post.created_at|date:"F j, Y" }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% empty %}
+                <p class="text-center text-muted">{% trans "Aucun article de blog disponible pour le moment." %}</p>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <!-- ================> Story section end here <================== -->
+</div>
+<!-- ================> Story section end here <================== -->
 
     <!-- ================> Work section start here <================== -->
     <div class="work work--style2 padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">

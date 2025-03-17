@@ -4,7 +4,6 @@ from .forms import CommentForm
 from accounts.utils import verify_recaptcha
 from django.db.models import Count
 from django.db.models import Q
-from django.http import JsonResponse
 from django.conf import settings
 
 def blog_list(request):

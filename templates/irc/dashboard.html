@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRC Dashboard</title>
+</head>
+<body>
+    <h1>IRC Network Overview</h1>
+
+    <input type="text" id="search" placeholder="Search..." onkeyup="filterList()">
+    <ul id="userList">
+    {% for user in users %}
+        <li>{{ user }}</li>
+    {% endfor %}
+    </ul>
+    <h2>Channels ({{ channels|length }})</h2>
+    <ul>
+        {% for channel in channels %}
+            <li>
+                <strong>{{ channel.name }}</strong> ({{ channel.user_count }} users)
+                <br>
+                <em>Topic:</em> {{ channel.topic.value|default:"No topic set" }}
+            </li>
+        {% empty %}
+            <li>No channels found.</li>
+        {% endfor %}
+    </ul>    
+</body>
+<script>
+    function filterList() {
+        let input = document.getElementById("search").value.toLowerCase();
+        let items = document.querySelectorAll("#userList li");
+        items.forEach(item => {
+            item.style.display = item.textContent.toLowerCase().includes(input) ? "" : "none";
+        });
+    }
+</script>
+</html>

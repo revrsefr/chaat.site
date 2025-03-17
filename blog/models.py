@@ -1,18 +1,20 @@
 from django.db import models
 from django.utils.text import slugify
+from accounts.models import CustomUser 
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
     content = models.TextField()
     image = models.ImageField(upload_to="blog_images/")
-    author = models.CharField(max_length=100, default="Admin")
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     keywords = models.TextField(blank=True)  # Added for SEO
     category = models.CharField(max_length=255, blank=True)  # Added for categories
     tags = models.TextField(blank=True)  # Added for tags
     is_active = models.BooleanField(default=True)
+    is_published = models.BooleanField(default=True)  # ✅ MUST EXIST
 
     def save(self, *args, **kwargs):
         if not self.slug:

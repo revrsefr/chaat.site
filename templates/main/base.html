@@ -31,6 +31,7 @@
     <title>{% block title %}home - chaat.site{% endblock %}</title>
     
     <!-- All stylesheet and icons css  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css">
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/animate.css' %}">
 	<link rel="stylesheet" href="{% static 'css/all.min.css' %}">
@@ -40,13 +41,48 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     
+   <!-- Google tag (gtag.js) -->
+    {% if request.COOKIES.cookie_analytics == "yes" %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-5J4F54MR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GTM-5J4F54MR');
+    </script>
+    {% endif %}
+    {% if request.COOKIES.cookie_advertising == "yes" %}
+    <script async src="https://ads.google.com/ads.js"></script>
+    {% endif %}
+
     <!-- Google Fonts -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
     </style>
     {% block head %}{% endblock %}
 </head>
-<body>
+<body>   
+    
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!Cookies.get('cookie_consent')) {
+                document.getElementById('cookie-banner').style.display = 'block';
+            }
+            
+            document.getElementById('accept-cookies').addEventListener('click', function() {
+                Cookies.set('cookie_consent', 'accepted', { expires: 365, path: '/' });
+                document.getElementById('cookie-banner').style.display = 'none';
+            });
+        });
+    </script>
+    
+ 
+    <!-- Google Tag Manager (noscript) -->
+
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J4F54MR"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     {% include 'main/header.html' %}
 
     
@@ -72,7 +108,263 @@
     <script src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/plugins.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
+    <script>
+        function fetchUserCount() {
+            fetch(window.location.href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                .then(response => response.text())
+                .then(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, "text/html");
+                    let newCount = doc.querySelector(".counter").innerText;
+                    document.querySelector(".counter").innerText = newCount;
+                });
+        }
+        setInterval(fetchUserCount, 5000); // ✅ Refresh every 5 seconds
+    </script>
+    <script>
+        function fetchServerCount() {
+            fetch(window.location.href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                .then(response => response.text())
+                .then(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, "text/html");
+                    let newServerCount = doc.querySelector(".counter").innerText;
+                    document.querySelector(".counter").innerText = newServerCount;
+                });
+        }
+        setInterval(fetchServerCount, 5000); // ✅ Refresh every 5 seconds
+    </script>
+    <script>
+        function fetchOperCount() {
+            fetch(window.location.href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                .then(response => response.text())
+                .then(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, "text/html");
+                    let newOperCount = doc.querySelector(".counter").innerText;
+                    document.querySelector(".counter").innerText = newOperCount;
+                });
+        }
+        setInterval(fetchOperCount, 5000); // ✅ Refresh every 5 seconds
+    </script>
+    <script>
+        function fetchChannelCount() {
+            fetch(window.location.href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                .then(response => response.text())
+                .then(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, "text/html");
+                    let newChannelCount = doc.querySelector(".counter").innerText;
+                    document.querySelector(".counter").innerText = newChannelCount;
+                });
+        }
+        setInterval(fetchChannelCount, 5000); // ✅ Refresh every 5 seconds
+    </script>
+    <style>
+        /* General Styles */
+        #cookie-banner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            background: #0055A4;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            font-family: "Arial", sans-serif;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, left 0.5s ease-in-out;
+        }
+    
+        #cookie-banner.show {
+            display: block;
+            opacity: 1;
+            left: 20px;
+        }
+    
+        /* Headline & Description */
+        .cookie-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+    
+        .cookie-description {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+    
+        /* Button Styles */
+        .cookie-buttons {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+    
+        .cookie-button {
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+            text-align: center;
+            width: 100%;
+        }
+    
+        .cookie-accept {
+            background: #00C851;
+            color: white;
+        }
+    
+        .cookie-accept:hover {
+            background: #009e42;
+        }
+    
+        .cookie-decline {
+            background: #ff4444;
+            color: white;
+        }
+    
+        .cookie-decline:hover {
+            background: #cc0000;
+        }
+    
+        .cookie-settings {
+            background: #ffbb33;
+            color: white;
+        }
+    
+        .cookie-settings:hover {
+            background: #e69500;
+        }
+    
+        /* Modal (Advanced Preferences) */
+        #cookie-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: #0055A4;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            z-index: 1000;
+        }
+    
+        #cookie-modal.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+    </style>
+    
+    <!-- Cookie Banner -->
+    <div id="cookie-banner">
+        <div class="cookie-header">Chaat.site demande votre consentement</div>
+        <p class="cookie-description">Nous utilisons des cookies pour améliorer votre expérience. Vous pouvez accepter tous les cookies ou personnaliser vos préférences.</p>
+        <div class="cookie-buttons">
+            <button id="cookie-accept" class="cookie-button cookie-accept">Accepter</button>
+            <button id="cookie-settings" class="cookie-button cookie-settings">Personnaliser</button>
+            <button id="cookie-decline" class="cookie-button cookie-decline">Refuser</button>
+        </div>
+    </div>
+    
+    <!-- Cookie Settings Modal -->
+    <div id="cookie-modal">
+        <h3>Préférences des cookies</h3>
+        <p>Choisissez les cookies que vous souhaitez autoriser :</p>
+        <label><input type="checkbox" id="cookie-analytics"> Mesure d'audience</label><br>
+        <label><input type="checkbox" id="cookie-functional"> Fonctionnels</label><br>
+        <label><input type="checkbox" id="cookie-advertising"> Publicitaires</label><br><br>
+        <button id="save-cookie-settings" class="cookie-button cookie-accept">Sauvegarder</button>
+    </div>
+    
+    <!-- JavaScript for Cookie Consent -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let banner = document.getElementById("cookie-banner");
+            let modal = document.getElementById("cookie-modal");
+    
+            function showBanner() {
+                banner.classList.add("show");
+            }
+    
+            function hideBanner() {
+                banner.classList.remove("show");
+            }
+    
+            function showModal() {
+                modal.classList.add("show");
+            }
+    
+            function hideModal() {
+                modal.classList.remove("show");
+            }
+    
+            function setCookies(consent, analytics, functional, advertising) {
+                Cookies.set('cookie_consent', consent, { expires: 365, path: '/' });
+                Cookies.set('cookie_analytics', analytics, { expires: 365, path: '/' });
+                Cookies.set('cookie_functional', functional, { expires: 365, path: '/' });
+                Cookies.set('cookie_advertising', advertising, { expires: 365, path: '/' });
+    
+                fetch("/cookie-consent/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `analytics=${analytics}&functional=${functional}&advertising=${advertising}`
+                });
+    
+                hideBanner();
+                hideModal();
+            }
+    
+            if (!Cookies.get("cookie_consent")) {
+                showBanner();
+            }
+    
+            document.getElementById("cookie-accept").addEventListener("click", function() {
+                setCookies("accepted", "yes", "yes", "yes");
+            });
+    
+            document.getElementById("cookie-decline").addEventListener("click", function() {
+                setCookies("declined", "no", "no", "no");
+            });
+    
+            document.getElementById("cookie-settings").addEventListener("click", function() {
+                showModal();
+            });
+    
+            document.getElementById("save-cookie-settings").addEventListener("click", function() {
+                let analytics = document.getElementById("cookie-analytics").checked ? "yes" : "no";
+                let functional = document.getElementById("cookie-functional").checked ? "yes" : "no";
+                let advertising = document.getElementById("cookie-advertising").checked ? "yes" : "no";
+                setCookies("custom", analytics, functional, advertising);
+            });
+        });
+    </script>
+                  
     {% endblock %}
 </body>
 </html>

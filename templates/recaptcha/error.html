@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - reCAPTCHA Verification</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: none;
+        }
+        .card-header {
+            background-color: #292929;
+            border-bottom: none;
+        }
+        .btn-primary {
+            background-color: #bb86fc;
+            border-color: #bb86fc;
+        }
+        .btn-primary:hover {
+            background-color: #9c4dcc;
+            border-color: #9c4dcc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <div class="card shadow">
+            <div class="card-header">
+                <h3>Error - /join #help in IRC, for any asistance.</h3>
+            </div>
+            <div class="card-body">
+                <p>{{ message|default:"An unexpected error occurred." }}</p>
+                <a href="{% url 'recaptcha:verify_session_token' %}" class="btn btn-primary">Try Again</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
