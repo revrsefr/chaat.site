@@ -36,7 +36,7 @@ pycparser==2.22
 PyJWT==2.10.1
 pyOpenSSL==25.0.0
 rcssmin==1.1.2
-requests==2.32.3
+requests==2.32.4
 rjsmin==1.2.2
 service-identity==24.2.0
 sqlparse==0.5.3
