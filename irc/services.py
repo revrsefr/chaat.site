@@ -54,12 +54,12 @@ class AnopeStatsService:
 
         for mode in modes:
             token = str(mode).strip().lower()
-            if token == "secret":
+            if token in {"secret", "private"}:
                 return True
             if token.startswith("+"):
                 # Flag modes are usually grouped like "+nt".
                 flags = token[1:].split()[0] if token[1:] else ""
-                if "s" in flags:
+                if "s" in flags or "p" in flags:
                     return True
         return False
 
