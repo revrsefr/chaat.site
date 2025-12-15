@@ -53,12 +53,14 @@ class AnopeStatsService:
             return False
 
         for mode in modes:
-            token = str(mode).strip().lower()
-            if token in {"secret", "private"}:
+            token_raw = str(mode).strip()
+            token_lower = token_raw.lower()
+            if token_lower in {"secret", "private"}:
                 return True
-            if token.startswith("+"):
+            if token_raw.startswith("+"):
                 # Flag modes are usually grouped like "+nt".
-                flags = token[1:].split()[0] if token[1:] else ""
+                flags = token_raw[1:].split()[0] if token_raw[1:] else ""
+                # Mode letters are case-sensitive on many IRCds: '+p' != '+P'.
                 if "s" in flags or "p" in flags:
                     return True
         return False
@@ -139,7 +141,11 @@ class AnopeStatsService:
             raw = self.rpc.list_channels("full")
             return self._normalize_channels(raw)
 
-        entries = [entry for entry in self._cached("channels.full", fetch, ttl=30) if not entry.get("is_secret")]
+        entries = [
+            entry
+            for entry in self._cached("channels.public.v1", fetch, ttl=30)
+            if not entry.get("is_secret")
+        ]
         if limit is not None:
             return entries[:limit]
         return list(entries)
