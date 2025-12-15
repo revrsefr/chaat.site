@@ -245,6 +245,18 @@
         background: rgba(255, 255, 255, 0.08);
     }
 
+    .badge--success {
+        color: #052413;
+        background: rgba(61, 213, 152, 0.95);
+        box-shadow: 0 10px 25px rgba(61, 213, 152, 0.25);
+    }
+
+    .badge--danger {
+        color: #2a0505;
+        background: rgba(255, 107, 107, 0.95);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.2);
+    }
+
     .server-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -476,10 +488,11 @@
         state.servers.forEach(server => {
             const card = document.createElement('div');
             card.className = 'server-card';
+            const statusClass = server.synced ? 'badge--success' : 'badge--danger';
             card.innerHTML = `
                 <h4>${server.name || 'services'}</h4>
                 <p class="topic">${server.description || '—'}</p>
-                <span class="badge">${server.synced ? 'synced' : 'lagging'}</span>
+                <span class="badge ${statusClass}">${server.synced ? 'synced' : 'lagging'}</span>
             `;
             serverGrid.appendChild(card);
         });
