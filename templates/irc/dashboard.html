@@ -1,39 +1,577 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRC Dashboard</title>
-</head>
-<body>
-    <h1>IRC Network Overview</h1>
+{% extends "main/base.html" %}
+{% load static %}
 
-    <input type="text" id="search" placeholder="Search..." onkeyup="filterList()">
-    <ul id="userList">
-    {% for user in users %}
-        <li>{{ user }}</li>
-    {% endfor %}
-    </ul>
-    <h2>Channels ({{ channels|length }})</h2>
-    <ul>
-        {% for channel in channels %}
-            <li>
-                <strong>{{ channel.name }}</strong> ({{ channel.user_count }} users)
-                <br>
-                <em>Topic:</em> {{ channel.topic.value|default:"No topic set" }}
-            </li>
-        {% empty %}
-            <li>No channels found.</li>
-        {% endfor %}
-    </ul>    
-</body>
+{% block title %}IRC Network{% endblock %}
+
+{% block head %}
+{{ block.super }}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    :root {
+        --ink: #e8f3ff;
+        --muted: rgba(232, 243, 255, 0.65);
+        --accent: #5de0e6;
+        --accent-strong: #f8d66d;
+        --bg: radial-gradient(circle at 5% 20%, rgba(41, 67, 133, 0.55), transparent 45%),
+               radial-gradient(circle at 80% 0%, rgba(93, 224, 230, 0.25), transparent 45%),
+               #050b1a;
+        --panel: rgba(7, 12, 28, 0.85);
+        --panel-line: rgba(255, 255, 255, 0.05);
+        --success: #3dd598;
+        --danger: #ff6b6b;
+    }
+
+    .irc-dashboard {
+        font-family: 'Space Grotesk', 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        padding: 4rem 5vw 6rem;
+    }
+
+    .irc-dashboard h1,
+    .irc-dashboard h2,
+    .irc-dashboard h3,
+    .irc-dashboard h4 {
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 0;
+    }
+
+    .dashboard-hero {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+        align-items: center;
+        margin-bottom: 3rem;
+    }
+
+    .hero-copy p {
+        color: var(--muted);
+        line-height: 1.6;
+        max-width: 52ch;
+    }
+
+    .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.75rem;
+        color: var(--accent);
+        margin-bottom: 0.6rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    .hero-actions a,
+    .hero-actions button {
+        border: none;
+        border-radius: 999px;
+        padding: 0.85rem 1.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .hero-actions a {
+        background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+        color: #03121d;
+        text-decoration: none;
+        box-shadow: 0 12px 30px rgba(93, 224, 230, 0.3);
+    }
+
+    .hero-actions button {
+        background: transparent;
+        border: 1px solid var(--panel-line);
+        color: var(--ink);
+    }
+
+    .hero-actions a:hover,
+    .hero-actions button:hover {
+        transform: translateY(-2px);
+    }
+
+    .status-card {
+        background: var(--panel);
+        border: 1px solid var(--panel-line);
+        border-radius: 1.2rem;
+        padding: 1.8rem;
+        backdrop-filter: blur(18px);
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .status-card span {
+        font-size: 2.25rem;
+        font-weight: 600;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: var(--panel);
+        border: 1px solid var(--panel-line);
+        border-radius: 1.2rem;
+        padding: 1.4rem 1.6rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top, rgba(93, 224, 230, 0.35), transparent 55%);
+        opacity: 0;
+        transition: opacity 300ms ease;
+    }
+
+    .stat-card:hover::after {
+        opacity: 1;
+    }
+
+    .stat-label {
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+    }
+
+    .stat-value {
+        font-size: 2.3rem;
+        font-weight: 600;
+        margin-top: 0.4rem;
+        display: block;
+    }
+
+    .panel {
+        background: var(--panel);
+        border: 1px solid var(--panel-line);
+        border-radius: 1.4rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 25px 65px rgba(0, 4, 17, 0.4);
+    }
+
+    .panel header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .panel header p {
+        color: var(--muted);
+        margin: 0;
+    }
+
+    .channel-controls {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .channel-controls input {
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid transparent;
+        padding: 0.65rem 1.25rem;
+        color: var(--ink);
+        min-width: 200px;
+    }
+
+    .channel-controls input::placeholder {
+        color: rgba(232, 243, 255, 0.5);
+    }
+
+    .channel-table {
+        border-radius: 1rem;
+        border: 1px solid var(--panel-line);
+        overflow: hidden;
+    }
+
+    .channel-table .row {
+        display: grid;
+        grid-template-columns: 2fr 2fr 5fr 1fr;
+        gap: 1rem;
+        padding: 0.9rem 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .channel-table .row.head {
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 0.72rem;
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .channel-table .row:last-child {
+        border-bottom: none;
+    }
+
+    .topic {
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    .modes {
+        color: var(--muted);
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        padding: 0.25rem 0.9rem;
+        font-size: 0.85rem;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .server-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+    }
+
+    .server-card {
+        border: 1px solid var(--panel-line);
+        border-radius: 1rem;
+        padding: 1.1rem 1.25rem;
+    }
+
+    .stacked-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+    }
+
+    .stacked-list li {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+        padding-bottom: 0.45rem;
+    }
+
+    .pill-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .pill-list span {
+        border-radius: 999px;
+        padding: 0.35rem 0.9rem;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 0.85rem;
+    }
+
+    .dashboard-status {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-top: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .irc-dashboard {
+            padding: 3rem 1.5rem;
+        }
+
+        .channel-table .row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="irc-dashboard">
+    <section class="dashboard-hero">
+        <div class="hero-copy">
+            <p class="eyebrow">Chaat.site Network</p>
+            <h1>Live IRC Telemetry</h1>
+            <p>Track channel heat, operator presence, and server health directly from services stream.</p>
+            <div class="hero-actions">
+                <a href="{% url 'webchat' %}" title="Launch KiwiIRC">Open Webchat</a>
+                <button type="button" id="refresh-dashboard">Sync Now</button>
+            </div>
+        </div>
+        <div class="status-card">
+            <p>Last sync</p>
+            <span id="last-sync">--</span>
+            <small id="dashboard-status" class="dashboard-status">Waiting for telemetry…</small>
+        </div>
+    </section>
+
+    <section class="stats-grid" aria-live="polite">
+        <article class="stat-card" data-metric="users">
+            <span class="stat-label">Users</span>
+            <span class="stat-value">--</span>
+        </article>
+        <article class="stat-card" data-metric="channels">
+            <span class="stat-label">Channels</span>
+            <span class="stat-value">--</span>
+        </article>
+        <article class="stat-card" data-metric="servers">
+            <span class="stat-label">Servers</span>
+            <span class="stat-value">--</span>
+        </article>
+        <article class="stat-card" data-metric="operators">
+            <span class="stat-label">Operators</span>
+            <span class="stat-value">--</span>
+        </article>
+    </section>
+
+    <section class="panel">
+        <header>
+            <div>
+                <h2>Active channels</h2>
+                <p>Top rooms ranked by population. Click the refresh control to pull fresh RPC stats on demand.</p>
+            </div>
+            <div class="channel-controls">
+                <input type="search" id="channel-search" placeholder="Filter #channel or topic">
+                <span class="badge"><span id="channel-count">0</span> tracked</span>
+            </div>
+        </header>
+        <div class="channel-table" role="table">
+            <div class="row head" role="row">
+                <span>Channel</span>
+                <span>Modes</span>
+                <span>Topic</span>
+                <span>Users</span>
+            </div>
+            <div id="channel-rows"></div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <header>
+            <div>
+                <h2>Servers</h2>
+                <p>Current uplinks synced via services.</p>
+            </div>
+        </header>
+        <div class="server-grid" id="server-grid"></div>
+    </section>
+
+    <section class="panel">
+        <div class="server-grid">
+            <article>
+                <header>
+                    <h3>Operators on duty</h3>
+                    <p>Derived from <code>rpc_user</code>.</p>
+                </header>
+                <ul class="stacked-list" id="operator-list"></ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Recently seen users</h3>
+                    <p>First 25 entries from <code>anope.listUsers</code>.</p>
+                </header>
+                <div class="pill-list" id="user-pills"></div>
+            </article>
+        </div>
+    </section>
+
+    {{ api_endpoints|json_script:"irc-api-endpoints" }}
+    {{ initial_payload|json_script:"irc-initial-payload" }}
+    {{ api_signature|json_script:"irc-api-signature" }}
+</main>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
 <script>
-    function filterList() {
-        let input = document.getElementById("search").value.toLowerCase();
-        let items = document.querySelectorAll("#userList li");
-        items.forEach(item => {
-            item.style.display = item.textContent.toLowerCase().includes(input) ? "" : "none";
+(() => {
+    const endpoints = JSON.parse(document.getElementById("irc-api-endpoints").textContent);
+    const initialPayload = JSON.parse(document.getElementById("irc-initial-payload").textContent || "{}");
+    const signatureNode = document.getElementById("irc-api-signature");
+    const apiSignature = signatureNode ? JSON.parse(signatureNode.textContent || "null") : null;
+    const state = {
+        overview: initialPayload.overview || null,
+        channels: initialPayload.channels || [],
+        servers: initialPayload.servers || [],
+        users: initialPayload.users || [],
+        operators: initialPayload.operators || [],
+    };
+
+    const statCards = document.querySelectorAll('.stat-card');
+    const channelRows = document.getElementById('channel-rows');
+    const channelCount = document.getElementById('channel-count');
+    const serverGrid = document.getElementById('server-grid');
+    const operatorList = document.getElementById('operator-list');
+    const userPills = document.getElementById('user-pills');
+    const lastSync = document.getElementById('last-sync');
+    const statusLine = document.getElementById('dashboard-status');
+    const searchInput = document.getElementById('channel-search');
+    const refreshButton = document.getElementById('refresh-dashboard');
+
+    const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 0 });
+
+    function updateStats() {
+        if (!state.overview) {
+            statCards.forEach(card => card.querySelector('.stat-value').textContent = '--');
+            return;
+        }
+        statCards.forEach(card => {
+            const metric = card.getAttribute('data-metric');
+            const value = state.overview.counts?.[metric] ?? 0;
+            card.querySelector('.stat-value').textContent = formatter.format(value);
+        });
+        lastSync.textContent = new Date(state.overview.updated_at || Date.now()).toLocaleTimeString();
+    }
+
+    function renderChannels(filter = '') {
+        const query = filter.trim().toLowerCase();
+        const filtered = state.channels.filter(entry => {
+            if (!query) return true;
+            return entry.name?.toLowerCase().includes(query)
+                || (entry.topic_value || '').toLowerCase().includes(query)
+                || (entry.modes_display || '').toLowerCase().includes(query);
+        });
+        channelRows.innerHTML = '';
+        filtered.forEach(entry => {
+            const row = document.createElement('div');
+            row.className = 'row';
+            row.innerHTML = `
+                <strong>${entry.name || ''}</strong>
+                <span class="modes">${entry.modes_display || '—'}</span>
+                <span class="topic">${entry.topic_value || '—'}</span>
+                <span class="badge">${formatter.format(entry.user_count || 0)}</span>
+            `;
+            channelRows.appendChild(row);
+        });
+        channelCount.textContent = filtered.length;
+    }
+
+    function renderServers() {
+        serverGrid.innerHTML = '';
+        state.servers.forEach(server => {
+            const card = document.createElement('div');
+            card.className = 'server-card';
+            card.innerHTML = `
+                <h4>${server.name || 'services'}</h4>
+                <p class="topic">${server.description || '—'}</p>
+                <span class="badge">${server.synced ? 'synced' : 'lagging'}</span>
+            `;
+            serverGrid.appendChild(card);
         });
     }
+
+    function renderOperators() {
+        operatorList.innerHTML = '';
+        if (!state.operators.length) {
+            const empty = document.createElement('li');
+            empty.textContent = 'No operators reported.';
+            operatorList.appendChild(empty);
+            return;
+        }
+        state.operators.forEach(entry => {
+            const row = document.createElement('li');
+            row.innerHTML = `
+                <span>${entry.name || 'oper'}</span>
+                <span class="badge">${entry.opertype?.name || '—'}</span>
+            `;
+            operatorList.appendChild(row);
+        });
+    }
+
+    function renderUsers() {
+        userPills.innerHTML = '';
+        if (!state.users.length) {
+            userPills.innerHTML = '<span>awaiting data…</span>';
+            return;
+        }
+        state.users.forEach(name => {
+            const pill = document.createElement('span');
+            pill.textContent = name;
+            userPills.appendChild(pill);
+        });
+    }
+
+    function setStatus(message, isError = false) {
+        statusLine.textContent = message;
+        statusLine.style.color = isError ? 'var(--danger)' : 'var(--muted)';
+    }
+
+    async function fetchEndpoint(url) {
+        const headers = { 'Accept': 'application/json' };
+        if (apiSignature) {
+            headers['X-Irc-Api-Signature'] = apiSignature;
+        }
+        const response = await fetch(url, { headers, credentials: 'same-origin' });
+        if (!response.ok) {
+            throw new Error(`Request failed (${response.status})`);
+        }
+        return response.json();
+    }
+
+    async function refreshAll() {
+        setStatus('Refreshing…');
+        try {
+            const [overview, channels, servers, users, operators] = await Promise.all([
+                fetchEndpoint(endpoints.overview),
+                fetchEndpoint(endpoints.channels),
+                fetchEndpoint(endpoints.servers),
+                fetchEndpoint(endpoints.users),
+                fetchEndpoint(endpoints.operators),
+            ]);
+            state.overview = overview;
+            state.channels = channels.results || channels;
+            state.servers = servers.results || servers;
+            state.users = users.results || users;
+            state.operators = operators.results || operators;
+            updateStats();
+            renderChannels(searchInput.value || '');
+            renderServers();
+            renderOperators();
+            renderUsers();
+            setStatus('Live data synced.');
+        } catch (error) {
+            console.error(error);
+            setStatus('Anope RPC temporarily unreachable.', true);
+        }
+    }
+
+    // Initial render from server-side payload
+    updateStats();
+    renderChannels();
+    renderServers();
+    renderOperators();
+    renderUsers();
+
+    searchInput?.addEventListener('input', (event) => renderChannels(event.target.value));
+    refreshButton?.addEventListener('click', refreshAll);
+
+    // Auto refresh every 60 seconds
+    setInterval(refreshAll, 60000);
+})();
 </script>
-</html>
+{% endblock %}
