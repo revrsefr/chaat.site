@@ -111,6 +111,8 @@ class ChannelListView(AnopeAPIView):
         except RPCError as exc:
             self._raise_unavailable(exc)
 
+        channels = [entry for entry in channels if not entry.get("is_secret")]
+
         if query:
             channels = [
                 entry

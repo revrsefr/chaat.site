@@ -43,6 +43,26 @@ class AnopeStatsService:
     # Normalizers
     # ------------------------------------------------------------------
 
+    @staticmethod
+    def _is_secret_channel(modes: Any) -> bool:
+        if not modes:
+            return False
+        if isinstance(modes, str):
+            modes = [modes]
+        if not isinstance(modes, list):
+            return False
+
+        for mode in modes:
+            token = str(mode).strip().lower()
+            if token == "secret":
+                return True
+            if token.startswith("+"):
+                # Flag modes are usually grouped like "+nt".
+                flags = token[1:].split()[0] if token[1:] else ""
+                if "s" in flags:
+                    return True
+        return False
+
     def _normalize_channels(self, raw: Any) -> List[Dict[str, Any]]:
         channels: List[Dict[str, Any]] = []
         if isinstance(raw, dict):
@@ -65,6 +85,7 @@ class AnopeStatsService:
                 modes = []
             entry["modes"] = modes
             entry["modes_display"] = " ".join(str(mode) for mode in modes) or None
+            entry["is_secret"] = self._is_secret_channel(modes)
 
             topic = entry.get("topic") or {}
             entry["topic_value"] = topic.get("value")
@@ -118,7 +139,7 @@ class AnopeStatsService:
             raw = self.rpc.list_channels("full")
             return self._normalize_channels(raw)
 
-        entries = self._cached("channels.full", fetch, ttl=30)
+        entries = [entry for entry in self._cached("channels.full", fetch, ttl=30) if not entry.get("is_secret")]
         if limit is not None:
             return entries[:limit]
         return list(entries)
