@@ -9,7 +9,7 @@ charset-normalizer==3.4.1
 constantly==23.10.4
 cryptography==44.0.1
 daphne==4.1.2
-Django==5.1.14
+Django==5.1.15
 django-appconf==1.1.0
 django-compressor==4.5.1
 django-cors-headers==4.6.0
@@ -45,3 +45,7 @@ txaio==23.1.1
 typing_extensions==4.12.2
 urllib3==2.6.0
 zope.interface==7.2
+
+# MySQL driver for Django
+mysqlclient==2.2.6
+PyMySQL==1.1.1
