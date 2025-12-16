@@ -649,6 +649,34 @@
             .replaceAll("'", '&#39;');
     }
 
+    function replaceChildren(parent, ...children) {
+        if (!parent) return;
+        parent.replaceChildren(...children.filter(Boolean));
+    }
+
+    function makeHint(text) {
+        const node = document.createElement('p');
+        node.className = 'empty-hint';
+        node.textContent = text;
+        return node;
+    }
+
+    function makeKv(label, value, { title } = {}) {
+        const dl = document.createElement('dl');
+        dl.className = 'kv';
+
+        const dt = document.createElement('dt');
+        dt.textContent = label;
+
+        const dd = document.createElement('dd');
+        dd.textContent = value;
+        if (title) dd.title = title;
+
+        dl.appendChild(dt);
+        dl.appendChild(dd);
+        return dl;
+    }
+
     function formatUnix(ts) {
         if (!ts) return '—';
         const date = new Date(Number(ts) * 1000);
@@ -699,12 +727,26 @@
         filtered.forEach(entry => {
             const row = document.createElement('div');
             row.className = 'row';
-            row.innerHTML = `
-                <strong>${entry.name || ''}</strong>
-                <span class="modes">${entry.modes_display || '—'}</span>
-                <span class="topic">${entry.topic_value || '—'}</span>
-                <span class="badge">${formatter.format(entry.user_count || 0)}</span>
-            `;
+
+            const nameEl = document.createElement('strong');
+            nameEl.textContent = entry.name || '';
+
+            const modesEl = document.createElement('span');
+            modesEl.className = 'modes';
+            modesEl.textContent = entry.modes_display || '—';
+
+            const topicEl = document.createElement('span');
+            topicEl.className = 'topic';
+            topicEl.textContent = entry.topic_value || '—';
+
+            const usersEl = document.createElement('span');
+            usersEl.className = 'badge';
+            usersEl.textContent = formatter.format(entry.user_count || 0);
+
+            row.appendChild(nameEl);
+            row.appendChild(modesEl);
+            row.appendChild(topicEl);
+            row.appendChild(usersEl);
             channelRows.appendChild(row);
         });
         channelCount.textContent = filtered.length;
@@ -716,11 +758,21 @@
             const card = document.createElement('div');
             card.className = 'server-card';
             const statusClass = server.synced ? 'badge--success' : 'badge--danger';
-            card.innerHTML = `
-                <h4>${server.name || 'services'}</h4>
-                <p class="topic">${server.description || '—'}</p>
-                <span class="badge ${statusClass}">${server.synced ? 'synced' : 'lagging'}</span>
-            `;
+
+            const title = document.createElement('h4');
+            title.textContent = server.name || 'services';
+
+            const description = document.createElement('p');
+            description.className = 'topic';
+            description.textContent = server.description || '—';
+
+            const badge = document.createElement('span');
+            badge.className = `badge ${statusClass}`;
+            badge.textContent = server.synced ? 'synced' : 'lagging';
+
+            card.appendChild(title);
+            card.appendChild(description);
+            card.appendChild(badge);
             serverGrid.appendChild(card);
         });
     }
@@ -735,10 +787,16 @@
         }
         state.operators.forEach(entry => {
             const row = document.createElement('li');
-            row.innerHTML = `
-                <span>${entry.name || 'oper'}</span>
-                <span class="badge">${entry.opertype?.name || '—'}</span>
-            `;
+
+            const nameEl = document.createElement('span');
+            nameEl.textContent = entry.name || 'oper';
+
+            const typeEl = document.createElement('span');
+            typeEl.className = 'badge';
+            typeEl.textContent = entry.opertype?.name || '—';
+
+            row.appendChild(nameEl);
+            row.appendChild(typeEl);
             operatorList.appendChild(row);
         });
     }
@@ -746,7 +804,9 @@
     function renderUsers() {
         userPills.innerHTML = '';
         if (!state.users.length) {
-            userPills.innerHTML = '<span>awaiting data…</span>';
+            const awaiting = document.createElement('span');
+            awaiting.textContent = 'awaiting data…';
+            userPills.appendChild(awaiting);
             return;
         }
 
@@ -766,7 +826,7 @@
         userDetailTitle.textContent = nickname || 'Loading…';
         userDetailSubtitle.textContent = 'Fetching live details from services…';
         userDetailBadges.innerHTML = '';
-        userDetailBody.innerHTML = '<p class="empty-hint">Loading…</p>';
+        replaceChildren(userDetailBody, makeHint('Loading…'));
     }
 
     function setUserDetailEmpty(message) {
@@ -774,7 +834,7 @@
         userDetailTitle.textContent = 'Select a user';
         userDetailSubtitle.textContent = 'Click a nickname to load live details.';
         userDetailBadges.innerHTML = '';
-        userDetailBody.innerHTML = `<p class="empty-hint">${escapeHtml(message)}</p>`;
+        replaceChildren(userDetailBody, makeHint(message));
     }
 
     function renderUserDetail(payload) {
@@ -811,42 +871,27 @@
         const signon = formatUnix(payload?.signon);
         const nickchanged = formatUnix(payload?.nickchanged);
 
-        userDetailBody.innerHTML = `
-            <div class="kv-grid">
-                <dl class="kv">
-                    <dt>Realname</dt>
-                    <dd title="${escapeHtml(realname)}">${escapeHtml(realname)}</dd>
-                </dl>
-                <dl class="kv">
-                    <dt>Server</dt>
-                    <dd title="${escapeHtml(server)}">${escapeHtml(server)}</dd>
-                </dl>
-                <dl class="kv">
-                    <dt>Modes</dt>
-                    <dd title="${escapeHtml(modes)}">${escapeHtml(modes)}</dd>
-                </dl>
-                <dl class="kv">
-                    <dt>Signon</dt>
-                    <dd>${escapeHtml(signon)}</dd>
-                </dl>
-                <dl class="kv">
-                    <dt>Nick changed</dt>
-                    <dd>${escapeHtml(nickchanged)}</dd>
-                </dl>
-                <dl class="kv">
-                    <dt>VHost / VIdent</dt>
-                    <dd title="${escapeHtml((payload?.vident || '') + (payload?.vhost ? '@' + payload.vhost : payload?.vhost || '—'))}">${escapeHtml(payload?.vident || payload?.ident || '—')}@${escapeHtml(payload?.vhost || payload?.chost || payload?.host || '—')}</dd>
-                </dl>
-                <dl class="kv">
-                    <dt>Away</dt>
-                    <dd title="${escapeHtml(payload?.away?.message || '—')}">${escapeHtml(payload?.away?.message || '—')}</dd>
-                </dl>
-                <dl class="kv user-channels">
-                    <dt>Channels (${channels.length})</dt>
-                    <dd>${escapeHtml(channelText)}</dd>
-                </dl>
-            </div>
-        `;
+        const videntOrIdent = payload?.vident || payload?.ident || '—';
+        const vhostOrHost = payload?.vhost || payload?.chost || payload?.host || '—';
+        const vhostDisplay = `${videntOrIdent}@${vhostOrHost}`;
+        const vhostTitle = (payload?.vident || '') + (payload?.vhost ? '@' + payload.vhost : payload?.vhost || '—');
+
+        const grid = document.createElement('div');
+        grid.className = 'kv-grid';
+
+        grid.appendChild(makeKv('Realname', realname, { title: realname }));
+        grid.appendChild(makeKv('Server', server, { title: server }));
+        grid.appendChild(makeKv('Modes', modes, { title: modes }));
+        grid.appendChild(makeKv('Signon', signon));
+        grid.appendChild(makeKv('Nick changed', nickchanged));
+        grid.appendChild(makeKv('VHost / VIdent', vhostDisplay, { title: vhostTitle }));
+        grid.appendChild(makeKv('Away', payload?.away?.message || '—', { title: payload?.away?.message || '—' }));
+
+        const channelsKv = makeKv(`Channels (${channels.length})`, channelText);
+        channelsKv.classList.add('user-channels');
+        grid.appendChild(channelsKv);
+
+        replaceChildren(userDetailBody, grid);
     }
 
     async function fetchUserDetail(nickname) {
@@ -918,7 +963,7 @@
                 selectUser(first);
                 setUserDetailLoading(first);
                 fetchUserDetail(first).then(renderUserDetail).catch(() => {
-                    userDetailBody.innerHTML = '<p class="empty-hint">Unable to load user details.</p>';
+                    replaceChildren(userDetailBody, makeHint('Unable to load user details.'));
                 });
             }
             setStatus('Live data synced.');
@@ -958,7 +1003,7 @@
         fetchUserDetail(nickname)
             .then(renderUserDetail)
             .catch(() => {
-                userDetailBody.innerHTML = '<p class="empty-hint">Unable to load user details right now.</p>';
+                replaceChildren(userDetailBody, makeHint('Unable to load user details right now.'));
             });
     });
 
