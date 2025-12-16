@@ -48,6 +48,10 @@ def dashboard(request):
         "channels": reverse("irc_api_channels"),
         "servers": reverse("irc_api_servers"),
         "users": reverse("irc_api_users"),
+        "user_detail_template": reverse(
+            "irc_api_user_detail",
+            kwargs={"nickname": "__NICK__"},
+        ),
         "operators": reverse("irc_api_operators"),
     }
 

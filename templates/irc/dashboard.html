@@ -291,11 +291,174 @@
         gap: 0.5rem;
     }
 
-    .pill-list span {
+    .pill-list span,
+    .pill-list button {
         border-radius: 999px;
         padding: 0.35rem 0.9rem;
         background: rgba(255, 255, 255, 0.08);
         font-size: 0.85rem;
+    }
+
+    .pill-list button {
+        border: 1px solid transparent;
+        color: var(--ink);
+        cursor: pointer;
+        transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .pill-list button:hover {
+        transform: translateY(-1px);
+        border-color: rgba(93, 224, 230, 0.45);
+        background: rgba(93, 224, 230, 0.14);
+    }
+
+    .pill-list button[aria-pressed="true"] {
+        background: rgba(93, 224, 230, 0.25);
+        border-color: rgba(93, 224, 230, 0.7);
+        box-shadow: 0 12px 28px rgba(93, 224, 230, 0.18);
+    }
+
+    .user-detail-card {
+        border-radius: 1.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(160deg, rgba(93, 224, 230, 0.08), rgba(248, 214, 109, 0.03)) , rgba(7, 12, 28, 0.65);
+        box-shadow: 0 25px 60px rgba(0, 4, 17, 0.35);
+        padding: 1.25rem;
+        backdrop-filter: blur(16px);
+        position: relative;
+        overflow: hidden;
+        min-height: 260px;
+    }
+
+    .user-detail-card::before {
+        content: "";
+        position: absolute;
+        inset: -40% -30% auto;
+        height: 200px;
+        background: radial-gradient(circle at 30% 50%, rgba(93, 224, 230, 0.35), transparent 55%);
+        pointer-events: none;
+        opacity: 0.45;
+    }
+
+    .user-detail-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .user-ident {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        min-width: 0;
+    }
+
+    .user-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        color: #02121a;
+        background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+        box-shadow: 0 16px 36px rgba(93, 224, 230, 0.24);
+        flex: 0 0 auto;
+    }
+
+    .user-titles {
+        min-width: 0;
+    }
+
+    .user-titles h3 {
+        font-size: 1.1rem;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-titles p {
+        margin: 0.2rem 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        justify-content: flex-end;
+    }
+
+    .badge--info {
+        background: rgba(93, 224, 230, 0.18);
+        border: 1px solid rgba(93, 224, 230, 0.35);
+        color: var(--ink);
+    }
+
+    .badge--warn {
+        background: rgba(248, 214, 109, 0.18);
+        border: 1px solid rgba(248, 214, 109, 0.35);
+        color: var(--ink);
+    }
+
+    .kv-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .kv {
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 1rem;
+        padding: 0.85rem 1rem;
+        min-width: 0;
+    }
+
+    .kv dt {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: rgba(232, 243, 255, 0.65);
+    }
+
+    .kv dd {
+        margin: 0.35rem 0 0;
+        font-size: 0.95rem;
+        color: var(--ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-channels {
+        grid-column: 1 / -1;
+    }
+
+    .user-channels dd {
+        white-space: normal;
+        line-height: 1.5;
+        max-height: 5.6em;
+        overflow: auto;
+    }
+
+    .empty-hint {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
     }
 
     .dashboard-status {
@@ -409,6 +572,27 @@
                 </header>
                 <div class="pill-list" id="user-pills"></div>
             </article>
+            <article>
+                <header>
+                    <h3>User details</h3>
+                    <p>Powered by <code>anope.user</code>.</p>
+                </header>
+                <div class="user-detail-card" id="user-detail-card" aria-live="polite">
+                    <div class="user-detail-header">
+                        <div class="user-ident">
+                            <div class="user-avatar" id="user-detail-avatar">?</div>
+                            <div class="user-titles">
+                                <h3 id="user-detail-title">Select a user</h3>
+                                <p id="user-detail-subtitle">Click a nickname to load live details.</p>
+                            </div>
+                        </div>
+                        <div class="user-badges" id="user-detail-badges"></div>
+                    </div>
+                    <div id="user-detail-body">
+                        <p class="empty-hint">Tip: this will show account, hostmask, TLS, and channels.</p>
+                    </div>
+                </div>
+            </article>
         </div>
     </section>
 
@@ -440,12 +624,55 @@
     const serverGrid = document.getElementById('server-grid');
     const operatorList = document.getElementById('operator-list');
     const userPills = document.getElementById('user-pills');
+    const userDetailAvatar = document.getElementById('user-detail-avatar');
+    const userDetailTitle = document.getElementById('user-detail-title');
+    const userDetailSubtitle = document.getElementById('user-detail-subtitle');
+    const userDetailBadges = document.getElementById('user-detail-badges');
+    const userDetailBody = document.getElementById('user-detail-body');
     const lastSync = document.getElementById('last-sync');
     const statusLine = document.getElementById('dashboard-status');
     const searchInput = document.getElementById('channel-search');
     const refreshButton = document.getElementById('refresh-dashboard');
 
     const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 0 });
+
+    const userDetailCache = new Map();
+    const userDetailInflight = new Map();
+    let selectedUser = null;
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
+    function formatUnix(ts) {
+        if (!ts) return '—';
+        const date = new Date(Number(ts) * 1000);
+        if (Number.isNaN(date.getTime())) return '—';
+        return date.toLocaleString();
+    }
+
+    function initialsFromNick(nick) {
+        const clean = String(nick || '').trim();
+        if (!clean) return '?';
+        const parts = clean.split(/[^a-zA-Z0-9]+/).filter(Boolean);
+        const seed = (parts[0] || clean).slice(0, 2);
+        return seed.toUpperCase();
+    }
+
+    function buildUserDetailUrl(nickname) {
+        const template = endpoints.user_detail_template;
+        if (template && template.includes('__NICK__')) {
+            return template.replace('__NICK__', encodeURIComponent(nickname));
+        }
+        // Fallback: append to users endpoint.
+        const base = (endpoints.users || '').replace(/\/?$/, '/');
+        return `${base}${encodeURIComponent(nickname)}/`;
+    }
 
     function updateStats() {
         if (!state.overview) {
@@ -522,10 +749,125 @@
             userPills.innerHTML = '<span>awaiting data…</span>';
             return;
         }
+
         state.users.forEach(name => {
-            const pill = document.createElement('span');
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = 'user-pill';
+            pill.dataset.nick = name;
+            pill.setAttribute('aria-pressed', String(name === selectedUser));
             pill.textContent = name;
             userPills.appendChild(pill);
+        });
+    }
+
+    function setUserDetailLoading(nickname) {
+        userDetailAvatar.textContent = initialsFromNick(nickname);
+        userDetailTitle.textContent = nickname || 'Loading…';
+        userDetailSubtitle.textContent = 'Fetching live details from services…';
+        userDetailBadges.innerHTML = '';
+        userDetailBody.innerHTML = '<p class="empty-hint">Loading…</p>';
+    }
+
+    function setUserDetailEmpty(message) {
+        userDetailAvatar.textContent = '?';
+        userDetailTitle.textContent = 'Select a user';
+        userDetailSubtitle.textContent = 'Click a nickname to load live details.';
+        userDetailBadges.innerHTML = '';
+        userDetailBody.innerHTML = `<p class="empty-hint">${escapeHtml(message)}</p>`;
+    }
+
+    function renderUserDetail(payload) {
+        const nick = payload?.nick || selectedUser || 'user';
+        userDetailAvatar.textContent = initialsFromNick(nick);
+        userDetailTitle.textContent = nick;
+
+        const ident = payload?.ident || '—';
+        const host = payload?.vhost || payload?.chost || payload?.host || '—';
+        const displayHost = ident !== '—' && host !== '—' ? `${ident}@${host}` : host;
+        userDetailSubtitle.textContent = displayHost;
+
+        const badges = [];
+        if (payload?.tls === true) badges.push({ label: 'TLS', cls: 'badge--success' });
+        if (payload?.tls === false) badges.push({ label: 'No TLS', cls: 'badge--danger' });
+        if (payload?.account?.display) badges.push({ label: `Account: ${payload.account.display}`, cls: 'badge--info' });
+        if (payload?.account?.opertype) badges.push({ label: payload.account.opertype, cls: 'badge--warn' });
+        if (payload?.away?.message) badges.push({ label: 'Away', cls: 'badge--warn' });
+
+        userDetailBadges.innerHTML = '';
+        badges.slice(0, 4).forEach(entry => {
+            const badge = document.createElement('span');
+            badge.className = `badge ${entry.cls || ''}`.trim();
+            badge.textContent = entry.label;
+            userDetailBadges.appendChild(badge);
+        });
+
+        const channels = Array.isArray(payload?.channels) ? payload.channels : [];
+        const channelText = channels.length ? channels.join(' ') : '—';
+
+        const realname = payload?.real || '—';
+        const server = payload?.server || '—';
+        const modes = Array.isArray(payload?.modes) ? payload.modes.join(' ') : (payload?.modes || '—');
+        const signon = formatUnix(payload?.signon);
+        const nickchanged = formatUnix(payload?.nickchanged);
+
+        userDetailBody.innerHTML = `
+            <div class="kv-grid">
+                <dl class="kv">
+                    <dt>Realname</dt>
+                    <dd title="${escapeHtml(realname)}">${escapeHtml(realname)}</dd>
+                </dl>
+                <dl class="kv">
+                    <dt>Server</dt>
+                    <dd title="${escapeHtml(server)}">${escapeHtml(server)}</dd>
+                </dl>
+                <dl class="kv">
+                    <dt>Modes</dt>
+                    <dd title="${escapeHtml(modes)}">${escapeHtml(modes)}</dd>
+                </dl>
+                <dl class="kv">
+                    <dt>Signon</dt>
+                    <dd>${escapeHtml(signon)}</dd>
+                </dl>
+                <dl class="kv">
+                    <dt>Nick changed</dt>
+                    <dd>${escapeHtml(nickchanged)}</dd>
+                </dl>
+                <dl class="kv">
+                    <dt>VHost / VIdent</dt>
+                    <dd title="${escapeHtml((payload?.vident || '') + (payload?.vhost ? '@' + payload.vhost : payload?.vhost || '—'))}">${escapeHtml(payload?.vident || payload?.ident || '—')}@${escapeHtml(payload?.vhost || payload?.chost || payload?.host || '—')}</dd>
+                </dl>
+                <dl class="kv">
+                    <dt>Away</dt>
+                    <dd title="${escapeHtml(payload?.away?.message || '—')}">${escapeHtml(payload?.away?.message || '—')}</dd>
+                </dl>
+                <dl class="kv user-channels">
+                    <dt>Channels (${channels.length})</dt>
+                    <dd>${escapeHtml(channelText)}</dd>
+                </dl>
+            </div>
+        `;
+    }
+
+    async function fetchUserDetail(nickname) {
+        if (!nickname) return null;
+        if (userDetailCache.has(nickname)) return userDetailCache.get(nickname);
+        if (userDetailInflight.has(nickname)) return userDetailInflight.get(nickname);
+
+        const promise = (async () => {
+            const payload = await fetchEndpoint(buildUserDetailUrl(nickname));
+            userDetailCache.set(nickname, payload);
+            return payload;
+        })().finally(() => userDetailInflight.delete(nickname));
+
+        userDetailInflight.set(nickname, promise);
+        return promise;
+    }
+
+    function selectUser(nickname) {
+        selectedUser = nickname;
+        document.querySelectorAll('.user-pill').forEach(btn => {
+            btn.setAttribute('aria-pressed', String(btn.dataset.nick === selectedUser));
         });
     }
 
@@ -566,6 +908,19 @@
             renderServers();
             renderOperators();
             renderUsers();
+
+            if (selectedUser && state.users.includes(selectedUser)) {
+                // Keep user detail fresh after refresh.
+                fetchUserDetail(selectedUser).then(renderUserDetail).catch(() => {});
+            } else if (!selectedUser && state.users.length) {
+                // Auto-select the first user for a "live" feel.
+                const first = state.users[0];
+                selectUser(first);
+                setUserDetailLoading(first);
+                fetchUserDetail(first).then(renderUserDetail).catch(() => {
+                    userDetailBody.innerHTML = '<p class="empty-hint">Unable to load user details.</p>';
+                });
+            }
             setStatus('Live data synced.');
         } catch (error) {
             console.error(error);
@@ -580,8 +935,32 @@
     renderOperators();
     renderUsers();
 
+    if (state.users.length) {
+        const first = state.users[0];
+        selectUser(first);
+        setUserDetailLoading(first);
+        fetchUserDetail(first)
+            .then(renderUserDetail)
+            .catch(() => setUserDetailEmpty('Anope RPC temporarily unreachable.'));
+    } else {
+        setUserDetailEmpty('Awaiting user list…');
+    }
+
     searchInput?.addEventListener('input', (event) => renderChannels(event.target.value));
     refreshButton?.addEventListener('click', refreshAll);
+
+    userPills?.addEventListener('click', (event) => {
+        const button = event.target?.closest?.('button.user-pill');
+        const nickname = button?.dataset?.nick;
+        if (!nickname) return;
+        selectUser(nickname);
+        setUserDetailLoading(nickname);
+        fetchUserDetail(nickname)
+            .then(renderUserDetail)
+            .catch(() => {
+                userDetailBody.innerHTML = '<p class="empty-hint">Unable to load user details right now.</p>';
+            });
+    });
 
     // Auto refresh every 60 seconds
     setInterval(refreshAll, 60000);
