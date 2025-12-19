@@ -15,6 +15,7 @@ from django.contrib.auth.hashers import make_password
 import secrets
 
 from .models import IrcAppPassword
+from .utils import issue_email_verification_code, verify_email_code
 
 factory = APIRequestFactory()
 CustomUser = get_user_model()
@@ -29,8 +30,8 @@ def register_view(request):
         data = response.data
 
         if response.status_code == 201:
-            messages.success(request, "Account created successfully! You can now log in.")
-            return redirect("login")
+            messages.success(request, "Compte créé. Un code de confirmation a été envoyé à votre email.")
+            return redirect("verify_email")
         else:
             messages.error(request, data.get("error", "An error occurred during registration."))
 
@@ -104,14 +105,43 @@ def change_email_view(request):
 # ✅ Logout View (Clears JWT Tokens)
 @login_required
 def logout_view(request):
+    # Clear any app-level tokens we stored in the session.
     request.session.pop("access_token", None)
     request.session.pop("refresh_token", None)
+
+    # IMPORTANT: also end the Django authenticated session.
+    logout(request)
+
     messages.success(request, "You have been logged out.")
     return redirect("login")
 
 # ✅ Render Forgot Password Page
 def forgot_password_view(request):
     return render(request, "accounts/forgot_password.html")
+
+
+def verify_email_view(request):
+    """Renders the email verification page and validates codes."""
+
+    if request.method == "POST":
+        email = (request.POST.get("email") or "").strip()
+        code = (request.POST.get("code") or "").strip()
+
+        user = CustomUser.objects.filter(email__iexact=email).first()
+        if not user:
+            messages.error(request, "Email inconnu.", extra_tags="emailverify")
+            return render(request, "accounts/verify_email.html", {"email": email})
+
+        ok, err = verify_email_code(user, code)
+        if not ok:
+            messages.error(request, err or "Code invalide.", extra_tags="emailverify")
+            return render(request, "accounts/verify_email.html", {"email": email})
+
+        messages.success(request, "Email confirmé. Vous pouvez vous connecter.", extra_tags="emailverify")
+        return redirect("login")
+
+    email = (request.GET.get("email") or "").strip()
+    return render(request, "accounts/verify_email.html", {"email": email})
 
 @login_required
 def profile_view(request, username):
@@ -203,12 +233,9 @@ def revoke_irc_app_password_view(request, username):
     return redirect("profile", username=user_profile.username)
 
 @login_required
-def account_settings_view(request, username):
-    user_profile = get_object_or_404(CustomUser, username=username)
-    if request.user != user_profile:
-        messages.error(request, "Vous n'avez pas la permission d'accéder à ce profil.")
-        return redirect("home")  # Redirect unauthorized users
-    return render(request, "accounts/profile.html")
+def account_settings_view(request):
+    # Placeholder: redirect to profile until a dedicated settings page exists.
+    return redirect("profile", username=request.user.username)
 
 @login_required
 def delete_account_view(request):

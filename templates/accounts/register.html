@@ -149,7 +149,8 @@
                 grecaptcha.reset();
             } else {
                 document.getElementById("register-message").innerHTML = `<div class="alert alert-success">${data.message}</div>`;
-                setTimeout(() => { window.location.href = "/accounts/login/"; }, 2000);
+                const email = encodeURIComponent(document.getElementById("email").value || "");
+                setTimeout(() => { window.location.href = `/accounts/verify-email/?email=${email}`; }, 1200);
             }
         })
         .catch(error => {

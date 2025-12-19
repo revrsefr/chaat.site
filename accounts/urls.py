@@ -3,16 +3,18 @@ from .views import (
     register_view, login_view, logout_view, forgot_password_view,
     change_password_view, change_email_view, profile_view,  account_settings_view,
     delete_account_view,
+    verify_email_view,
     generate_irc_app_password_view,
     revoke_irc_app_password_view,
 )
-from .api import register, login_api, login_token, change_password, change_email
+from .api import register, login_api, login_token, change_password, change_email, verify_email, resend_email_verification
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
+    path("verify-email/", verify_email_view, name="verify_email"),
     path("forgot-password/", forgot_password_view, name="forgot_password"),
     path("change-password/", change_password_view, name="change_password"),
     path("change-email/", change_email_view, name="change_email"),
@@ -26,6 +28,8 @@ urlpatterns = [
     # ✅ API Endpoints
     path("api/register/", register, name="api_register"),
     path("api/login/", login_api, name="api_login"),
+    path("api/verify-email/", verify_email, name="api_verify_email"),
+    path("api/resend-verify-email/", resend_email_verification, name="api_resend_verify_email"),
     path("api/login_token/", login_token, name="api_login_token"),
     path("api/change-password/", change_password, name="api_change_password"),
     path("api/change-email/", change_email, name="api_change_email"),

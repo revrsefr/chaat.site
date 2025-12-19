@@ -14,6 +14,12 @@ class CustomUser(AbstractUser):
     last_login = models.DateTimeField(default=now, null=False, blank=False)
     public = models.BooleanField(default=True)  
 
+    # Email verification
+    email_verified = models.BooleanField(default=False)
+    email_verification_code_hash = models.CharField(max_length=256, blank=True, default="")
+    email_verification_expires_at = models.DateTimeField(null=True, blank=True)
+    email_verification_sent_at = models.DateTimeField(null=True, blank=True)
+
     # ✅ Fix conflicts with Django auth.User model
     groups = models.ManyToManyField(
         "auth.Group",

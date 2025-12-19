@@ -1,0 +1,146 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Confirmer l'email" %} - {{ site_brand.title_suffix }}{% endblock %}
+
+{% block content %}
+<section class="log-reg">
+    <div class="top-menu-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-7"></div>
+                <div class="col-lg-4 col-5">
+                    <a href="{% url 'main:home' %}" class="backto-home">
+                        <i class="fas fa-chevron-left"></i> {% trans "home" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="image image-log"></div>
+            <div class="col-lg-7">
+                <div class="log-reg-inner">
+                    <div class="section-header inloginp">
+                        <h2 class="title">{% trans "Confirmez votre email" %}</h2>
+                    </div>
+
+                    <div class="main-content inloginp">
+                        <p style="margin-bottom: 14px; opacity: 0.9;">
+                            {% trans "Nous vous avons envoyé un code à 6 chiffres. Entrez-le ci-dessous pour activer votre compte." %}
+                        </p>
+
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if 'emailverify' in message.tags %}
+                                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                                        {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                        <form id="verify-email-form" method="POST" action="{% url 'verify_email' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>{% trans "Email" %}</label>
+                                <input type="email" class="my-form-control" name="email" id="verify-email" value="{{ email|default_if_none:'' }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>{% trans "Code" %}</label>
+                                <input type="text" class="my-form-control" name="code" id="verify-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" required>
+                            </div>
+
+                            <button type="submit" class="default-btn reverse"><span>{% trans "Confirmer" %}</span></button>
+                            <button type="button" id="resend-code" class="default-btn" style="margin-left: 10px;"><span>{% trans "Renvoyer le code" %}</span></button>
+
+                            <div id="verify-email-message" style="margin-top: 12px;"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function initVerifyEmail() {
+    const form = document.getElementById('verify-email-form');
+    const resendBtn = document.getElementById('resend-code');
+    const emailEl = document.getElementById('verify-email');
+    const codeEl = document.getElementById('verify-code');
+    const msgEl = document.getElementById('verify-email-message');
+
+    const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    const csrfToken = csrfInput ? csrfInput.value : null;
+
+    const show = (html) => { if (msgEl) msgEl.innerHTML = html; };
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            // Let the normal POST work as fallback for no-JS.
+            e.preventDefault();
+
+            show('<div class="alert alert-info">Vérification…</div>');
+            try {
+                const res = await fetch('{% url "api_verify_email" %}', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrfToken || '',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: (emailEl?.value || '').trim(),
+                        code: (codeEl?.value || '').trim(),
+                    }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok) {
+                    show('<div class="alert alert-success">' + (data.message || 'Email confirmé.') + '</div>');
+                    setTimeout(() => { window.location.href = '{% url "login" %}'; }, 1200);
+                } else {
+                    show('<div class="alert alert-danger">' + (data.error || 'Impossible de confirmer.') + '</div>');
+                }
+            } catch (err) {
+                console.error(err);
+                show('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+            }
+        });
+    }
+
+    if (resendBtn) {
+        resendBtn.addEventListener('click', async () => {
+            show('<div class="alert alert-info">Envoi…</div>');
+            try {
+                const res = await fetch('{% url "api_resend_verify_email" %}', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrfToken || '',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: (emailEl?.value || '').trim() }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok) {
+                    show('<div class="alert alert-success">' + (data.message || 'Code envoyé.') + '</div>');
+                } else {
+                    show('<div class="alert alert-danger">' + (data.error || 'Impossible d\'envoyer le code.') + '</div>');
+                }
+            } catch (err) {
+                console.error(err);
+                show('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+            }
+        });
+    }
+})();
+</script>
+{% endblock %}

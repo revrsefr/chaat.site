@@ -2,6 +2,51 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="{% get_current_language as LANGUAGE_CODE %}">
+<style>
+    /* Header account dropdown: keep it theme-consistent (scoped, minimal). */
+    .header-account-dropdown .dropdown-menu {
+        background: #213366;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        padding: 10px;
+        min-width: 240px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    }
+    .header-account-dropdown .dropdown-item {
+        color: #fff;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-transform: none;
+    }
+    .header-account-dropdown .dropdown-item:hover,
+    .header-account-dropdown .dropdown-item:focus {
+        background: rgba(255, 255, 255, 0.08);
+        color: #f24570;
+    }
+    .header-account-dropdown .dropdown-divider {
+        border-top-color: rgba(255, 255, 255, 0.14);
+        margin: 8px 0;
+    }
+    .header-account-dropdown .dropdown-item i {
+        font-size: 1.05em;
+        line-height: 1;
+    }
+
+    /* Hide dropdown caret unless interacting (hover/focus/open). */
+    .header-account-dropdown .dropdown-toggle::after {
+        opacity: 0;
+        transition: opacity 150ms ease;
+    }
+    .header-account-dropdown:hover .dropdown-toggle::after,
+    .header-account-dropdown .dropdown-toggle:focus-visible::after,
+    .header-account-dropdown .dropdown-toggle[aria-expanded="true"]::after {
+        opacity: 1;
+    }
+</style>
 <header class="header header--style2" id="navbar">
     <div class="header__top d-none d-lg-block">
         <div class="container">
@@ -63,8 +108,51 @@
                         </ul>
                     </div>
                     <ul class="button-group">
-                        <li><a href="{% url 'login' %}" class="default-btn login"><i class="fa-solid fa-user"></i> <span>{% trans "S'identifier" %}</span> </a></li>
-                        <li><a href="{% url 'register' %}" class="default-btn signup"><i class="fa-solid fa-users"></i> <span>{% trans "Créer un compte" %}</span> </a></li>
+                        {% if request.user.is_authenticated %}
+                            <li class="dropdown header-account-dropdown">
+                                <a
+                                    href="#"
+                                    class="default-btn login dropdown-toggle"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <i class="bi bi-person-circle"></i>
+                                    <span>{% blocktrans with username=request.user.username %}Compte : {{ username }}{% endblocktrans %}</span>
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'profile' username=request.user.username %}">
+                                            <i class="bi bi-person"></i>
+                                            {% trans "Mon profil" %}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'account_settings' %}">
+                                            <i class="bi bi-gear"></i>
+                                            {% trans "Paramètres du compte" %}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'change_password' %}">
+                                            <i class="bi bi-key"></i>
+                                            {% trans "Modifier le mot de passe" %}
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'logout' %}">
+                                            <i class="bi bi-box-arrow-right"></i>
+                                            {% trans "Déconnexion" %}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}" class="default-btn login"><i class="fa-solid fa-user"></i> <span>{% trans "S'identifier" %}</span> </a></li>
+                            <li><a href="{% url 'register' %}" class="default-btn signup"><i class="fa-solid fa-users"></i> <span>{% trans "Créer un compte" %}</span> </a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
