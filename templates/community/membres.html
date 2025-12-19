@@ -1,5 +1,6 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% load querystring %}
 
 {% block title %}Membres - {{ site_brand.title_suffix }}{% endblock %}
 
@@ -21,7 +22,7 @@
 <!-- scrollToTop ending here -->
 
  <!-- ================> Page Header section start here <================== -->
- <div class="pageheader bg_img" style="background-image: url(static/images/bg-img/pageheader.jpg);">
+ <div class="pageheader bg_img" style="background-image: url('{% static "images/bg-img/pageheader.jpg" %}');">
     <div class="container">
         <div class="pageheader__content text-center">
             <h2>La famille TChatZone</h2>
@@ -56,7 +57,7 @@
                     <div class="member__info--customselect right w-100">
                         <div class="default-btn"><span>Order By:</span></div>
                         <div class="banner__inputlist">
-                            <select id="order-by" onchange="window.location.href='?order=' + this.value">
+                            <select id="order-by">
                                 <option value="last_active" {% if order == "last_active" %}selected{% endif %}>Last Active</option>
                                 <option value="oldest" {% if order == "oldest" %}selected{% endif %}>Oldest</option>
                                 <option value="popular" {% if order == "popular" %}selected{% endif %}>Popular</option>
@@ -72,7 +73,7 @@
                 <div class="member__item">
                     <div class="member__inner">
                         <div class="member__thumb">
-                            <img src="{{ member.avatar.url }}" alt="{{ member.username }}">
+                            <img src="{{ member.avatar_url }}" alt="{{ member.username }}">
                             <span class="member__activity 
                                 {% if member.last_login and member.last_login > active_threshold %} online 
                                 {% else %} member__activity--ofline 
@@ -80,14 +81,10 @@
                             </span>
                         </div>
                         <div class="member__content">
-                            <a href="{% url 'profile' username=member.username %}"><h5>{{ member.username }}</h5></a>
+                            <a href="{% url 'member_profile' username=member.username %}"><h5>{{ member.username }}</h5></a>
                             <p>
                                 {% if member.last_login %}
-                                    {% if member.last_login > now %}
-                                        Active
-                                    {% else %}
-                                        {{ member.last_login|timesince }} ago
-                                    {% endif %}
+                                    {{ member.last_login|timesince }} ago
                                 {% else %}
                                     Inactive
                                 {% endif %}
@@ -108,17 +105,17 @@
                 <div class="member__pagination--right">
                     <ul class="default-pagination">
                         {% if members.has_previous %}
-                            <li><a href="?page={{ members.previous_page_number }}"><i class="fas fa-chevron-left"></i></a></li>
+                            <li><a href="?{% qs page=members.previous_page_number %}"><i class="fas fa-chevron-left"></i></a></li>
                         {% endif %}
                         
                         {% for num in members.paginator.page_range %}
                             <li>
-                                <a href="?page={{ num }}" class="{% if num == members.number %}active{% endif %}">{{ num|stringformat:"02d" }}</a>
+                                <a href="?{% qs page=num %}" class="{% if num == members.number %}active{% endif %}">{{ num|stringformat:"02d" }}</a>
                             </li>
                         {% endfor %}
                         
                         {% if members.has_next %}
-                            <li><a href="?page={{ members.next_page_number }}"><i class="fas fa-chevron-right"></i></a></li>
+                            <li><a href="?{% qs page=members.next_page_number %}"><i class="fas fa-chevron-right"></i></a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -145,9 +142,9 @@
                                 <div class="banner__inputlist">
                                     <select name="gender">
                                         <option value="">Select Gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="others">Others</option>
+                                        {% for value,label in gender_choices %}
+                                            <option value="{{ value }}" {% if request.GET.gender == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
@@ -157,8 +154,9 @@
                                     <div class="col-6">
                                         <div class="banner__inputlist">
                                             <select name="age_min">
+                                                <option value="">Min</option>
                                                 {% for age in ages %}
-                                                    <option value="{{ age }}">{{ age }}</option>
+                                                    <option value="{{ age }}" {% if request.GET.age_min == age|stringformat:"s" %}selected{% endif %}>{{ age }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -166,8 +164,9 @@
                                     <div class="col-6">
                                         <div class="banner__inputlist">
                                             <select name="age_max">
+                                                <option value="">Max</option>
                                                 {% for age in ages %}
-                                                    <option value="{{ age }}">{{ age }}</option>
+                                                    <option value="{{ age }}" {% if request.GET.age_max == age|stringformat:"s" %}selected{% endif %}>{{ age }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -177,12 +176,7 @@
                             <div class="col">
                                 <label>Country</label>
                                 <div class="banner__inputlist">
-                                    <select name="country">
-                                        <option value="">Select Country</option>
-                                        <option value="Bangladesh">Bangladesh</option>
-                                        <option value="USA">USA</option>
-                                        <option value="UK">UK</option>
-                                    </select>
+                                    <input type="text" name="country" placeholder="Country / City" value="{{ request.GET.country|default:'' }}">
                                 </div>
                             </div>
                             <div class="col">
@@ -196,4 +190,20 @@
     </div>
 </div>
 <!-- ✅ Modal end -->
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    (function () {
+        const select = document.getElementById('order-by');
+        if (!select) return;
+        select.addEventListener('change', function () {
+            const params = new URLSearchParams(window.location.search);
+            params.set('order', this.value);
+            params.delete('page');
+            window.location.search = params.toString();
+        });
+    })();
+</script>
 {% endblock %}

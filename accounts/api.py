@@ -23,7 +23,7 @@ from django.utils import timezone
 from datetime import timedelta
 import jwt
 
-from accounts.models import IrcAppPassword
+from accounts.models import CustomUser, IrcAppPassword
 from accounts.tokens import get_tokens_for_user
 from accounts.utils import issue_email_verification_code, verify_email_code
 

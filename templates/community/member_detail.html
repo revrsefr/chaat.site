@@ -1,0 +1,300 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}{{ member.username }} - Communauté - {{ site_brand.title_suffix }}{% endblock %}
+
+{% block content %}
+<!-- preloader start here -->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="preloader-icon">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<!-- preloader ending here -->
+
+<!-- scrollToTop start here -->
+<a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
+<!-- scrollToTop ending here -->
+
+<!-- ================> Page Header section start here <================== -->
+<div class="pageheader bg_img" style="background-image: url('{% static "images/bg-img/pageheader.jpg" %}');">
+    <div class="container">
+        <div class="pageheader__content text-center">
+            <h2>{{ member.username }}</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="{% url 'main:home' %}">home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'community_membres' %}">Communauté</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profil</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- ================> Page Header section end here <================== -->
+
+<div class="group group--single padding-bottom">
+    <div class="group__top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 d-none d-xl-block"></div>
+                <div class="col-xl-9">
+                    <ul class="nav nav-tabs" id="memberTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-activity" data-bs-toggle="tab" data-bs-target="#pane-activity" type="button" role="tab" aria-controls="pane-activity" aria-selected="true">
+                                <i class="fa-solid fa-house"></i> Activité
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-profile" data-bs-toggle="tab" data-bs-target="#pane-profile" type="button" role="tab" aria-controls="pane-profile" aria-selected="false">
+                                <i class="fa-solid fa-users"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-sites" data-bs-toggle="tab" data-bs-target="#pane-sites" type="button" role="tab" aria-controls="pane-sites" aria-selected="false">
+                                <i class="fa-solid fa-link"></i> Sites
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-media" data-bs-toggle="tab" data-bs-target="#pane-media" type="button" role="tab" aria-controls="pane-media" aria-selected="false">
+                                <i class="fa-solid fa-photo-film"></i> Media
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="group__bottom">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-xl-6 order-xl-1">
+                    <div class="group__bottom--left">
+                        <div class="tab-content" id="memberTabContent">
+                            <div class="tab-pane fade show active" id="pane-activity" role="tabpanel" aria-labelledby="tab-activity">
+                                <div class="group__bottom--head bg-white mb-4 border-0">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" type="button">Publications</button>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="group__bottom--area bg-white p-4">
+                                    {% if recent_posts %}
+                                        <div class="list-group">
+                                            {% for post in recent_posts %}
+                                                <a class="list-group-item list-group-item-action" href="{% url 'blog:blog_detail' slug=post.slug %}">
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        <h6 class="mb-1">{{ post.title }}</h6>
+                                                        <small>{{ post.created_at }}</small>
+                                                    </div>
+                                                    <small>Voir l’article</small>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p class="mb-0" style="opacity: 0.8;">Aucune activité publique pour le moment.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="pane-profile" role="tabpanel" aria-labelledby="tab-profile">
+                                <div class="info">
+                                    <div class="info-card mb-4">
+                                        <div class="info-card-title"><h6>Infos</h6></div>
+                                        <div class="info-card-content">
+                                            <ul class="info-list">
+                                                <li>
+                                                    <span class="info-name">Nom d’utilisateur</span>
+                                                    <span class="info-details">{{ member.username }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-name">Genre</span>
+                                                    <span class="info-details">{{ member.get_gender_display }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-name">Âge</span>
+                                                    <span class="info-details">{% if member_age_years %}{{ member_age_years }}{% else %}-{% endif %}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-name">Ville</span>
+                                                    <span class="info-details">{% if member.city %}{{ member.city }}{% else %}-{% endif %}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-name">Inscription</span>
+                                                    <span class="info-details">{{ member.date_joined|date:"Y-m-d" }}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-name">Dernière activité</span>
+                                                    <span class="info-details">
+                                                        {% if member.last_login %}
+                                                            {{ member.last_login|timesince }} ago
+                                                        {% else %}
+                                                            -
+                                                        {% endif %}
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-name">Email vérifié</span>
+                                                    <span class="info-details">{% if member.email_verified %}Oui{% else %}Non{% endif %}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-card">
+                                        <div class="info-card-title"><h6>À propos</h6></div>
+                                        <div class="info-card-content">
+                                            {% if member.description %}
+                                                <p class="mb-0">{{ member.description }}</p>
+                                            {% else %}
+                                                <p class="mb-0" style="opacity: 0.8;">Aucune description.</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="pane-sites" role="tabpanel" aria-labelledby="tab-sites">
+                                <div class="site">
+                                    <div class="info-card">
+                                        <div class="info-card-title"><h6>Liens</h6></div>
+                                        <div class="info-card-content">
+                                            <p class="mb-0" style="opacity: 0.8;">Aucun lien public pour le moment.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="pane-media" role="tabpanel" aria-labelledby="tab-media">
+                                <div class="group__bottom--body bg-white p-4">
+                                    <h6 class="mb-3">Dernières images</h6>
+                                    <div class="row g-2">
+                                        {% if recent_media_posts %}
+                                            {% for post in recent_media_posts %}
+                                                <div class="col-4">
+                                                    <a href="{% url 'blog:blog_detail' slug=post.slug %}" title="{{ post.title }}">
+                                                        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px;">
+                                                    </a>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="col-12">
+                                                <p class="mb-0" style="opacity: 0.8;">Aucun média pour le moment.</p>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 order-xl-0">
+                    <div class="group__bottom--center">
+                        <div class="story__item style2">
+                            <div class="story__inner">
+                                <div class="story__thumb position-relative">
+                                    <img src="{{ member.avatar_url }}" alt="{{ member.username }}">
+                                    <span class="member__activity {% if member.last_login and member.last_login > active_threshold %}online{% else %}member__activity--ofline{% endif %}"></span>
+                                </div>
+                                <div class="story__content px-0 pb-0">
+                                    <h4>{{ member.username }}</h4>
+                                    <div class="story__content--content mb-2 pb-3">
+                                        <p>
+                                            <i class="fa-solid fa-clock"></i>
+                                            {% if member.last_login %}Active {{ member.last_login|timesince }} ago{% else %}Inactive{% endif %}
+                                        </p>
+                                    </div>
+                                    {% if member.description %}
+                                        <p class="mb-2">{{ member.description|truncatechars:140 }}</p>
+                                    {% else %}
+                                        <p class="mb-2" style="opacity: 0.8;">Aucune bio.</p>
+                                    {% endif %}
+
+                                    <div class="story__content--author mt-3 pb-2">
+                                        <h6 class="d-block w-100 mb-3">Photos récentes</h6>
+                                        <div class="row g-2">
+                                            {% for post in recent_media_posts %}
+                                                <div class="col-4">
+                                                    <a href="{% url 'blog:blog_detail' slug=post.slug %}">
+                                                        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100%; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                    </a>
+                                                </div>
+                                            {% empty %}
+                                                <div class="col-12"><p class="mb-0" style="opacity: 0.8;">Aucune photo.</p></div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 order-xl-2">
+                    <div class="group__bottom--right">
+                        <div class="active-member bg-white mb-4">
+                            <div class="modal-header">
+                                <h6>Membres</h6>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="newest-tab" data-bs-toggle="tab" data-bs-target="#newest" type="button" role="tab" aria-controls="newest" aria-selected="true">Nouveaux</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="popular-tab" data-bs-toggle="tab" data-bs-target="#popular" type="button" role="tab" aria-controls="popular" aria-selected="false">Populaires</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="modal-body group__bottom--body">
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="newest" role="tabpanel" aria-labelledby="newest-tab">
+                                        <ul>
+                                            {% for u in newest_members %}
+                                                <li>
+                                                    <div class="d-flex align-items-center" style="gap: 10px;">
+                                                        <img src="{{ u.avatar_url }}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;">
+                                                        <div>
+                                                            <a href="{% url 'member_profile' username=u.username %}"><strong>{{ u.username }}</strong></a>
+                                                            <div style="font-size: 12px; opacity: .8;">{% if u.last_login %}{{ u.last_login|timesince }} ago{% else %}Inactive{% endif %}</div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            {% empty %}
+                                                <li><span style="opacity: 0.8;">Aucun membre.</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" id="popular" role="tabpanel" aria-labelledby="popular-tab">
+                                        <ul>
+                                            {% for u in popular_members %}
+                                                <li>
+                                                    <div class="d-flex align-items-center" style="gap: 10px;">
+                                                        <img src="{{ u.avatar_url }}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;">
+                                                        <div>
+                                                            <a href="{% url 'member_profile' username=u.username %}"><strong>{{ u.username }}</strong></a>
+                                                            <div style="font-size: 12px; opacity: .8;">{% if u.last_login %}{{ u.last_login|timesince }} ago{% else %}Inactive{% endif %}</div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            {% empty %}
+                                                <li><span style="opacity: 0.8;">Aucun membre.</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
