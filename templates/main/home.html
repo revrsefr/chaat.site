@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 <html lang="{% get_current_language as LANGUAGE_CODE %}">
-{% block title %}home - chaat.site{% endblock %}
+{% block title %}home - {{ site_brand.title_suffix }}{% endblock %}
 {% block content %}
     <!-- ================> Banner section start here <================== -->
     <div class="banner banner--style3 padding-top bg_img"  style="background-image: url('{% static "images/banner/bg.jpg" %}');">
@@ -12,9 +12,9 @@
                 <div class="col-lg-5 col-12 wow fadeInLeft" data-wow-duration="1.5s">
                     <div class="banner__content">
                         <div class="banner__title">
-                            <h2>Tchatter<span> avec </span>des personnes proche de vous...</h2>
-                            <p>{% trans "Serveur de tchat francophone gratuit, sans inscription obligatoire..." %}</p>
-                            <a href="#" class="default-btn style-2"><span>tChatter ici c'est rapide, simple et sans inscription.</span></a>
+                            <h2>Redécouvrez le plaisir<span> de </span> discuter en ligne !</h2>
+                            <p>{% trans "Discuter gratuitement avec des personnes proches de chez vous." %}</p>
+                            <a href="#" class="default-btn style-2"><span>La discussion en ligne, c'est plus fun que jamais !</span></a>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="banner__thumb--title">
-                            <h4>{% trans "#Coucou?, c'est gratuit.." %}</h4>
+                            <h4>{% trans "#!accueil!  #!célibataires  #!40anset+ " %}</h4>
                         </div>
                     </div>
                 </div>
@@ -43,8 +43,8 @@
 					<div class="col">
 						<div class="about__left">
 							<div class="about__top">
-								<div class="about__content">
-									<h3>TchatZone</h3>
+                                <div class="about__content">
+                                    <h3>{{ site_brand.site_name }}</h3>
 									<p>C'est là où il est facile de discuter gratuitement avec des milliers de personnes.</p>
 								</div>
 							</div>
@@ -377,7 +377,11 @@
     <div class="work padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
         <div class="container">
             <div class="section__header text-center wow fadeInUp" data-wow-duration="1.5s">
-                <h2>{% trans "Pourquoi choisir chaat.site?" %}</h2>
+                <h2>
+                    {% blocktrans trimmed with site_name=site_brand.site_name %}
+                        Pourquoi choisir {{ site_name }} ?
+                    {% endblocktrans %}
+                </h2>
             </div>
             <div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
                 <div class="d-xl-flex align-items-start work__area">
@@ -396,7 +400,11 @@
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Trouvez votre moitie" %}</h3>
-                                        <p>{% trans "Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de chaat.site. tout ce que vous avez à faire est de suivre votre instinct et de faire vibrer votre cœur !" %}</p>
+                                        <p>
+                                            {% blocktrans trimmed with site_name=site_brand.site_name %}
+                                                Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de {{ site_name }}. tout ce que vous avez à faire est de suivre votre instinct et de faire vibrer votre cœur !
+                                            {% endblocktrans %}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -409,7 +417,11 @@
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "100% Match de gens" %}</h3>
-                                        <p>{% trans "Nos utilisateurs son réel, chaat.site et libre de bots et fake users." %}</p>
+                                        <p>
+                                            {% blocktrans trimmed with site_name=site_brand.site_name %}
+                                                Nos utilisateurs sont réels, {{ site_name }} est libre de bots et de faux comptes.
+                                            {% endblocktrans %}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -435,7 +447,11 @@
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Live The Story" %}</h3>
-                                        <p>{% trans "Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de chaat.site. tout ce que tu as à faire c'est de suivre ton instinct et de surprendre ton cœur!" %}</p>
+                                        <p>
+                                            {% blocktrans trimmed with site_name=site_brand.site_name %}
+                                                Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de {{ site_name }}. Tout ce que tu as à faire, c'est de suivre ton instinct et de surprendre ton cœur !
+                                            {% endblocktrans %}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

@@ -9,26 +9,26 @@
     <meta name="type" content="chat">
     <meta name="robots" content="index, follow">
     <meta name="distribution" content="global">
-    <meta name="identifier-url" content="https://chaat.site/">
+    <meta name="identifier-url" content="{{ site_brand.base_url }}/">
     <meta name="rating" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="chat en ligne, discussion instantanée, tchat gratuit, rencontres, chat sans inscription" />
-    <meta name="author" content="chaat.site" />
+    <meta name="author" content="{{ site_brand.meta_author }}" />
     <link rel="apple-touch-icon" sizes="120x120" href="../images/apple-touch-icon-120x120-precomposed.png">
     <link rel="apple-touch-icon" sizes="152x152" href="../images/apple-touch-icon-152x152-precomposed.png">
     <meta property="og:title" content="Rejoignez dès maintenant votre tchat gratuit sans inscription et discuter avec des milliers d'utilisateurs du monde entier. bon tchatche sur votre site de discussion !">
     <meta property="og:description" content="Rejoignez notre chat gratuit pour discuter en direct avec de nouvelles personnes. Aucune inscription requise !" />
     <meta property="og:image" content="{% static 'images/banner/shape/home3/01.png' %}" />
-    <meta property="og:url" content="https://chaat.site/" />
+    <meta property="og:url" content="{{ canonical_url }}" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Chaat.site" />
+    <meta property="og:site_name" content="{{ site_brand.site_name }}" />
     <meta property="og:locale" content="fr_FR">
     <meta itemprop="name" content="Chat en ligne - Discuter gratuitement" />
     <meta itemprop="image" content="{% static 'images/banner/shape/home3/01.png' %}" />
-    <link rel="canonical" href="https://chaat.site/main/home/">
+    <link rel="canonical" href="{{ canonical_url }}">
 
 
-    <title>{% block title %}home - chaat.site{% endblock %}</title>
+    <title>{% block title %}{{ site_brand.default_title }}{% endblock %}</title>
     
     <!-- All stylesheet and icons css  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css">
@@ -41,6 +41,35 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-71Q9L0CHMP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-71Q9L0CHMP');
+</script>
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PG7EK3MLR2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PG7EK3MLR2');
+</script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RYNG5VRD0H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RYNG5VRD0H');
+</script>
+
    <!-- Google tag (gtag.js) -->
     {% if request.COOKIES.cookie_analytics == "yes" %}
     <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-5J4F54MR"></script>
@@ -76,6 +105,7 @@
             });
         });
     </script>
+    
     
  
     <!-- Google Tag Manager (noscript) -->
@@ -282,7 +312,7 @@
     
     <!-- Cookie Banner -->
     <div id="cookie-banner">
-        <div class="cookie-header">Chaat.site demande votre consentement</div>
+        <div class="cookie-header">{{ site_brand.site_name }} demande votre consentement</div>
         <p class="cookie-description">Nous utilisons des cookies pour améliorer votre expérience. Vous pouvez accepter tous les cookies ou personnaliser vos préférences.</p>
         <div class="cookie-buttons">
             <button id="cookie-accept" class="cookie-button cookie-accept">Accepter</button>

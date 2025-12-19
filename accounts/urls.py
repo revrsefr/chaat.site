@@ -2,9 +2,11 @@ from django.urls import path
 from .views import (
     register_view, login_view, logout_view, forgot_password_view,
     change_password_view, change_email_view, profile_view,  account_settings_view,
-    delete_account_view
+    delete_account_view,
+    generate_irc_app_password_view,
+    revoke_irc_app_password_view,
 )
-from .api import register, login_api, change_password, change_email
+from .api import register, login_api, login_token, change_password, change_email
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
@@ -15,6 +17,8 @@ urlpatterns = [
     path("change-password/", change_password_view, name="change_password"),
     path("change-email/", change_email_view, name="change_email"),
     path("profile/<str:username>/", profile_view, name="profile"),
+    path("profile/<str:username>/irc-password/generate/", generate_irc_app_password_view, name="generate_irc_app_password"),
+    path("profile/<str:username>/irc-password/revoke/", revoke_irc_app_password_view, name="revoke_irc_app_password"),
     path("settings/", account_settings_view, name="account_settings"),
     path("delete/", delete_account_view, name="delete_account"),
     
@@ -22,6 +26,7 @@ urlpatterns = [
     # ✅ API Endpoints
     path("api/register/", register, name="api_register"),
     path("api/login/", login_api, name="api_login"),
+    path("api/login_token/", login_token, name="api_login_token"),
     path("api/change-password/", change_password, name="api_change_password"),
     path("api/change-email/", change_email, name="api_change_email"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

@@ -1,43 +1,108 @@
-import json
+import base64
+import os
+import uuid
+
 import requests
 
-class AnopeRPC:
-    def __init__(self, host="http://127.0.0.1:5600/jsonrpc"):  # Updated port to 5600
-        self.host = host
 
-    def run(self, method, params=None):
+DEFAULT_RPC_TOKEN = os.getenv("ANOPE_RPC_TOKEN")
+
+
+class RPCError(RuntimeError):
+    """Raised when the JSON-RPC endpoint reports an error."""
+
+
+class AnopeRPC:
+    """Thin client modeled after docs/RPC/jsonrpc.rb."""
+
+    def __init__(self, host="http://127.0.0.1:5600/jsonrpc", token=None):
+        self.host = host
+        self.token = token or DEFAULT_RPC_TOKEN
+
+    def _headers(self):
+        headers = {"Content-Type": "application/json"}
+        if self.token:
+            encoded = base64.b64encode(self.token.encode("utf-8")).decode("ascii")
+            headers["Authorization"] = f"Bearer {encoded}"
+        return headers
+
+    def run(self, method, *params):
         payload = {
             "jsonrpc": "2.0",
-            "id": "1",
             "method": method,
-            "params": params or []
+            "params": [str(param) for param in params],
+            "id": uuid.uuid4().hex,
         }
-        headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post(self.host, json=payload, headers=headers, timeout=5)
+            response = requests.post(self.host, json=payload, headers=self._headers(), timeout=5)
             response.raise_for_status()
-            data = response.json()
-            if "result" in data:
-                return data["result"]
-            elif "error" in data:
-                print(f"Anope Error: {data['error']}")
-                return None
-        except requests.exceptions.RequestException as e:
-            print(f"RPC Request Failed: {e}")
-            return None
+        except requests.exceptions.RequestException as exc:
+            raise RPCError(f"RPC request failed: {exc}") from exc
 
-    def list_channels(self):
-        return self.run("anope.listChannels")
+        data = response.json()
+        if "error" in data:
+            err = data["error"]
+            raise RPCError(f"JSON-RPC returned {err.get('code')}: {err.get('message')}")
+        return data.get("result")
 
-    def get_channel(self, channel):
-        result = self.run("anope.channel", [channel])
-        if not result:
-            return {"name": channel, "users": [], "topic": {"value": "No topic set"}}
-        return result
+    # rpc_data helpers
 
-    def list_users(self):
-        return self.run("anope.listUsers")
+    def list_accounts(self, detail="name"):
+        return self.run("anope.listAccounts", detail)
 
-    def get_user(self, user):
-        return self.run("anope.user", [user])
+    def account(self, name):
+        return self.run("anope.account", name)
+
+    def list_channels(self, detail="name"):
+        return self.run("anope.listChannels", detail)
+
+    def channel(self, name):
+        return self.run("anope.channel", name)
+
+    def list_opers(self, detail="name"):
+        return self.run("anope.listOpers", detail)
+
+    def oper(self, name):
+        return self.run("anope.oper", name)
+
+    def list_servers(self, detail="name"):
+        return self.run("anope.listServers", detail)
+
+    def server(self, name):
+        return self.run("anope.server", name)
+
+    def list_users(self, detail="name"):
+        return self.run("anope.listUsers", detail)
+
+    def user(self, name):
+        return self.run("anope.user", name)
+
+    # rpc_message helpers
+
+    def message_network(self, *messages):
+        return self.run("anope.messageNetwork", *messages)
+
+    def message_server(self, server_name, *messages):
+        return self.run("anope.messageServer", server_name, *messages)
+
+    def message_user(self, source, target, *messages):
+        return self.run("anope.messageUser", source, target, *messages)
+
+    # rpc_user helpers
+
+    def check_credentials(self, account, password):
+        return self.run("anope.checkCredentials", account, password)
+
+    def identify(self, account, user):
+        return self.run("anope.identify", account, user)
+
+    def list_commands(self, *services):
+        return self.run("anope.listCommands", *services)
+
+    def command(self, account, service, *command):
+        return self.run("anope.commands", account, service, *command)
+
+    # Backwards compat alias used by early templates
+    def get_channel(self, name):
+        return self.channel(name)

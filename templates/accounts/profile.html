@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Profil - chaat.site{% endblock %}
+{% block title %}Profil - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block content %}
 <section class="log-reg">
@@ -33,22 +33,44 @@
                     <div class="main-content inloginp">
                         <!-- ✅ Only allow the profile owner to edit -->
                         {% if request.user == user_profile %}
-                        <form action="{% url 'profile' username=user_profile.username %}" method="POST" enctype="multipart/form-data">
+                        <form id="profileUpdateForm" action="{% url 'profile' username=user_profile.username %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             
                             <!-- ✅ Avatar Upload -->
                             <div class="text-center">
+                                {% if user_profile.avatar %}
+                                    {% with avatar_src=user_profile.avatar.url %}
                                 <img id="selectedAvatar"
-                                    src="{{ user_profile.avatar.url|default:'/static/images/default-avatar.jpg' }}" 
+                                    src="{{ avatar_src }}" 
                                     class="rounded-circle profile-avatar"
                                     style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"
                                     alt="Avatar"
-                                    onclick="openModal('{{ user_profile.avatar.url|default:'/static/images/default-avatar.jpg' }}')">
-                                
-                                <label class="btn btn-primary btn-sm mt-2" for="customFile2">
+                                    onclick="openModal('{{ avatar_src }}')">
+                                    {% endwith %}
+                                {% else %}
+                                <img id="selectedAvatar"
+                                    src="{% static 'images/default-avatar.jpg' %}"
+                                    class="rounded-circle profile-avatar"
+                                    style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;"
+                                    alt="Avatar"
+                                    onclick="openModal('{% static 'images/default-avatar.jpg' %}')">
+                                {% endif %}
+
+                                <input type="file"
+                                    class="form-control"
+                                    id="customFile2"
+                                    name="avatar"
+                                    accept="image/*"
+                                    style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;"
+                                    onchange="displaySelectedImage(event, 'selectedAvatar')">
+
+                                <label class="btn btn-primary btn-sm mt-2" for="customFile2" style="cursor: pointer;">
                                     Ajouter une photo
-                                    <input type="file" class="form-control d-none" id="customFile2" name="avatar" onchange="displaySelectedImage(event, 'selectedAvatar')">
                                 </label>
+
+                                <div style="margin-top: 6px; font-size: 12px; opacity: 0.8;">
+                                    Sélectionnez une image puis cliquez sur “Sauvegarder les modifications”.
+                                </div>
                             </div>
 
                             <!-- ✅ User Details -->
@@ -64,7 +86,7 @@
 
                             <div class="form-group">
                                 <label>{% trans "Date de naissance" %}</label>
-                                <input type="date" name="birth_date" class="my-form-control" value="{{ user_profile.age|default_if_none:'' }}">
+                                <input type="date" name="age" class="my-form-control" value="{% if user_profile.age %}{{ user_profile.age|date:'Y-m-d' }}{% endif %}">
                             </div>
 
                             <div class="form-group">
@@ -90,7 +112,53 @@
                                     <span>{% trans "Sauvegarder les modifications" %}</span>
                                 </button>
                             </div>
+
+                            <div id="profileSaveStatus" style="margin-top: 10px;"></div>
                         </form>
+
+                        <hr class="my-4">
+
+                        <div class="section-header inloginp">
+                            <h3 class="title">Mot de passe IRC (token)</h3>
+                        </div>
+
+                        <div class="main-content inloginp">
+                            <p>
+                                Utilisez ce token comme mot de passe pour NickServ (à la place du mot de passe du site).
+                                Actifs: <strong id="ircTokenActiveCount">{{ irc_app_password_count }}</strong>
+                            </p>
+
+                            <div id="ircTokenAlert" class="alert alert-warning" {% if not irc_app_password_plain %}style="display:none"{% endif %}>
+                                <strong>Votre nouveau token IRC (copiez-le maintenant) :</strong>
+                                <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                    <span
+                                        id="ircToken"
+                                        title="Cliquer pour copier"
+                                        style="font-family: monospace; word-break: break-all; cursor: pointer; user-select: all; padding: 6px 10px; background: rgba(0,0,0,0.06); border-radius: 6px;"
+                                        onclick="copyIrcToken()"
+                                    >{{ irc_app_password_plain }}</span>
+
+                                    <span id="ircTokenCopyStatus" style="display:none; font-weight: 600;"></span>
+                                </div>
+                            </div>
+
+                            <div id="ircTokenActionStatus" style="margin-top: 10px;"></div>
+
+                            <div class="sidebar-links">
+                                <form id="ircTokenGenerateForm" method="POST" action="{% url 'generate_irc_app_password' username=user_profile.username %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="default-btn reverse">Générer un token IRC</button>
+                                </form>
+                                <form id="ircTokenRevokeForm" method="POST" action="{% url 'revoke_irc_app_password' username=user_profile.username %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="default-btn reverse text-danger">Révoquer le token IRC</button>
+                                </form>
+                            </div>
+
+                            <p style="margin-top: 10px;">
+                                Exemple: <code>/msg NickServ IDENTIFY {{ user_profile.username }} &lt;token&gt;</code>
+                            </p>
+                        </div>
 
                         <hr class="my-4">
 
@@ -116,6 +184,186 @@
 
 <!-- ✅ JavaScript for Avatar Preview & Click-to-Zoom -->
 <script>
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    async function postJsonForm(formEl) {
+        const csrf = getCookie('csrftoken');
+        const res = await fetch(formEl.action, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                ...(csrf ? { 'X-CSRFToken': csrf } : {}),
+            },
+            credentials: 'same-origin',
+            body: new FormData(formEl),
+        });
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('application/json')) {
+            const data = await res.json();
+            return { ok: res.ok, status: res.status, data };
+        }
+        // Fallback: if server returned HTML for some reason, reload the page.
+        window.location.reload();
+        return null;
+    }
+
+    (function initProfileSaveAjax() {
+        const profileForm = document.getElementById('profileUpdateForm');
+        const statusEl = document.getElementById('profileSaveStatus');
+        const avatarImg = document.getElementById('selectedAvatar');
+
+        const setStatus = (html) => {
+            if (statusEl) statusEl.innerHTML = html;
+        };
+
+        if (!profileForm) return;
+
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setStatus('<div class="alert alert-info">Sauvegarde…</div>');
+            try {
+                const payload = await postJsonForm(profileForm);
+                if (!payload) return;
+                if (payload.ok && payload.data && payload.data.ok) {
+                    const avatarUrl = payload.data.profile && payload.data.profile.avatar_url;
+                    if (avatarImg && avatarUrl) {
+                        avatarImg.src = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 'v=' + Date.now();
+                        avatarImg.onclick = () => openModal(avatarUrl);
+                    }
+                    setStatus('<div class="alert alert-success">' + (payload.data.message || 'Profil mis à jour.') + '</div>');
+                } else {
+                    const errors = (payload.data && payload.data.errors) ? payload.data.errors : null;
+                    if (errors) {
+                        const lines = [];
+                        for (const [field, items] of Object.entries(errors)) {
+                            for (const it of items) {
+                                lines.push((field === '__all__' ? '' : field + ': ') + (it.message || 'Erreur'));
+                            }
+                        }
+                        setStatus('<div class="alert alert-danger">' + lines.join('<br>') + '</div>');
+                    } else {
+                        setStatus('<div class="alert alert-danger">Impossible de sauvegarder le profil.</div>');
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                setStatus('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+            }
+        });
+    })();
+
+    (function initIrcTokenAjax() {
+        const genForm = document.getElementById('ircTokenGenerateForm');
+        const revForm = document.getElementById('ircTokenRevokeForm');
+        const tokenAlert = document.getElementById('ircTokenAlert');
+        const tokenEl = document.getElementById('ircToken');
+        const copyStatusEl = document.getElementById('ircTokenCopyStatus');
+        const activeEl = document.getElementById('ircTokenActiveCount');
+        const actionStatus = document.getElementById('ircTokenActionStatus');
+
+        const setActionStatus = (html) => {
+            if (actionStatus) actionStatus.innerHTML = html;
+        };
+
+        if (genForm) {
+            genForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                setActionStatus('<div class="alert alert-info">Génération du token…</div>');
+                try {
+                    const payload = await postJsonForm(genForm);
+                    if (!payload) return;
+                    const data = payload.data;
+                    if (data && data.token) {
+                        if (tokenEl) tokenEl.textContent = data.token;
+                        if (tokenAlert) tokenAlert.style.display = '';
+                        if (copyStatusEl) copyStatusEl.style.display = 'none';
+                        if (activeEl && typeof data.active !== 'undefined') activeEl.textContent = String(data.active);
+                        setActionStatus('<div class="alert alert-success">Token généré. Copiez-le maintenant (affiché une seule fois).</div>');
+                    } else {
+                        setActionStatus('<div class="alert alert-danger">Impossible de générer le token.</div>');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setActionStatus('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+                }
+            });
+        }
+
+        if (revForm) {
+            revForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                setActionStatus('<div class="alert alert-info">Révocation…</div>');
+                try {
+                    const payload = await postJsonForm(revForm);
+                    if (!payload) return;
+                    const data = payload.data;
+                    if (data && data.revoked) {
+                        if (tokenAlert) tokenAlert.style.display = 'none';
+                        if (tokenEl) tokenEl.textContent = '';
+                        if (copyStatusEl) copyStatusEl.style.display = 'none';
+                        if (activeEl && typeof data.active !== 'undefined') activeEl.textContent = String(data.active);
+                        setActionStatus('<div class="alert alert-success">Token révoqué.</div>');
+                    } else {
+                        setActionStatus('<div class="alert alert-danger">Impossible de révoquer le token.</div>');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setActionStatus('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+                }
+            });
+        }
+    })();
+
+    function copyIrcToken() {
+        const tokenEl = document.getElementById('ircToken');
+        const statusEl = document.getElementById('ircTokenCopyStatus');
+        if (!tokenEl) return;
+
+        const token = (tokenEl.textContent || '').trim();
+        if (!token) return;
+
+        const showStatus = (text, ok) => {
+            if (!statusEl) return;
+            statusEl.textContent = text;
+            statusEl.style.display = 'inline';
+            statusEl.style.color = ok ? '#1b5e20' : '#b71c1c';
+            window.clearTimeout(statusEl._t);
+            statusEl._t = window.setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 2000);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(token)
+                .then(() => showStatus('Copié !', true))
+                .catch(() => showStatus('Impossible de copier.', false));
+            return;
+        }
+
+        // Fallback for older browsers / non-secure contexts
+        const ta = document.createElement('textarea');
+        ta.value = token;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        try {
+            const ok = document.execCommand('copy');
+            showStatus(ok ? 'Copié !' : 'Impossible de copier.', ok);
+        } catch (e) {
+            showStatus('Impossible de copier.', false);
+        }
+        document.body.removeChild(ta);
+    }
+
     function displaySelectedImage(event, imgId) {
         var reader = new FileReader();
         reader.onload = function(){

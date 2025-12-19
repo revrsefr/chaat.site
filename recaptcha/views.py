@@ -24,7 +24,7 @@ def get_client_ip(request):
 @require_GET
 def check_token(request):
     client_ip = get_client_ip(request)
-    allowed_ips = ["141.94.76.86", "::1"]  # Replace with your allowed IPs if needed
+    allowed_ips = getattr(settings, "RECAPTCHA_CHECK_IPS", ["54.38.156.235", "2001:41d0:701:1100::65d0", "::1", "127.0.0.1"])
     if client_ip not in allowed_ips:
         return render(request, "recaptcha/error.html", {
             "message": "Access denied: You are not authorized to use this service."

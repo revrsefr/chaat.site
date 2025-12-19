@@ -6,13 +6,14 @@ from django.template.loader import render_to_string
 from irc.rpc_client import AnopeRPC
 from blog.models import BlogPost
 from django.http import JsonResponse  
+from django.conf import settings
 
 def home(request):
     members = CustomUser.objects.all()
     latest_posts = BlogPost.objects.filter(is_published=True).order_by("-created_at")[:3]  # ✅ Get latest 3 posts
     cities = City.objects.all().order_by("name")
 
-    rpc = AnopeRPC()
+    rpc = AnopeRPC(token=settings.ANOPE_RPC_TOKEN)
     users = rpc.list_users() or []
     servers = rpc.run("anope.listServers") or []  # ✅ Get list of servers
     opers = rpc.run("anope.listOpers") or []  # ✅ Get list of online operators

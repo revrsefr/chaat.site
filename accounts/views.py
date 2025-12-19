@@ -9,6 +9,12 @@ from .models import CustomUser
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
 from .forms import ProfileUpdateForm
+from django.http import JsonResponse
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password
+import secrets
+
+from .models import IrcAppPassword
 
 factory = APIRequestFactory()
 CustomUser = get_user_model()
@@ -111,8 +117,12 @@ def forgot_password_view(request):
 def profile_view(request, username):
     user_profile = get_object_or_404(CustomUser, username=username)
 
+    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
+
     # ✅ Restrict access: Only the owner can access & update their profile
     if request.user != user_profile:
+        if wants_json:
+            return JsonResponse({"ok": False, "error": "forbidden"}, status=403)
         messages.error(request, "Vous n'avez pas la permission d'accéder à ce profil.")
         return redirect("home")  # Redirect unauthorized users
 
@@ -120,15 +130,77 @@ def profile_view(request, username):
         form = ProfileUpdateForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
+            if wants_json:
+                user_profile.refresh_from_db()
+                return JsonResponse({
+                    "ok": True,
+                    "message": "Votre profil a été mis à jour avec succès.",
+                    "profile": {
+                        "age": user_profile.age.isoformat() if user_profile.age else None,
+                        "gender": user_profile.gender,
+                        "city": user_profile.city,
+                        "description": user_profile.description,
+                        "avatar_url": user_profile.avatar.url if user_profile.avatar else None,
+                    },
+                })
             messages.success(request, "Votre profil a été mis à jour avec succès.")
             return redirect("profile", username=user_profile.username)
+        if wants_json:
+            return JsonResponse({"ok": False, "errors": form.errors.get_json_data()}, status=400)
     else:
         form = ProfileUpdateForm(instance=user_profile)
 
+    irc_app_password_plain = request.session.pop("irc_app_password_plain", None)
+    irc_app_password_count = IrcAppPassword.objects.filter(user=user_profile, revoked_at__isnull=True).count()
+
     return render(request, "accounts/profile.html", {
         "user_profile": user_profile,
-        "form": form
+        "form": form,
+        "irc_app_password_plain": irc_app_password_plain,
+        "irc_app_password_count": irc_app_password_count,
     })
+
+
+@login_required
+def generate_irc_app_password_view(request, username):
+    user_profile = get_object_or_404(CustomUser, username=username)
+    if request.user != user_profile:
+        messages.error(request, "Vous n'avez pas la permission d'effectuer cette action.")
+        return redirect("home")
+
+    if request.method != "POST":
+        return redirect("profile", username=user_profile.username)
+
+    # Revoke existing active tokens for simplicity (single active token).
+    IrcAppPassword.objects.filter(user=user_profile, revoked_at__isnull=True).update(revoked_at=timezone.now())
+
+    plain = secrets.token_urlsafe(24)
+    IrcAppPassword.objects.create(user=user_profile, password=make_password(plain))
+
+    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
+    if wants_json:
+        return JsonResponse({"token": plain, "active": 1})
+
+    request.session["irc_app_password_plain"] = plain
+    messages.success(request, "Nouveau mot de passe IRC généré. Copiez-le maintenant (affiché une seule fois).")
+    return redirect("profile", username=user_profile.username)
+
+
+@login_required
+def revoke_irc_app_password_view(request, username):
+    user_profile = get_object_or_404(CustomUser, username=username)
+    if request.user != user_profile:
+        messages.error(request, "Vous n'avez pas la permission d'effectuer cette action.")
+        return redirect("home")
+
+    if request.method == "POST":
+        IrcAppPassword.objects.filter(user=user_profile, revoked_at__isnull=True).update(revoked_at=timezone.now())
+        wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
+        if wants_json:
+            return JsonResponse({"revoked": True, "active": 0})
+        messages.success(request, "Mot de passe IRC révoqué.")
+
+    return redirect("profile", username=user_profile.username)
 
 @login_required
 def account_settings_view(request, username):
