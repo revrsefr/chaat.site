@@ -1,20 +1,22 @@
-import json
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password
-from rest_framework.decorators import api_view, permission_classes, authentication_classes, throttle_classes
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.throttling import ScopedRateThrottle
-from .utils import verify_recaptcha
-from django.http import JsonResponse
-from accounts.models import CustomUser
-from accounts.tokens import get_tokens_for_user
-from accounts.utils import verify_recaptcha
-import traceback
 import logging
+
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
+from django.utils.dateparse import parse_date
+
+from rest_framework import status
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+    throttle_classes,
+)
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 
 from django.conf import settings
 from django.utils import timezone
@@ -22,31 +24,61 @@ from datetime import timedelta
 import jwt
 
 from accounts.models import IrcAppPassword
+from accounts.tokens import get_tokens_for_user
 from accounts.utils import issue_email_verification_code, verify_email_code
-from django.core.exceptions import ValidationError
+
+from .utils import verify_recaptcha
 
 
 irc_api_logger = logging.getLogger("accounts.irc_api")
+auth_api_logger = logging.getLogger("accounts.auth_api")
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
+@throttle_classes([ScopedRateThrottle])
 def register(request):
     try:
         if request.user.is_authenticated:
             return Response({"error": "You are already registered"}, status=status.HTTP_400_BAD_REQUEST)
 
-        username = request.data.get("username")
-        email = request.data.get("email")
+        username = (request.data.get("username") or "").strip()
+        email = (request.data.get("email") or "").strip().lower()
         password1 = request.data.get("password1")
         password2 = request.data.get("password2")
-        age = request.data.get("birthday")  # ✅ Fix age field (should be birthday)
-        gender = request.data.get("gender")
-        city = request.data.get("city")
+        birthday_raw = request.data.get("birthday")
+        gender = (request.data.get("gender") or "").strip()
+        city = (request.data.get("city") or "").strip()
         recaptcha_token = request.data.get("g_recaptcha_response") or request.data.get("g-recaptcha-response")
         avatar = request.FILES.get("avatar")  # ✅ Get uploaded avatar file
 
-        # ✅ Debugging: Print received data (REMOVE in production)
-        print("🔹 Received data:", request.data)
+        if not username or not email or not password1 or not password2:
+            return Response({"error": "Champs requis manquants."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            EmailValidator()(email)
+        except ValidationError:
+            return Response({"error": "Email invalide."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate username using model field validators.
+        try:
+            CustomUser._meta.get_field("username").run_validators(username)
+        except ValidationError:
+            return Response({"error": "Nom d'utilisateur invalide."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if password1 != password2:
+            return Response({"error": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            validate_password(password1)
+        except ValidationError as ve:
+            return Response({"error": "Mot de passe trop faible.", "details": list(ve.messages)}, status=status.HTTP_400_BAD_REQUEST)
+
+        birthday = None
+        if birthday_raw:
+            birthday = parse_date(str(birthday_raw))
+            if not birthday:
+                return Response({"error": "Date de naissance invalide."}, status=status.HTTP_400_BAD_REQUEST)
 
         # ✅ reCAPTCHA Verification
         is_valid, recaptcha_error = verify_recaptcha(recaptcha_token)
@@ -58,35 +90,44 @@ def register(request):
             return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
         if CustomUser.objects.filter(email=email).exists():
             return Response({"error": "Email already registered"}, status=status.HTTP_400_BAD_REQUEST)
-        if password1 != password2:
-            return Response({"error": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
         if gender not in ["M", "F"]:
             return Response({"error": "Invalid gender"}, status=status.HTTP_400_BAD_REQUEST)
 
         # ✅ Create user
-        user = CustomUser.objects.create(
+        user = CustomUser.objects.create_user(
             username=username,
             email=email,
-            age=age,  # ✅ Make sure this is `birthday`
+            age=birthday,
             gender=gender,
-            city=city
+            city=city,
+            password=password1,
         )
-        user.set_password(password1)  # ✅ Hash password
 
         # New accounts must verify email before login.
         user.email_verified = False
-        user.save()  # Ensure password + flags are persisted.
+        user.save(update_fields=["email_verified"])  # Ensure flag is persisted.
 
         # ✅ Save avatar AFTER user is created
         if avatar:
-            user.avatar = avatar  
-            user.save()  # ✅ Save the user with avatar
+            max_bytes = getattr(settings, "AVATAR_MAX_UPLOAD_SIZE", 2 * 1024 * 1024)
+            content_type = getattr(avatar, "content_type", "") or ""
+            if avatar.size and avatar.size > max_bytes:
+                return Response({"error": "Avatar trop volumineux."}, status=status.HTTP_400_BAD_REQUEST)
+            if content_type and not content_type.startswith("image/"):
+                return Response({"error": "Avatar invalide."}, status=status.HTTP_400_BAD_REQUEST)
+            user.avatar = avatar
+            user.save(update_fields=["avatar"])  # ✅ Save the user with avatar
 
         # Email verification code
         try:
             issue_email_verification_code(user)
+        except ValidationError as ve:
+            auth_api_logger.warning("register email_issue validation_error user_id=%s email=%r err=%s", user.pk, user.email, ve)
+            return Response({
+                "error": "Compte créé, mais l'envoi du code est temporairement limité. Réessayez bientôt.",
+            }, status=status.HTTP_429_TOO_MANY_REQUESTS)
         except Exception:
-            # Don't leak details in prod; keep server-side logs.
+            auth_api_logger.exception("register email_issue failed user_id=%s email=%r", user.pk, user.email)
             return Response({
                 "error": "Compte créé, mais impossible d'envoyer l'email de confirmation. Veuillez réessayer plus tard ou contacter le support.",
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -96,18 +137,20 @@ def register(request):
             "requires_email_verification": True,
         }, status=status.HTTP_201_CREATED)
 
-    except Exception as e:
-        print("❌ ERROR in register API:", str(e))  # ✅ Print error
-        print(traceback.format_exc())  # ✅ Show full traceback
-        return Response({"error": f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception:
+        auth_api_logger.exception("register unexpected_error")
+        return Response({"error": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# Make ScopedRateThrottle apply the intended scope.
+register.throttle_scope = "register"
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
+@throttle_classes([ScopedRateThrottle])
 def login_api(request):
     try:
-        # ✅ Debugging: Print request data
-        print("🔹 Received login data:", json.dumps(request.data, indent=4))
-
         username = request.data.get("username")
         password = request.data.get("password")
 
@@ -130,9 +173,12 @@ def login_api(request):
         
         return Response({"error": "Invalid username or password."}, status=status.HTTP_400_BAD_REQUEST)
 
-    except Exception as e:
-        print(f"⚠️ API Error: {e}")
-        return JsonResponse({"error": "Internal server error."}, status=500)
+    except Exception:
+        auth_api_logger.exception("login_api unexpected_error")
+        return Response({"error": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+login_api.throttle_scope = "login"
 
 
 @api_view(["POST"])
@@ -232,6 +278,7 @@ login_token.throttle_scope = "irc_api"
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
+@throttle_classes([ScopedRateThrottle])
 def verify_email(request):
     """Verify an email address using a short code sent by email."""
 
@@ -243,17 +290,22 @@ def verify_email(request):
 
     user = CustomUser.objects.filter(email__iexact=email).first()
     if not user:
-        return Response({"error": "Email inconnu."}, status=status.HTTP_400_BAD_REQUEST)
+        # Avoid leaking whether an email exists.
+        return Response({"error": "Email ou code invalide."}, status=status.HTTP_400_BAD_REQUEST)
 
     ok, err = verify_email_code(user, code)
     if not ok:
-        return Response({"error": err or "Code invalide."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": err or "Email ou code invalide."}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({"message": "Email confirmé. Vous pouvez vous connecter."}, status=status.HTTP_200_OK)
 
 
+verify_email.throttle_scope = "verify_email"
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
+@throttle_classes([ScopedRateThrottle])
 def resend_email_verification(request):
     email = (request.data.get("email") or "").strip().lower()
     if not email:
@@ -261,16 +313,22 @@ def resend_email_verification(request):
 
     user = CustomUser.objects.filter(email__iexact=email).first()
     if not user:
-        return Response({"error": "Email inconnu."}, status=status.HTTP_400_BAD_REQUEST)
+        # Avoid leaking whether an email exists.
+        return Response({"message": "Si l'email existe, un code a été envoyé."}, status=status.HTTP_200_OK)
     if getattr(user, "email_verified", False):
-        return Response({"message": "Email déjà confirmé."}, status=status.HTTP_200_OK)
+        return Response({"message": "Si l'email existe, un code a été envoyé."}, status=status.HTTP_200_OK)
 
     try:
         issue_email_verification_code(user)
+    except ValidationError:
+        return Response({"message": "Veuillez patienter avant de demander un nouveau code."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
     except Exception:
         return Response({"error": "Impossible d'envoyer l'email. Réessayez plus tard."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    return Response({"message": "Nouveau code envoyé."}, status=status.HTTP_200_OK)
+    return Response({"message": "Si l'email existe, un code a été envoyé."}, status=status.HTTP_200_OK)
+
+
+resend_email_verification.throttle_scope = "resend_email"
 
 # ✅ API Change Password (Requires Authentication)
 @api_view(["POST"])
@@ -293,7 +351,8 @@ def change_password(request):
 def change_email(request):
     new_email = request.data.get("new_email")
 
-    if User.objects.filter(email=new_email).exists():
+    UserModel = get_user_model()
+    if UserModel.objects.filter(email=new_email).exists():
         return Response({"error": "Email already in use"}, status=status.HTTP_400_BAD_REQUEST)
 
     request.user.email = new_email

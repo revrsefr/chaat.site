@@ -92,16 +92,19 @@
                                             {% endif %}
 
                                             <div class="form-group" style="margin-top: 12px;">
-                                                <label class="btn btn-primary btn-sm" for="customFile2" style="cursor: pointer;">
-                                                    {% trans "Ajouter une photo" %}
-                                                </label>
+                                                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;">
+                                                    <label for="customFile2" class="default-btn reverse" style="margin: 0; padding: 10px 14px; font-size: 13px; cursor: pointer;">
+                                                        <span>{% trans "Choisir une photo" %}</span>
+                                                    </label>
+                                                    <span id="profileAvatarFileName" style="font-size: 12px; opacity: 0.85;">{% trans "Aucun fichier" %}</span>
+                                                </div>
                                                 <input type="file"
                                                     class="my-form-control"
                                                     id="customFile2"
                                                     name="avatar"
                                                     accept="image/*"
                                                     style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;"
-                                                    onchange="displaySelectedImage(event, 'selectedAvatar')">
+                                                >
                                                 <div style="margin-top: 8px; font-size: 12px; opacity: 0.8;">
                                                     {% trans "Sélectionnez une image puis sauvegardez." %}
                                                 </div>
@@ -117,11 +120,23 @@
 
                                         <div class="form-group">
                                             <label>{% trans "Email" %}</label>
-                                            <input type="email" class="my-form-control" value="{{ user_profile.email }}" disabled>
+                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+                                                <input type="email" class="my-form-control" value="{{ user_profile.email }}" disabled style="flex: 1 1 260px;">
+                                                {% if user_profile.email_verified %}
+                                                    <span class="badge bg-success" style="white-space: nowrap; padding: 8px 10px; border-radius: 999px;">{% trans "Vérifié" %}</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger" style="white-space: nowrap; padding: 8px 10px; border-radius: 999px;">{% trans "Non vérifié" %}</span>
+                                                {% endif %}
+                                            </div>
                                             <div style="margin-top: 6px; font-size: 12px; opacity: 0.8;">
                                                 <a href="{% url 'change_email' %}" class="default-btn reverse" style="padding: 8px 12px; font-size: 12px;">
                                                     <span>{% trans "Modifier l'email" %}</span>
                                                 </a>
+                                                {% if not user_profile.email_verified %}
+                                                    <a href="{% url 'verify_email' %}?email={{ user_profile.email|urlencode }}" class="default-btn" style="padding: 8px 12px; font-size: 12px; margin-left: 8px;">
+                                                        <span>{% trans "Vérifier maintenant" %}</span>
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </div>
 
@@ -272,20 +287,45 @@
         return null;
     }
 
+    function renderAlert(targetEl, type, message, lines) {
+        if (!targetEl) return;
+
+        const container = document.createElement('div');
+        container.className = `alert alert-${type}`;
+        container.setAttribute('role', 'alert');
+
+        if (message) {
+            const msg = document.createElement('div');
+            msg.textContent = String(message);
+            container.appendChild(msg);
+        }
+
+        if (Array.isArray(lines) && lines.length) {
+            const list = document.createElement('ul');
+            list.className = 'mb-0';
+            for (const line of lines) {
+                const li = document.createElement('li');
+                li.textContent = String(line);
+                list.appendChild(li);
+            }
+            container.appendChild(list);
+        }
+
+        targetEl.replaceChildren(container);
+    }
+
     (function initProfileSaveAjax() {
         const profileForm = document.getElementById('profileUpdateForm');
         const statusEl = document.getElementById('profileSaveStatus');
         const avatarImg = document.getElementById('selectedAvatar');
 
-        const setStatus = (html) => {
-            if (statusEl) statusEl.innerHTML = html;
-        };
+        const setStatus = (type, message, lines) => renderAlert(statusEl, type, message, lines);
 
         if (!profileForm) return;
 
         profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            setStatus('<div class="alert alert-info">Sauvegarde…</div>');
+            setStatus('info', 'Sauvegarde…');
             try {
                 const payload = await postJsonForm(profileForm);
                 if (!payload) return;
@@ -295,7 +335,7 @@
                         avatarImg.src = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 'v=' + Date.now();
                         avatarImg.onclick = () => openModal(avatarUrl);
                     }
-                    setStatus('<div class="alert alert-success">' + (payload.data.message || 'Profil mis à jour.') + '</div>');
+                    setStatus('success', payload.data.message || 'Profil mis à jour.');
                 } else {
                     const errors = (payload.data && payload.data.errors) ? payload.data.errors : null;
                     if (errors) {
@@ -305,14 +345,14 @@
                                 lines.push((field === '__all__' ? '' : field + ': ') + (it.message || 'Erreur'));
                             }
                         }
-                        setStatus('<div class="alert alert-danger">' + lines.join('<br>') + '</div>');
+                        setStatus('danger', "", lines);
                     } else {
-                        setStatus('<div class="alert alert-danger">Impossible de sauvegarder le profil.</div>');
+                        setStatus('danger', 'Impossible de sauvegarder le profil.');
                     }
                 }
             } catch (err) {
                 console.error(err);
-                setStatus('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+                setStatus('danger', 'Erreur réseau. Réessayez.');
             }
         });
     })();
@@ -326,14 +366,12 @@
         const activeEl = document.getElementById('ircTokenActiveCount');
         const actionStatus = document.getElementById('ircTokenActionStatus');
 
-        const setActionStatus = (html) => {
-            if (actionStatus) actionStatus.innerHTML = html;
-        };
+        const setActionStatus = (type, message, lines) => renderAlert(actionStatus, type, message, lines);
 
         if (genForm) {
             genForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                setActionStatus('<div class="alert alert-info">Génération du token…</div>');
+                setActionStatus('info', 'Génération du token…');
                 try {
                     const payload = await postJsonForm(genForm);
                     if (!payload) return;
@@ -343,13 +381,13 @@
                         if (tokenAlert) tokenAlert.style.display = '';
                         if (copyStatusEl) copyStatusEl.style.display = 'none';
                         if (activeEl && typeof data.active !== 'undefined') activeEl.textContent = String(data.active);
-                        setActionStatus('<div class="alert alert-success">Token généré. Copiez-le maintenant (affiché une seule fois).</div>');
+                        setActionStatus('success', 'Token généré. Copiez-le maintenant (affiché une seule fois).');
                     } else {
-                        setActionStatus('<div class="alert alert-danger">Impossible de générer le token.</div>');
+                        setActionStatus('danger', 'Impossible de générer le token.');
                     }
                 } catch (err) {
                     console.error(err);
-                    setActionStatus('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+                    setActionStatus('danger', 'Erreur réseau. Réessayez.');
                 }
             });
         }
@@ -357,7 +395,7 @@
         if (revForm) {
             revForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                setActionStatus('<div class="alert alert-info">Révocation…</div>');
+                setActionStatus('info', 'Révocation…');
                 try {
                     const payload = await postJsonForm(revForm);
                     if (!payload) return;
@@ -367,13 +405,13 @@
                         if (tokenEl) tokenEl.textContent = '';
                         if (copyStatusEl) copyStatusEl.style.display = 'none';
                         if (activeEl && typeof data.active !== 'undefined') activeEl.textContent = String(data.active);
-                        setActionStatus('<div class="alert alert-success">Token révoqué.</div>');
+                        setActionStatus('success', 'Token révoqué.');
                     } else {
-                        setActionStatus('<div class="alert alert-danger">Impossible de révoquer le token.</div>');
+                        setActionStatus('danger', 'Impossible de révoquer le token.');
                     }
                 } catch (err) {
                     console.error(err);
-                    setActionStatus('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
+                    setActionStatus('danger', 'Erreur réseau. Réessayez.');
                 }
             });
         }
@@ -428,32 +466,109 @@
         reader.onload = function(){
             var output = document.getElementById(imgId);
             output.src = reader.result;
+            output.dataset.avatarSrc = output.src;
         };
         reader.readAsDataURL(event.target.files[0]);
     }
+
+    (function initProfileAvatarPicker() {
+        const input = document.getElementById('customFile2');
+        const preview = document.getElementById('selectedAvatar');
+        const fileNameEl = document.getElementById('profileAvatarFileName');
+        if (!input) return;
+
+        const noneText = '{% trans "Aucun fichier" %}';
+        const setFileName = (name) => {
+            if (!fileNameEl) return;
+            fileNameEl.textContent = name || noneText;
+        };
+
+        input.addEventListener('change', () => {
+            const file = input.files && input.files[0];
+            if (!file) {
+                setFileName(noneText);
+                return;
+            }
+
+            setFileName(file.name);
+
+            if (preview && file.type && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    preview.src = String(reader.result || preview.src);
+                    preview.dataset.avatarSrc = preview.src;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    })();
 
     function openModal(imageSrc) {
         const existing = document.getElementById('imageModal');
         if (existing) existing.remove();
 
-        let modal = document.createElement('div');
+        const safeSrc = (() => {
+            const src = String(imageSrc || '');
+            if (src.startsWith('/') || src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:image/')) {
+                return src;
+            }
+            return '';
+        })();
+
+        const modal = document.createElement('div');
         modal.id = 'imageModal';
-        modal.innerHTML = `
-            <div id="imageModalOverlay" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 18px;">
-                <div style="position: relative; max-width: min(900px, 92vw); max-height: 88vh;">
-                    <img src="${imageSrc}" style="max-width: 100%; max-height: 88vh; border-radius: 14px; box-shadow: 0 18px 50px rgba(0,0,0,0.35);">
-                    <button type="button" onclick="closeModal()" aria-label="Close" style="position: absolute; top: -12px; right: -12px; width: 40px; height: 40px; border-radius: 999px; border: 0; cursor: pointer; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.25); font-size: 22px; line-height: 40px;">&times;</button>
-                </div>
-            </div>
-        `;
+        const overlay = document.createElement('div');
+        overlay.id = 'imageModalOverlay';
+        overlay.style.position = 'fixed';
+        overlay.style.inset = '0';
+        overlay.style.background = 'rgba(0, 0, 0, 0.78)';
+        overlay.style.display = 'flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.zIndex = '9999';
+        overlay.style.padding = '18px';
+
+        const wrap = document.createElement('div');
+        wrap.style.position = 'relative';
+        wrap.style.maxWidth = 'min(900px, 92vw)';
+        wrap.style.maxHeight = '88vh';
+
+        const img = document.createElement('img');
+        img.src = safeSrc;
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '88vh';
+        img.style.borderRadius = '14px';
+        img.style.boxShadow = '0 18px 50px rgba(0,0,0,0.35)';
+        img.alt = '';
+
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.setAttribute('aria-label', 'Close');
+        closeBtn.textContent = '×';
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '-12px';
+        closeBtn.style.right = '-12px';
+        closeBtn.style.width = '40px';
+        closeBtn.style.height = '40px';
+        closeBtn.style.borderRadius = '999px';
+        closeBtn.style.border = '0';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.background = '#fff';
+        closeBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.25)';
+        closeBtn.style.fontSize = '22px';
+        closeBtn.style.lineHeight = '40px';
+
+        closeBtn.addEventListener('click', closeModal);
+
+        wrap.appendChild(img);
+        wrap.appendChild(closeBtn);
+        overlay.appendChild(wrap);
+        modal.appendChild(overlay);
         document.body.appendChild(modal);
 
-        const overlay = document.getElementById('imageModalOverlay');
-        if (overlay) {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) closeModal();
-            });
-        }
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModal();
+        });
         document.addEventListener('keydown', function escClose(e) {
             if (e.key === 'Escape') {
                 document.removeEventListener('keydown', escClose);

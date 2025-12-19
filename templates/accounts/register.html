@@ -5,6 +5,14 @@
 
 {% block content %}
 
+<style>
+    /* Match profile page fix: disable the theme's inner scroll for this page only. */
+    .register-page-root { height: auto !important; min-height: 100vh; }
+    .register-page-root .log-reg-inner { max-height: none !important; height: auto !important; overflow: visible !important; }
+    .register-page-root .main-content { overflow: visible !important; }
+    .register-page-root .image { bottom: 0 !important; height: auto !important; }
+</style>
+
 <!-- Preloader -->
 <div class="preloader">
     <div class="preloader-inner">
@@ -18,7 +26,7 @@
 <!-- Scroll to Top -->
 <a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
 
-<section class="log-reg">
+<section class="log-reg register-page-root">
     <div class="top-menu-area">
         <div class="container">
             <div class="row">
@@ -79,7 +87,34 @@
                             </div>
                             <div class="form-group">
                                 <label>Avatar</label>
-                                <input type="file" class="my-form-control" id="avatar" name="avatar">
+                                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                                    <img
+                                        id="registerAvatarPreview"
+                                        src="{% static 'images/default-avatar.jpg' %}"
+                                        alt="Aperçu avatar"
+                                        style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; border: 1px solid rgba(255,255,255,0.15);"
+                                    >
+
+                                    <div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 260px;">
+                                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                            <label for="avatar" class="default-btn reverse" style="margin: 0; padding: 10px 14px; font-size: 13px; cursor: pointer;">
+                                                <span>Choisir une photo</span>
+                                            </label>
+                                            <span id="registerAvatarFileName" style="font-size: 12px; opacity: 0.85;">Aucun fichier</span>
+                                        </div>
+                                        <div style="font-size: 12px; opacity: 0.75;">
+                                            Formats: JPG/PNG/WebP. Taille max recommandée: 2MB.
+                                        </div>
+                                    </div>
+
+                                    <input
+                                        type="file"
+                                        id="avatar"
+                                        name="avatar"
+                                        accept="image/*"
+                                        style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;"
+                                    >
+                                </div>
                             </div>
                             <!-- Google reCAPTCHA -->
                             <div class="form-group">
@@ -100,25 +135,46 @@
         event.preventDefault(); 
 
         const msgEl = document.getElementById("register-message");
-        const showMessage = (html) => {
-            if (msgEl) msgEl.innerHTML = html;
+        const showMessage = (type, message, details) => {
+            if (!msgEl) return;
+
+            const container = document.createElement("div");
+            container.className = `alert alert-${type}`;
+            container.setAttribute("role", "alert");
+
+            const messageNode = document.createElement("div");
+            messageNode.textContent = String(message || "");
+            container.appendChild(messageNode);
+
+            if (Array.isArray(details) && details.length) {
+                const list = document.createElement("ul");
+                list.className = "mb-0";
+                for (const item of details) {
+                    const li = document.createElement("li");
+                    li.textContent = String(item);
+                    list.appendChild(li);
+                }
+                container.appendChild(list);
+            }
+
+            msgEl.replaceChildren(container);
         };
 
         const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
         const csrfToken = csrfInput ? csrfInput.value : null;
         if (!csrfToken) {
-            showMessage('<div class="alert alert-danger">Erreur CSRF: veuillez recharger la page.</div>');
+            showMessage("danger", "Erreur CSRF: veuillez recharger la page.");
             return;
         }
 
         if (typeof grecaptcha === 'undefined') {
-            showMessage('<div class="alert alert-danger">reCAPTCHA non chargé. Vérifiez le bloqueur de scripts / publicité, puis rechargez la page.</div>');
+            showMessage("danger", "reCAPTCHA non chargé. Vérifiez le bloqueur de scripts / publicité, puis rechargez la page.");
             return;
         }
 
         const recaptcha = grecaptcha.getResponse();
         if (!recaptcha) {
-            showMessage('<div class="alert alert-danger">Veuillez valider le reCAPTCHA.</div>');
+            showMessage("danger", "Veuillez valider le reCAPTCHA.");
             return;
         }
     
@@ -145,19 +201,80 @@
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                document.getElementById("register-message").innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                showMessage("danger", data.error, data.details);
                 grecaptcha.reset();
             } else {
-                document.getElementById("register-message").innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                showMessage("success", data.message);
                 const email = encodeURIComponent(document.getElementById("email").value || "");
                 setTimeout(() => { window.location.href = `/accounts/verify-email/?email=${email}`; }, 1200);
             }
         })
         .catch(error => {
             console.error("Error:", error);
-            showMessage('<div class="alert alert-danger">Erreur réseau. Réessayez dans quelques secondes.</div>');
+            showMessage("danger", "Erreur réseau. Réessayez dans quelques secondes.");
         });
     });    
+
+    (function initRegisterAvatarPicker() {
+                const DEFAULT_AVATAR_SVG = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+                            <defs>
+                                <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+                                    <stop offset="0" stop-color="#3b82f6"/>
+                                    <stop offset="1" stop-color="#06b6d4"/>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="64" cy="64" r="64" fill="url(#g)"/>
+                            <circle cx="64" cy="52" r="22" fill="rgba(255,255,255,0.92)"/>
+                            <path d="M26 116c9-22 25-35 38-35s29 13 38 35" fill="rgba(255,255,255,0.88)"/>
+                        </svg>
+                `.trim();
+                const DEFAULT_AVATAR_DATA_URI = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(DEFAULT_AVATAR_SVG)}`;
+
+        const input = document.getElementById('avatar');
+        const preview = document.getElementById('registerAvatarPreview');
+        const fileNameEl = document.getElementById('registerAvatarFileName');
+        if (!input) return;
+
+                const ensurePreviewFallback = () => {
+                        if (!preview) return;
+                        // If the referenced static file doesn't exist, naturalWidth will be 0.
+                        if (preview.naturalWidth === 0) {
+                                preview.src = DEFAULT_AVATAR_DATA_URI;
+                        }
+                };
+
+                if (preview) {
+                        preview.addEventListener('error', () => {
+                                preview.src = DEFAULT_AVATAR_DATA_URI;
+                        }, { once: true });
+                        // Handle the case where the error already happened before we attached the listener.
+                        window.setTimeout(ensurePreviewFallback, 0);
+                }
+
+        const setFileName = (name) => {
+            if (!fileNameEl) return;
+            fileNameEl.textContent = name || 'Aucun fichier';
+        };
+
+        input.addEventListener('change', () => {
+            const file = input.files && input.files[0];
+            if (!file) {
+                setFileName('Aucun fichier');
+                return;
+            }
+
+            setFileName(file.name);
+
+            if (preview && file.type && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    preview.src = String(reader.result || preview.src);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    })();
 </script>
 
 {% endblock %}
