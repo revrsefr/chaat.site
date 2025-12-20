@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Dict
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.urls import NoReverseMatch, reverse
 
 
 def _normalize_host(host: str) -> str:
@@ -88,4 +92,85 @@ def site_branding(request):
     return {
         "site_brand": brand,
         "canonical_url": canonical_url,
+        "static_version": getattr(settings, "STATIC_VERSION", "") or "1",
     }
+
+
+def _footer_for_host(host: str) -> dict:
+    site_footers = getattr(settings, "SITE_FOOTERS", {})
+    if host in site_footers:
+        return site_footers[host]
+
+    if host.startswith("www."):
+        bare_host = host[4:]
+        if bare_host in site_footers:
+            return site_footers[bare_host]
+
+    return getattr(settings, "DEFAULT_SITE_FOOTER", {})
+
+
+def _safe_reverse(viewname: str, *args, **kwargs) -> str:
+    try:
+        return reverse(viewname, args=args, kwargs=kwargs)
+    except NoReverseMatch:
+        return "#"
+
+
+def site_footer(request):
+    """Expose footer configuration + latest users to all templates.
+
+    This is intentionally defensive: it should never break template rendering
+    (e.g. during maintenance, migrations, or partial deployments).
+    """
+
+    normalized_host = _normalize_host(request.get_host() if request else "")
+    configured = _footer_for_host(normalized_host) or {}
+
+    footer = {
+        "background_image": configured.get("background_image", "images/footer/bg-2.jpg"),
+        "tagline": configured.get(
+            "tagline",
+            "Chat gratuit, sans inscription — discutez et rencontrez du monde.",
+        ),
+        "help_channel": configured.get("help_channel", "#aide"),
+        "help_text": configured.get(
+            "help_text",
+            "Nos opérateurs seront ravis de vous aider.",
+        ),
+        "legal_links": configured.get(
+            "legal_links",
+            [
+                {"label": "Conditions générales", "url": _safe_reverse("main:terms")},
+                {"label": "Mentions légales", "url": _safe_reverse("main:legal")},
+                {"label": "À propos", "url": _safe_reverse("main:about")},
+            ],
+        ),
+        "useful_links": configured.get(
+            "useful_links",
+            [
+                {"label": "Webchat", "url": _safe_reverse("webchat")},
+                {"label": "Membres", "url": _safe_reverse("community_membres")},
+                {"label": "Blog", "url": _safe_reverse("blog_list")},
+                {"label": "Inscription", "url": _safe_reverse("register")},
+                {"label": "Connexion", "url": _safe_reverse("login")},
+            ],
+        ),
+        "social_links": configured.get(
+            "social_links",
+            [],
+        ),
+        "year": datetime.now().year,
+        "latest_users": [],
+    }
+
+    latest_users_count = int(configured.get("latest_users_count", 5) or 5)
+    if latest_users_count > 0:
+        try:
+            User = get_user_model()
+            footer["latest_users"] = list(
+                User.objects.only("username", "date_joined", "avatar").order_by("-date_joined")[:latest_users_count]
+            )
+        except Exception:
+            footer["latest_users"] = []
+
+    return {"footer": footer}

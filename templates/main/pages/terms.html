@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Conditions générales" %} - {{ site_brand.title_suffix }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <h1 class="mb-3">{% trans "Conditions générales" %}</h1>
+      <p class="text-muted">{% trans "Contenu à compléter." %}</p>
+      <p>{% trans "En utilisant ce site, vous acceptez de respecter les règles de bonne conduite et la législation en vigueur." %}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

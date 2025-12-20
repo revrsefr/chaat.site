@@ -24,7 +24,7 @@ sitemaps = {
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("admin/login/", AdminLoginView.as_view(), name="admin_login"),
-    path('', home_redirect, name='home_redirect'),  # ✅ Redirect from `/` to `/main/home/`
+    path('', home_redirect, name='home'),  # ✅ Global `home` (redirects `/` -> `/main/home/`)
     path("main/", include("main.urls", namespace="main")), 
     path('accounts/', include('accounts.urls')), 
     path('irc/', include('irc.urls')),    # IRC app URLs

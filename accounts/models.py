@@ -37,9 +37,23 @@ class CustomUser(AbstractUser):
 
     def avatar_url(self):
         """Return a default avatar if the user hasn't uploaded one."""
-        if self.avatar:
+        default_static = "/static/images/default-avatar.svg"
+
+        if not self.avatar or not getattr(self.avatar, "name", ""):
+            return default_static
+
+        try:
+            # Be defensive: don't return a URL to a missing file.
+            if hasattr(self.avatar, "storage") and hasattr(self.avatar.storage, "exists"):
+                if not self.avatar.storage.exists(self.avatar.name):
+                    return default_static
+        except Exception:
+            return default_static
+
+        try:
             return self.avatar.url
-        return "/static/users/avatars/default-avatar.jpg"  # Default avatar path
+        except Exception:
+            return default_static
     
     @property
     def avatar_tag(self):

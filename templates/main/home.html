@@ -1,11 +1,14 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% load i18n %}
-<html lang="{% get_current_language as LANGUAGE_CODE %}">
 {% block title %}home - {{ site_brand.title_suffix }}{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=6">
+    <script defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
+{% endblock %}
 {% block content %}
     <!-- ================> Banner section start here <================== -->
-    <div class="banner banner--style3 padding-top bg_img"  style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+    <div class="banner banner--style3 padding-top bg_img"  style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
         
         <div class="container">
             <div class="row g-0 justify-content-center justify-content-xl-between">
@@ -59,51 +62,21 @@
 								<div class="about__bottom--body">
 									<div class="ragi__slider overflow-hidden">
 										<div class="swiper-wrapper">
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/01.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/02.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/03.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/04.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/05.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/01.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/02.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/03.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
-											<div class="swiper-slide">
-												<div class="ragi__thumb">
-													<a href="member-single.html"><img src="{% static 'images/ragi/04.jpg' %}" alt="dating thumb"></a>
-												</div>
-											</div>
+                                            {% for m in latest_members %}
+                                                <div class="swiper-slide">
+                                                    <div class="ragi__thumb">
+                                                        <a href="{% url 'member_profile' username=m.username %}" title="{{ m.username }}">
+                                                            <img src="{{ m.avatar_url }}" alt="{{ m.username }}">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            {% empty %}
+                                                <div class="swiper-slide">
+                                                    <div class="ragi__thumb">
+                                                        <img src="{% static 'images/ragi/01.jpg' %}" alt="member">
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
 										</div>
 									</div>
 								</div>
@@ -112,86 +85,116 @@
 					</div>
 					<div class="col">
 						<div class="about__right">
-							<div class="about__title">
-								<h3>Entrer sans inscription</h3>
-							</div>
-							<form action="{% url 'webchat' %}" method="GET" class="form" target="_blank" id="form-desktop">
-								<div class="banner__list">
-									<div class="row">
-										<div class="col-6">
-											<div class="form-group">
-                                              <strong><label >Pseudo</label></strong>
-                                              <input type="text" pattern=".{3,}" title="Saisissez un pseudo avec minimum 3 caractères." id="pseudo" name="nick" class="my-form-control" placeholder="Entrer un pseudo" required="">
-                                            </div>
-                                            <style> 
-                                                .my-form-control::-webkit-input-placeholder {color:    rgb(0, 0, 0);  }
-                                                .my-form-control::-moz-placeholder { color:  rgb(0, 0, 0); }
-                                                .my-form-control:-ms-input-placeholder { color:  rgb(0, 0, 0);  }
-                                                .my-form-control::placeholder { color:  rgb(0, 0, 0);  }
-                                            </style>
-										</div>
+                            <div class="home-webchat-card">
+                                <div class="home-webchat-title">
+                                    <h3>Entrer sans inscription</h3>
+                                    <p>Choisis un pseudo et rejoins le tchat en 1 clic.</p>
+                                </div>
+                                <form action="{% url 'webchat' %}" method="GET" class="home-webchat-form" target="_blank" id="form-desktop">
+                                    <div class="row g-3">
                                         <div class="col-lg-6 col-12">
-											<strong><label>Sexe</label></strong>
-											<div class="banner__inputlist">
-												<select>
-													<option value="homme">Homme</option>
-													<option value="femme" selected>Femme</option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="banner__list">
-									<div class="row">
-										<div class="col-lg-6 col-12">
-											<strong><label>Âge</label></strong>
-											<div class="row g-3">
-												<div class="col-6">
-													<div class="banner__inputlist">
-														<select>
-															<option value="18" selected>18</option>
-															<option value="19">19</option>
-															<option value="20">20</option>
-															<option value="21">21</option>
-															<option value="22">22</option>
-															<option value="23">23</option>
-															<option value="24">24</option>
-															<option value="25">25</option>
-															<option value="26">26</option>
-															<option value="27">27</option>
-															<option value="28">28</option>
-															<option value="29">29</option>
-															<option value="30">30</option>
-															<option value="31">31</option>
-															<option value="32">32</option>
-															<option value="33">33</option>
-															<option value="34">34</option>
-															<option value="35">35</option>
-															<option value="36">36</option>
-															<option value="37">37</option>
-															<option value="38">38</option>
-															<option value="39">39</option>
-															<option value="40">40</option>
-														</select>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 col-12">
-											<strong><label>Ville</label></strong>
-											<div class="banner__inputlist">
-												<select name="ville">
-                                                    <option value="">Sélectionner une ville</option>
-                                                    {% for city in cities %}
-                                                        <option value="{{ city.name }}">{{ city.name }}</option>
-                                                    {% endfor %}
+                                            <label class="form-label" for="webchat-nick">Pseudo</label>
+                                            <div class="home-webchat-field">
+                                                <i class="bi bi-person"></i>
+                                                <input
+                                                    type="text"
+                                                    id="webchat-nick"
+                                                    name="nick"
+                                                    class="home-webchat-input"
+                                                    placeholder="{% if user.is_authenticated %}{{ user.username }}{% else %}Entrer un pseudo{% endif %}"
+                                                    {% if user.is_authenticated %}value="{{ user.username }}"{% endif %}
+                                                    pattern=".{3,}"
+                                                    title="Saisissez un pseudo avec minimum 3 caractères."
+                                                    required
+                                                    autocomplete="nickname"
+                                                >
+                                            </div>
+                                            <div class="home-webchat-hint">Minimum 3 caractères.</div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <label class="form-label" for="webchat-sexe">Sexe</label>
+                                            <div class="home-webchat-field">
+                                                <i class="bi bi-gender-ambiguous"></i>
+                                                <select id="webchat-sexe" name="sexe" class="home-webchat-select" required>
+                                                    <option value="homme">Homme</option>
+                                                    <option value="femme" selected>Femme</option>
                                                 </select>
-											</div>
-										</div>
-									</div>
-								</div>
-								<button type="submit" class="default-btn reverse d-block"><span>tchatter..</span></button>
-							</form>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <label class="form-label" for="webchat-age">Âge</label>
+                                            <div class="home-webchat-field">
+                                                <i class="bi bi-calendar2-week"></i>
+                                                <select id="webchat-age" name="age" class="home-webchat-select" required>
+                                                    <option value="18" selected>18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                    <option value="21">21</option>
+                                                    <option value="22">22</option>
+                                                    <option value="23">23</option>
+                                                    <option value="24">24</option>
+                                                    <option value="25">25</option>
+                                                    <option value="26">26</option>
+                                                    <option value="27">27</option>
+                                                    <option value="28">28</option>
+                                                    <option value="29">29</option>
+                                                    <option value="30">30</option>
+                                                    <option value="31">31</option>
+                                                    <option value="32">32</option>
+                                                    <option value="33">33</option>
+                                                    <option value="34">34</option>
+                                                    <option value="35">35</option>
+                                                    <option value="36">36</option>
+                                                    <option value="37">37</option>
+                                                    <option value="38">38</option>
+                                                    <option value="39">39</option>
+                                                    <option value="40">40</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <label class="form-label" for="webchat-ville">Ville</label>
+                                            <div class="home-webchat-field">
+                                                <i class="bi bi-geo-alt"></i>
+                                                <input
+                                                    type="text"
+                                                    id="webchat-ville"
+                                                    name="ville"
+                                                    class="home-webchat-input"
+                                                    placeholder="Tape ta ville (ex: Paris)"
+                                                    list="webchat-ville-list"
+                                                    autocomplete="address-level2"
+                                                    data-cities-endpoint="{% url 'get_cities' %}"
+                                                >
+                                                <datalist id="webchat-ville-list"></datalist>
+                                                <div class="home-webchat-suggestions" id="webchat-ville-suggestions" hidden></div>
+                                            </div>
+                                            <div class="home-webchat-hint">Tape au moins 2 lettres pour voir des suggestions.</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" for="webchat-channel">Salon</label>
+                                            <div class="home-webchat-field">
+                                                <i class="bi bi-hash"></i>
+                                                <input
+                                                    type="text"
+                                                    id="webchat-channel"
+                                                    name="channel"
+                                                    class="home-webchat-input"
+                                                    value="#!Accueil"
+                                                    placeholder="#!Accueil"
+                                                    autocomplete="off"
+                                                >
+                                            </div>
+                                            <div class="home-webchat-hint">Tu peux mettre un autre salon (ex: #Rencontre).</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="default-btn d-block home-webchat-submit">
+                                                <span>Entrer dans le tchat <i class="bi bi-chat-dots"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -266,7 +269,7 @@
     <!-- ================> About section end here <================== -->
 
     <!-- ================> Member section start here <================== -->
-    <div class="member member--style3 padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+    <div class="member member--style3 padding-top padding-bottom" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
         <div class="container">
             <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
                 <h2>{% trans "Nos membres" %}</h2>
@@ -274,94 +277,29 @@
             </div>
             <div class="section__wrapper">
                 <div class="row g-0 mx-12-none justify-content-center wow fadeInUp" data-wow-duration="1.5s">
+                    {% for m in home_members %}
                     <div class="member__item">
                         <div class="member__inner">
                             <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/01.jpg' %}" alt="member-img">
+                                <a href="{% url 'member_profile' username=m.username %}" title="{{ m.username }}">
+                                    <img src="{{ m.avatar_url }}" alt="{{ m.username }}">
+                                </a>
                             </div>
                             <div class="member__content">
-                                <a href="#"><h5>Michelle</h5></a>
-                                <p>Active il a 2 heures</p>
+                                <a href="{% url 'member_profile' username=m.username %}"><h5>{{ m.username }}</h5></a>
+                                <p>
+                                    {% if m.last_login %}
+                                        Active il y a {{ m.last_login|timesince }}
+                                    {% else %}
+                                        Inactive
+                                    {% endif %}
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/02.jpg' %}" alt="member-img">
-                            </div>
-                            <div class="member__content">
-                                <a href="#"><h5>Pedro</h5></a>
-                                <p>Active il a 1 heure</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/03.jpg' %}" alt="member-img">
-                            </div>
-                            <div class="member__content">
-                                <a href="#"><h5>Arika</h5></a>
-                                <p>Active il a 3 jours</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/04.jpg' %}" alt="member-img">
-                            </div>
-                            <div class="member__content">
-                                <a href="#"><h5>Chintoc</h5></a>
-                                <p>Active il a 10 jours</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/05.jpg' %}" alt="member-img">
-                            </div>
-                            <div class="member__content">
-                                <a href="#"><h5>Jhon</h5></a>
-                                <p>Active il a 23 jours</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/06.jpg' %}" alt="member-img">
-                            </div>
-                            <div class="member__content">
-                                <a href="#"><h5>Armelle</h5></a>
-                                <p>Active il a 2 heures</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/07.jpg' %}" alt="member-img">
-                            </div>
-                            <div class="member__content">
-                                <a href="#"><h5>Mike</h5></a>
-                                <p>Active il a 2 heures</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <img src="{% static 'images/member/home3/08.jpg' %}" alt="member-img">
-                            </div>
-                            <div class="member__content">
-                                <a href="#"><h5>Clara</h5></a>
-                                <p>Active il a 2 minutes</p>
-                            </div>
-                        </div>
-                    </div>
+                    {% empty %}
+                    <p class="text-center text-muted">{% trans "Aucun membre disponible pour le moment." %}</p>
+                    {% endfor %}
                 </div>
                 <div class="text-center mt-4 wow fadeInUp" data-wow-duration="2s">
                     <a href="{% url 'community_membres' %}" class="default-btn"><span>{% trans "Commu" %} <i class="ms-2 fas fa-users"></i></span></a>
@@ -374,7 +312,7 @@
    
 
     <!-- ================> Work section start here <================== -->
-    <div class="work padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+    <div class="work padding-top padding-bottom bg_img" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
         <div class="container">
             <div class="section__header text-center wow fadeInUp" data-wow-duration="1.5s">
                 <h2>
@@ -464,7 +402,7 @@
     <!-- ================> Work section end here <================== -->
 
    <!-- ================> Story section start here <================== -->
-<div class="story padding-top padding-bottom" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+<div class="story padding-top padding-bottom" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
     <div class="container">
         <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
             <h2>{% trans "blog" %}</h2>
@@ -477,13 +415,13 @@
                     <div class="story__item">
                         <div class="story__inner">
                             <div class="story__thumb">
-                                <a href="{% url 'blog_detail' post.slug %}">
+                                <a href="{% url 'blog:blog_detail' slug=post.slug %}">
                                     <img src="{{ post.image.url }}" alt="{{ post.title }}">
                                 </a>
                                 <span class="member__activity member__activity--offline">{{ post.category }}</span>
                             </div>
                             <div class="story__content">
-                                <a href="{% url 'blog_detail' post.slug %}">
+                                <a href="{% url 'blog:blog_detail' slug=post.slug %}">
                                     <h4>{{ post.title }}</h4>
                                 </a>
                                 <div class="story__content--author">
@@ -509,7 +447,7 @@
 <!-- ================> Story section end here <================== -->
 
     <!-- ================> Work section start here <================== -->
-    <div class="work work--style2 padding-top padding-bottom bg_img" style="background-image: url('{% static "images/banner/bg.jpg" %}');">
+    <div class="work work--style2 padding-top padding-bottom bg_img" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
         <div class="container">
             <div class="section__wrapper">
                 <div class="row g-4 justify-content-center">
@@ -573,6 +511,5 @@
             </div>
         </div>
     </div>
-</html>
     <!-- ================> Work section end here <================== -->
 {% endblock %}

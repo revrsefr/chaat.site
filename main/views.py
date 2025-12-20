@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from locations.models import City
 from accounts.models import CustomUser
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -9,9 +8,18 @@ from django.http import JsonResponse
 from django.conf import settings
 
 def home(request):
-    members = CustomUser.objects.all()
+    latest_members = (
+        CustomUser.objects.filter(public=True)
+        .order_by("-date_joined")
+        .only("username", "avatar", "last_login")[:9]
+    )
+
+    home_members = (
+        CustomUser.objects.filter(public=True)
+        .order_by("-last_login")
+        .only("username", "avatar", "last_login")[:8]
+    )
     latest_posts = BlogPost.objects.filter(is_published=True).order_by("-created_at")[:3]  # ✅ Get latest 3 posts
-    cities = City.objects.all().order_by("name")
 
     rpc = AnopeRPC(token=settings.ANOPE_RPC_TOKEN)
     users = rpc.list_users() or []
@@ -25,9 +33,10 @@ def home(request):
     channel_count = len(channels)  # ✅ Count total channels
 
     return render(request, 'main/home.html', {
-        "members": members,
-        "cities": cities,
+        "latest_members": latest_members,
+        "home_members": home_members,
         "latest_posts": latest_posts,
+        "posts": latest_posts,
         "user_count": user_count,  # ✅ Added user count
         "server_count": server_count,  # ✅ Added server count
         "oper_count": oper_count,  # ✅ Added operator count

@@ -8,4 +8,9 @@ urlpatterns = [
     path("home/", home, name="home"),  # ✅ Named URL for 'home'
     path('sitemap.xsl', TemplateView.as_view(template_name="sitemap.xsl"), name='sitemap_xslt'),
     path('cookie-consent/', save_cookie_consent, name='cookie_consent'),
+
+    # Simple informational pages (used by the footer)
+    path("about/", TemplateView.as_view(template_name="main/pages/about.html"), name="about"),
+    path("terms/", TemplateView.as_view(template_name="main/pages/terms.html"), name="terms"),
+    path("legal/", TemplateView.as_view(template_name="main/pages/legal.html"), name="legal"),
 ]
