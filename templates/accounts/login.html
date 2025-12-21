@@ -4,9 +4,88 @@
 
 {% block title %}Login - {{ site_brand.title_suffix }}{% endblock %}
 
+{% block head %}
+<style>
+    /* Theme-first: keep this page using the existing log-reg layout.
+       Only add tiny, scoped enhancements (no custom layout framework). */
+    .login-page-root { height: auto !important; min-height: 100vh; }
+    .login-page-root .log-reg-inner { max-height: none !important; height: auto !important; overflow: visible !important; }
+    .login-page-root .main-content.inloginp { overflow: visible !important; }
+    .login-page-root .image { bottom: 0 !important; height: auto !important; }
+
+    @keyframes subtleShake {
+        0% { transform: translateX(0); }
+        20% { transform: translateX(-6px); }
+        40% { transform: translateX(6px); }
+        60% { transform: translateX(-4px); }
+        80% { transform: translateX(4px); }
+        100% { transform: translateX(0); }
+    }
+    .shake { animation: subtleShake 320ms ease-in-out; }
+
+    .login-alert {
+        display: none;
+        border-radius: 14px;
+        padding: 12px 14px;
+        margin: 0 0 14px 0;
+        border: 1px solid rgba(0,0,0,0.08);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+    .login-alert.show { display: block; }
+    .login-alert-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .login-alert-title { font-weight: 800; margin: 0; }
+    .login-alert-msg { margin: 4px 0 0 0; opacity: 0.95; }
+    .login-alert-close { background: transparent; border: none; font-size: 18px; line-height: 1; opacity: 0.7; }
+
+    .field-error { display: none; margin-top: 6px; font-size: 12px; color: #dc3545; font-weight: 600; }
+    .field-error.show { display: block; }
+    .field-invalid { border-color: #dc3545 !important; }
+
+    .password-wrap { position: relative; }
+    .password-wrap .my-form-control { padding-right: 54px; }
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        pointer-events: auto;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.85);
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+    }
+    /* When theme renders light inputs, keep button visible. */
+    .password-toggle.light {
+        background: rgba(0,0,0,0.04);
+        border-color: rgba(0,0,0,0.10);
+        color: rgba(0,0,0,0.70);
+    }
+
+    .login-loading { opacity: 0.9; cursor: not-allowed; }
+    .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255,255,255,0.55);
+        border-top-color: rgba(255,255,255,1);
+        border-radius: 999px;
+        display: inline-block;
+        vertical-align: -2px;
+        margin-right: 8px;
+        animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+{% endblock %}
+
 {% block content %}
 
-<!-- preloader start here -->
+<!-- Preloader -->
 <div class="preloader">
     <div class="preloader-inner">
         <div class="preloader-icon">
@@ -15,19 +94,15 @@
         </div>
     </div>
 </div>
-<!-- preloader ending here -->
 
-<!-- scrollToTop start here -->
+<!-- Scroll to Top -->
 <a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
-<!-- scrollToTop ending here -->
 
-<section class="log-reg">
+<section class="log-reg login-page-root">
     <div class="top-menu-area">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-7">
-                    <div class="logo"></div>
-                </div>
+                <div class="col-lg-8 col-7"></div>
                 <div class="col-lg-4 col-5">
                     <a href="{% url 'main:home' %}" class="backto-home">
                         <i class="fas fa-chevron-left"></i> {% trans "Back to Home" %}
@@ -41,34 +116,101 @@
         <div class="row">
             <div class="image image-log"></div>
             <div class="col-lg-7">
-                <div class="log-reg-inner">
+                <div class="log-reg-inner" id="loginCard">
                     <div class="section-header inloginp">
-                        <h2 class="title">{% trans "tChatZone" %}</h2>
+                        <h2 class="title">{% trans "Acceder a vote compte.." %}</h2>
                     </div>
 
-                    <div class="main-content inloginp">
-                        <form action="{% url 'login' %}" method="POST">
+                    <div class="main-content inloginp" id="loginMain">
+                        {% trans "S'identifier" as i18n_login_default %}
+                        {% trans "Connexion..." as i18n_login_loading %}
+                        {% trans "Succès" as i18n_success %}
+                        {% trans "Erreur" as i18n_error %}
+                        {% trans "Réponse invalide du serveur." as i18n_bad_server_response %}
+                        {% trans "Redirection..." as i18n_redirecting %}
+                        {% trans "Connexion réussie" as i18n_login_success %}
+                        {% trans "Impossible de se connecter" as i18n_cannot_login %}
+                        {% trans "Identifiants invalides." as i18n_invalid_credentials %}
+                        {% trans "Erreur réseau" as i18n_network_error %}
+                        {% trans "Impossible de contacter le serveur. Réessayez." as i18n_cannot_contact %}
+                        {% trans "Ouvrir mon profil" as i18n_open_profile %}
+                        {% trans "Se déconnecter" as i18n_logout %}
+                        {% trans "Email vérifié" as i18n_email_verified %}
+                        {% trans "Email non vérifié" as i18n_email_unverified %}
+                        {% trans "Ville" as i18n_city %}
+                        {% trans "Sexe" as i18n_gender %}
+                        {% trans "Homme" as i18n_male %}
+                        {% trans "Femme" as i18n_female %}
+
+                        <script>
+                            window.__loginI18n = {
+                                defaultLabel: "{{ i18n_login_default|escapejs }}",
+                                loadingLabel: "{{ i18n_login_loading|escapejs }}",
+                                success: "{{ i18n_success|escapejs }}",
+                                error: "{{ i18n_error|escapejs }}",
+                                badServerResponse: "{{ i18n_bad_server_response|escapejs }}",
+                                redirecting: "{{ i18n_redirecting|escapejs }}",
+                                loginSuccess: "{{ i18n_login_success|escapejs }}",
+                                cannotLogin: "{{ i18n_cannot_login|escapejs }}",
+                                invalidCredentials: "{{ i18n_invalid_credentials|escapejs }}",
+                                networkError: "{{ i18n_network_error|escapejs }}",
+                                cannotContact: "{{ i18n_cannot_contact|escapejs }}",
+                                openProfile: "{{ i18n_open_profile|escapejs }}",
+                                logout: "{{ i18n_logout|escapejs }}",
+                                emailVerified: "{{ i18n_email_verified|escapejs }}",
+                                emailUnverified: "{{ i18n_email_unverified|escapejs }}",
+                                city: "{{ i18n_city|escapejs }}",
+                                gender: "{{ i18n_gender|escapejs }}",
+                                male: "{{ i18n_male|escapejs }}",
+                                female: "{{ i18n_female|escapejs }}"
+                            };
+                        </script>
+
+                        <div id="loginAlert" class="alert alert-danger login-alert{% if messages %} show{% endif %}" role="alert" aria-live="polite">
+                            <div class="login-alert-head">
+                                <div>
+                                    <p class="login-alert-title" id="loginAlertTitle">{% trans "Erreur" %}</p>
+                                    <p class="login-alert-msg" id="loginAlertMsg">{% if messages %}{% for message in messages %}{{ message }}{% if not forloop.last %}<br>{% endif %}{% endfor %}{% endif %}</p>
+                                </div>
+                                <button type="button" class="login-alert-close" id="loginAlertClose" aria-label="Close">&times;</button>
+                            </div>
+                        </div>
+
+                        <form id="loginForm" action="{% url 'login' %}" method="POST" novalidate>
                             {% csrf_token %}
                             
                             <div class="form-group">
                                 <label>{% trans "Votre email ou Nom d'utilisateur" %}</label>
-                                <input type="text" name="username" class="my-form-control" placeholder="Entrer votre email ou nom" required>
+                                <input type="text" name="username" id="username" class="my-form-control" placeholder="{% trans "Entrer votre email ou nom" %}" autocomplete="username" required>
+                                <div class="field-error" id="usernameFeedback"></div>
                             </div>
                         
                             <div class="form-group">
                                 <label>{% trans "Mot de passe" %}</label>
-                                <input type="password" name="password" class="my-form-control" placeholder="Entrer votre mot de passe" required>
+                                <div class="password-wrap">
+                                    <input type="password" name="password" id="password" class="my-form-control" placeholder="{% trans "Entrer votre mot de passe" %}" autocomplete="current-password" required>
+                                    <button type="button" class="password-toggle light" id="togglePassword" aria-label="Toggle password visibility">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="field-error" id="passwordFeedback"></div>
                             </div>
                         
                             <p class="f-pass">
                                 {% trans "Mot de passe oublié?" %} 
                                 <a href="{% url 'forgot_password' %}">{% trans "Récupérer mon mot de passe" %}</a>
+                                <span style="margin: 0 8px; opacity: 0.6;">•</span>
+                                <a href="{% url 'register' %}">{% trans "Créer un compte" %}</a>
                             </p>
                         
                             <div class="text-center">
-                                <button type="submit" class="default-btn">
-                                    <span>{% trans "S'identifier" %}</span>
+                                <button type="submit" class="default-btn" id="submitBtn">
+                                    <span id="submitLabel">{% trans "S'identifier" %}</span>
                                 </button>
+                            </div>
+
+                            <div class="text-center" style="margin-top: 10px; opacity: 0.85; font-size: 12px;">
+                                {% trans "Astuce : vous pouvez utiliser votre email ou votre pseudo." %}
                             </div>
                         </form>
                     </div>
@@ -77,4 +219,318 @@
         </div>
     </div>
 </section>
+
+<script>
+    (function () {
+        var i18n = window.__loginI18n || {};
+        var form = document.getElementById('loginForm');
+        var loginCard = document.getElementById('loginCard');
+        var loginMain = document.getElementById('loginMain');
+        var submitBtn = document.getElementById('submitBtn');
+        var submitLabel = document.getElementById('submitLabel');
+
+        var alertBox = document.getElementById('loginAlert');
+        var alertTitle = document.getElementById('loginAlertTitle');
+        var alertMsg = document.getElementById('loginAlertMsg');
+        var alertClose = document.getElementById('loginAlertClose');
+
+        var usernameInput = document.getElementById('username');
+        var passwordInput = document.getElementById('password');
+        var usernameFeedback = document.getElementById('usernameFeedback');
+        var passwordFeedback = document.getElementById('passwordFeedback');
+
+        var togglePassword = document.getElementById('togglePassword');
+        var logoutUrl = '{% url "logout" %}';
+
+        function setLoading(loading) {
+            submitBtn.disabled = !!loading;
+            if (submitBtn.classList && submitBtn.classList.toggle) {
+                submitBtn.classList.toggle('login-loading', !!loading);
+            }
+            if (loading) {
+                submitLabel.innerHTML = '<span class="spinner"></span>' + (i18n.loadingLabel || 'Connexion...');
+            } else {
+                submitLabel.innerHTML = (i18n.defaultLabel || "S'identifier");
+            }
+        }
+
+        function resetFieldErrors() {
+            if (usernameInput && usernameInput.classList) usernameInput.classList.remove('field-invalid');
+            if (passwordInput && passwordInput.classList) passwordInput.classList.remove('field-invalid');
+            if (usernameFeedback && usernameFeedback.classList) usernameFeedback.classList.remove('show');
+            if (passwordFeedback && passwordFeedback.classList) passwordFeedback.classList.remove('show');
+            if (usernameFeedback) usernameFeedback.innerHTML = '';
+            if (passwordFeedback) passwordFeedback.innerHTML = '';
+        }
+
+        function showAlert(type, title, message) {
+            if (!alertBox) return;
+            if (alertBox.classList) {
+                alertBox.classList.remove('alert-danger');
+                alertBox.classList.remove('alert-success');
+                alertBox.classList.add(type === 'success' ? 'alert-success' : 'alert-danger');
+                alertBox.classList.add('show');
+            }
+            if (alertTitle) alertTitle.innerHTML = title || (type === 'success' ? '{% trans "Succès" %}' : '{% trans "Erreur" %}');
+            if (alertMsg) alertMsg.innerHTML = message || '';
+        }
+
+        function hideAlert() {
+            if (!alertBox || !alertBox.classList) return;
+            alertBox.classList.remove('show');
+        }
+
+        function shakeOnce(el) {
+            if (!el || !el.classList) return;
+            el.classList.remove('shake');
+            // force reflow
+            el.offsetWidth;
+            el.classList.add('shake');
+            var done = function () {
+                el.classList.remove('shake');
+                el.removeEventListener('animationend', done);
+            };
+            el.addEventListener('animationend', done);
+        }
+
+        function setHeaderLoggedIn(username, profileUrl) {
+            var group = document.querySelector('ul.button-group');
+            if (!group) return;
+            group.innerHTML = '';
+
+            var li1 = document.createElement('li');
+            var a1 = document.createElement('a');
+            a1.href = profileUrl;
+            a1.className = 'default-btn login';
+            a1.innerHTML = '<i class="bi bi-person-circle"></i> <span>Compte : ' + String(username).replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>';
+            li1.appendChild(a1);
+
+            var li2 = document.createElement('li');
+            var a2 = document.createElement('a');
+            a2.href = logoutUrl;
+            a2.className = 'default-btn reverse';
+            a2.innerHTML = '<span>' + (i18n.logout || 'Se déconnecter') + '</span>';
+            li2.appendChild(a2);
+
+            group.appendChild(li1);
+            group.appendChild(li2);
+        }
+
+        function requestJson(method, url, formData, ok, fail) {
+            // Prefer fetch if available, otherwise use XMLHttpRequest.
+            if (window.fetch) {
+                var options = {
+                    method: method,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                };
+                if (method !== 'GET' && formData) {
+                    options.body = formData;
+                }
+
+                window.fetch(url, options).then(function (resp) {
+                    resp.json().then(function (data) {
+                        ok(resp, data);
+                    }).catch(function () {
+                        fail(resp, null);
+                    });
+                }).catch(function () {
+                    fail(null, null);
+                });
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            try {
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.setRequestHeader('Accept', 'application/json');
+            } catch (e) {}
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+                var resp = { ok: xhr.status >= 200 && xhr.status < 300, status: xhr.status };
+                var data = null;
+                try { data = JSON.parse(xhr.responseText); } catch (e) {}
+                ok(resp, data);
+            };
+            xhr.onerror = function () { fail(null, null); };
+            xhr.send(formData);
+        }
+
+        function loadProfilePanel(profileUrl) {
+            requestJson('GET', profileUrl, null, function (resp, data) {
+                if (!resp || !resp.ok || !data || !data.ok || !data.profile) {
+                    return; // silently ignore
+                }
+                var profile = data.profile;
+
+                var wrapper = document.createElement('div');
+                wrapper.style.marginTop = '10px';
+
+                var header = document.createElement('div');
+                header.style.display = 'flex';
+                header.style.alignItems = 'center';
+                header.style.gap = '12px';
+                header.style.marginBottom = '12px';
+
+                var avatar = document.createElement('img');
+                avatar.alt = 'Avatar';
+                avatar.style.width = '56px';
+                avatar.style.height = '56px';
+                avatar.style.borderRadius = '999px';
+                avatar.style.objectFit = 'cover';
+                avatar.style.border = '1px solid rgba(255,255,255,0.18)';
+                avatar.src = profile.avatar_url || '{% static "images/default-avatar.jpg" %}';
+
+                var meta = document.createElement('div');
+                var uname = document.createElement('div');
+                uname.style.fontWeight = '800';
+                uname.innerHTML = profile.username;
+                var em = document.createElement('div');
+                em.style.opacity = '0.9';
+                em.style.fontSize = '13px';
+                em.innerHTML = profile.email + (profile.email_verified ? ' • ' + (i18n.emailVerified || 'Email vérifié') : ' • ' + (i18n.emailUnverified || 'Email non vérifié'));
+                meta.appendChild(uname);
+                meta.appendChild(em);
+
+                header.appendChild(avatar);
+                header.appendChild(meta);
+
+                wrapper.appendChild(header);
+
+                var addItem = function (label, value) {
+                    var box = document.createElement('div');
+                    box.style.border = '1px solid rgba(255,255,255,0.14)';
+                    box.style.borderRadius = '14px';
+                    box.style.padding = '12px 12px';
+                    box.style.background = 'rgba(255,255,255,0.06)';
+                    box.style.marginBottom = '10px';
+                    var l = document.createElement('div');
+                    l.style.fontSize = '0.82rem';
+                    l.style.opacity = '0.85';
+                    l.style.fontWeight = '700';
+                    l.innerHTML = label;
+                    var v = document.createElement('div');
+                    v.style.marginTop = '2px';
+                    v.style.fontWeight = '700';
+                    v.innerHTML = value || '—';
+                    box.appendChild(l);
+                    box.appendChild(v);
+                    wrapper.appendChild(box);
+                };
+
+                addItem(i18n.city || 'Ville', profile.city);
+                var gender = profile.gender;
+                if (gender === 'M') gender = (i18n.male || 'Homme');
+                else if (gender === 'F') gender = (i18n.female || 'Femme');
+                addItem(i18n.gender || 'Sexe', gender);
+
+                var actions = document.createElement('div');
+                actions.style.display = 'flex';
+                actions.style.gap = '10px';
+                actions.style.flexWrap = 'wrap';
+                actions.style.marginTop = '12px';
+
+                var openBtn = document.createElement('a');
+                openBtn.href = profileUrl;
+                openBtn.className = 'default-btn';
+                openBtn.innerHTML = '<span>' + (i18n.openProfile || 'Ouvrir mon profil') + '</span>';
+
+                var logoutBtn = document.createElement('a');
+                logoutBtn.href = logoutUrl;
+                logoutBtn.className = 'default-btn reverse';
+                logoutBtn.innerHTML = '<span>' + (i18n.logout || 'Se déconnecter') + '</span>';
+
+                actions.appendChild(openBtn);
+                actions.appendChild(logoutBtn);
+                wrapper.appendChild(actions);
+
+                if (form) form.style.display = 'none';
+                if (loginMain) loginMain.appendChild(wrapper);
+            }, function () {
+                // ignore
+            });
+        }
+
+        if (alertClose) {
+            alertClose.addEventListener('click', hideAlert);
+        }
+
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function (ev) {
+                if (ev && ev.preventDefault) ev.preventDefault();
+                var isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                var icon = togglePassword.querySelector('i');
+                if (icon) icon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+            });
+        }
+
+        if (!form) return;
+        form.addEventListener('submit', function (e) {
+            if (e && e.preventDefault) e.preventDefault();
+            hideAlert();
+            resetFieldErrors();
+            setLoading(true);
+
+            requestJson('POST', form.action, new FormData(form), function (resp, data) {
+                if (!data) {
+                    showAlert('error', i18n.error || 'Erreur', i18n.badServerResponse || 'Réponse invalide du serveur.');
+                    shakeOnce(loginCard);
+                    setLoading(false);
+                    return;
+                }
+
+                if (resp && resp.ok && data.ok) {
+                    showAlert('success', i18n.loginSuccess || 'Connexion réussie', data.message || (i18n.redirecting || 'Redirection...'));
+                    if (data.redirect_url) {
+                        try {
+                            if (window.history && window.history.pushState) {
+                                window.history.pushState({}, '', data.redirect_url);
+                            }
+                        } catch (ex) {}
+                        if (data.username) setHeaderLoggedIn(data.username, data.redirect_url);
+                        loadProfilePanel(data.redirect_url);
+                    }
+                    setLoading(false);
+                    return;
+                }
+
+                var fieldErrors = data.field_errors || {};
+                if (fieldErrors.username) {
+                    if (usernameInput && usernameInput.classList) usernameInput.classList.add('field-invalid');
+                    if (usernameFeedback) {
+                        usernameFeedback.innerHTML = fieldErrors.username;
+                        if (usernameFeedback.classList) usernameFeedback.classList.add('show');
+                    }
+                }
+                if (fieldErrors.password) {
+                    if (passwordInput && passwordInput.classList) passwordInput.classList.add('field-invalid');
+                    if (passwordFeedback) {
+                        passwordFeedback.innerHTML = fieldErrors.password;
+                        if (passwordFeedback.classList) passwordFeedback.classList.add('show');
+                    }
+                }
+
+                var msg = (data.error && data.error.message) ? data.error.message : (i18n.invalidCredentials || 'Identifiants invalides.');
+                showAlert('error', i18n.cannotLogin || 'Impossible de se connecter', msg);
+                shakeOnce(loginCard);
+                setLoading(false);
+            }, function () {
+                showAlert('error', i18n.networkError || 'Erreur réseau', i18n.cannotContact || 'Impossible de contacter le serveur. Réessayez.');
+                shakeOnce(loginCard);
+                setLoading(false);
+            });
+        });
+
+        if (window.addEventListener) {
+            window.addEventListener('popstate', function () {
+                window.location.reload();
+            });
+        }
+    })();
+</script>
 {% endblock %}

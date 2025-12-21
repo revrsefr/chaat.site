@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 import secrets
+from django.urls import reverse
 
 from .models import IrcAppPassword
 from .utils import issue_email_verification_code, verify_email_code
@@ -38,8 +39,10 @@ def register_view(request):
     return render(request, "accounts/register.html")
 
 def login_view(request):
+    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
+
     if request.method == "POST":
-        username = request.POST.get("username")
+        username = (request.POST.get("username") or "").strip()
         password = request.POST.get("password")
 
         # ✅ Call the API Directly Without Wrapping `Request`
@@ -48,19 +51,55 @@ def login_view(request):
         data = response.data
 
         if response.status_code == 200:
+            resolved_username = data.get("username") or username
+
             # ✅ Get user manually (Since `authenticate()` fails with API passwords)
             try:
-                user = CustomUser.objects.get(username=username)
+                user = CustomUser.objects.get(username=resolved_username)
                 login(request, user)  # ✅ Use Django session login
                 request.session["access_token"] = data["access_token"]
                 request.session["refresh_token"] = data["refresh_token"]
 
+                redirect_url = reverse("profile", kwargs={"username": user.username})
+                if wants_json:
+                    return JsonResponse({
+                        "ok": True,
+                        "redirect_url": redirect_url,
+                        "username": user.username,
+                        "message": "Login successful!",
+                    })
+
                 messages.success(request, "Login successful!")
-                return redirect("profile", username=user.username)  # ✅ Django Redirect (No JS)
+                return redirect(redirect_url)  # ✅ Django Redirect (No JS)
             except CustomUser.DoesNotExist:
+                if wants_json:
+                    return JsonResponse({
+                        "ok": False,
+                        "error": {
+                            "code": "unknown_user",
+                            "message": "Nom d'utilisateur ou email inconnu.",
+                        },
+                        "field_errors": {"username": "Nom d'utilisateur ou email inconnu."},
+                    }, status=400)
                 messages.error(request, "User not found. Try registering.")
 
-        messages.error(request, data.get("error", "Invalid credentials."))
+        error_message = data.get("error", "Invalid credentials.")
+        error_code = data.get("code")
+        field = data.get("field")
+        field_errors = {}
+        if error_code == "unknown_user" or field == "username":
+            field_errors["username"] = error_message
+        elif error_code == "bad_password" or field == "password":
+            field_errors["password"] = error_message
+
+        if wants_json:
+            return JsonResponse({
+                "ok": False,
+                "error": {"code": error_code or "invalid_credentials", "message": error_message},
+                "field_errors": field_errors,
+            }, status=response.status_code if response.status_code else 400)
+
+        messages.error(request, error_message)
 
     return render(request, "accounts/login.html")
 
@@ -155,6 +194,21 @@ def profile_view(request, username):
             return JsonResponse({"ok": False, "error": "forbidden"}, status=403)
         messages.error(request, "Vous n'avez pas la permission d'accéder à ce profil.")
         return redirect("home")  # Redirect unauthorized users
+
+    if request.method == "GET" and wants_json:
+        return JsonResponse({
+            "ok": True,
+            "profile": {
+                "username": user_profile.username,
+                "email": user_profile.email,
+                "email_verified": bool(getattr(user_profile, "email_verified", False)),
+                "age": user_profile.age.isoformat() if user_profile.age else None,
+                "gender": user_profile.gender,
+                "city": user_profile.city,
+                "description": user_profile.description,
+                "avatar_url": user_profile.avatar.url if user_profile.avatar else None,
+            },
+        })
 
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, request.FILES, instance=user_profile)

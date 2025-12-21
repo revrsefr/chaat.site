@@ -151,31 +151,57 @@ register.throttle_scope = "register"
 @throttle_classes([ScopedRateThrottle])
 def login_api(request):
     try:
-        username = request.data.get("username")
+        identifier = (request.data.get("username") or "").strip()
         password = request.data.get("password")
 
-        if not username or not password:
-            return Response({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-        user = authenticate(username=username, password=password)
-
-        if user and not getattr(user, "email_verified", False):
-            return Response({"error": "Veuillez confirmer votre email avant de vous connecter."}, status=status.HTTP_403_FORBIDDEN)
-
-        if user:
-            tokens = get_tokens_for_user(user)
+        if not identifier or not password:
             return Response({
-                "message": "Login successful!",
-                "username": user.username, 
-                "access_token": tokens["access"],
-                "refresh_token": tokens["refresh"],
-            }, status=status.HTTP_200_OK)
-        
-        return Response({"error": "Invalid username or password."}, status=status.HTTP_400_BAD_REQUEST)
+                "error": "Champs requis manquants.",
+                "code": "missing_fields",
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Allow login by either username or email.
+        candidate_user = CustomUser.objects.filter(username__iexact=identifier).first()
+        if not candidate_user:
+            candidate_user = CustomUser.objects.filter(email__iexact=identifier).first()
+
+        if not candidate_user:
+            # User asked for explicit feedback; return a dedicated code.
+            return Response({
+                "error": "Nom d'utilisateur ou email inconnu.",
+                "code": "unknown_user",
+                "field": "username",
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Authenticate using the canonical username.
+        user = authenticate(username=candidate_user.username, password=password)
+        if not user:
+            return Response({
+                "error": "Mot de passe incorrect.",
+                "code": "bad_password",
+                "field": "password",
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not getattr(user, "email_verified", False):
+            return Response({
+                "error": "Veuillez confirmer votre email avant de vous connecter.",
+                "code": "email_unverified",
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        tokens = get_tokens_for_user(user)
+        return Response({
+            "message": "Login successful!",
+            "username": user.username,
+            "access_token": tokens["access"],
+            "refresh_token": tokens["refresh"],
+        }, status=status.HTTP_200_OK)
 
     except Exception:
         auth_api_logger.exception("login_api unexpected_error")
-        return Response({"error": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({
+            "error": "Internal server error.",
+            "code": "server_error",
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 login_api.throttle_scope = "login"

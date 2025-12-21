@@ -145,12 +145,18 @@ def site_footer(request):
                 {"label": "À propos", "url": _safe_reverse("main:about")},
             ],
         ),
+        "information_links": configured.get(
+            "information_links",
+            [
+                {"label": "Network IRC", "url": _safe_reverse("irc_dashboard")},
+            ],
+        ),
         "useful_links": configured.get(
             "useful_links",
             [
                 {"label": "Webchat", "url": _safe_reverse("webchat")},
                 {"label": "Membres", "url": _safe_reverse("community_membres")},
-                {"label": "Blog", "url": _safe_reverse("blog_list")},
+                {"label": "Blog", "url": _safe_reverse("blog:blog_list")},
                 {"label": "Inscription", "url": _safe_reverse("register")},
                 {"label": "Connexion", "url": _safe_reverse("login")},
             ],
@@ -160,8 +166,26 @@ def site_footer(request):
             [],
         ),
         "year": datetime.now().year,
+        "recent_articles": [],
         "latest_users": [],
     }
+
+    recent_articles_count = int(configured.get("recent_articles_count", 5) or 5)
+    if recent_articles_count > 0:
+        try:
+            from blog.models import BlogPost
+
+            recent_posts = (
+                BlogPost.objects.filter(is_active=True, is_published=True)
+                .only("title", "slug", "created_at")
+                .order_by("-created_at")[:recent_articles_count]
+            )
+            footer["recent_articles"] = [
+                {"title": post.title, "url": _safe_reverse("blog:blog_detail", slug=post.slug)}
+                for post in recent_posts
+            ]
+        except Exception:
+            footer["recent_articles"] = []
 
     latest_users_count = int(configured.get("latest_users_count", 5) or 5)
     if latest_users_count > 0:

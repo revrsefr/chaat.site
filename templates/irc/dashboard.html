@@ -1,7 +1,7 @@
 {% extends "main/base.html" %}
 {% load static %}
 
-{% block title %}IRC Network{% endblock %}
+{% block title %}Network: irc telemetry{% endblock %}
 
 {% block head %}
 {{ block.super }}
@@ -491,7 +491,7 @@
     <section class="dashboard-hero">
         <div class="hero-copy">
             <p class="eyebrow">Chaat.site Network</p>
-            <h1>Live IRC Telemetry</h1>
+            <h1>Live Network Telemetry</h1>
             <p>Track channel heat, operator presence, and server health directly from services stream.</p>
             <div class="hero-actions">
                 <a href="{% url 'webchat' %}" title="Launch KiwiIRC">Open Webchat</a>

@@ -6,6 +6,7 @@ from irc.rpc_client import AnopeRPC
 from blog.models import BlogPost
 from django.http import JsonResponse  
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
     latest_members = (
@@ -49,14 +50,21 @@ def sitemap_xslt(request):
     return HttpResponse(xml, content_type='text/xml')
 
 
+@csrf_exempt
 def save_cookie_consent(request):
     if request.method == "POST":
         analytics = request.POST.get('analytics', 'no')
         functional = request.POST.get('functional', 'no')
         advertising = request.POST.get('advertising', 'no')
 
+        consent = "custom"
+        if analytics == "yes" and functional == "yes" and advertising == "yes":
+            consent = "accepted"
+        elif analytics == "no" and functional == "no" and advertising == "no":
+            consent = "declined"
+
         response = JsonResponse({"status": "success"})
-        response.set_cookie("cookie_consent", "accepted", max_age=365*24*60*60)  # 1 year
+        response.set_cookie("cookie_consent", consent, max_age=365*24*60*60)  # 1 year
         response.set_cookie("cookie_analytics", analytics, max_age=365*24*60*60)
         response.set_cookie("cookie_functional", functional, max_age=365*24*60*60)
         response.set_cookie("cookie_advertising", advertising, max_age=365*24*60*60)
