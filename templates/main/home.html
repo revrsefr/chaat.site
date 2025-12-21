@@ -5,11 +5,30 @@
 {% block head %}
     <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=6" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=6"></noscript>
+
+    <!-- LCP: preload hero image and give it high priority -->
+    <link rel="preload" as="image" href="{% static 'images/banner/bg.jpg' %}" fetchpriority="high">
+
+    <style>
+        /* LCP: render hero background as an <img> so fetchpriority applies */
+        .banner.banner--style3.bg_img { position: relative; background-image: none !important; }
+        .banner.banner--style3 .banner-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        .banner.banner--style3 > .container { position: relative; z-index: 1; }
+    </style>
+
     <script defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
 {% endblock %}
 {% block content %}
     <!-- ================> Banner section start here <================== -->
-    <div class="banner banner--style3 padding-top bg_img"  style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
+    <div class="banner banner--style3 padding-top bg_img">
+        <img class="banner-bg" src="{% static 'images/banner/bg.jpg' %}" alt="" aria-hidden="true" fetchpriority="high" loading="eager" decoding="async">
         
         <div class="container">
             <div class="row g-0 justify-content-center justify-content-xl-between">
