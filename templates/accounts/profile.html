@@ -4,7 +4,7 @@
 
 {% block title %}Profil - {{ site_brand.title_suffix }}{% endblock %}
 
-{% block content %}
+{% block head %}
 <style>
     /* Minimal + theme-compatible: just remove the inner-scroll behaviour. */
     .profile-page .log-reg-inner { max-height: none !important; height: auto !important; overflow: visible !important; }
@@ -33,7 +33,9 @@
         user-select: all;
     }
 </style>
+{% endblock %}
 
+{% block content %}
 <section class="log-reg profile-page-root">
     <div class="top-menu-area">
         <div class="container">

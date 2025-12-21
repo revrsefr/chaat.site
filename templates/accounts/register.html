@@ -3,8 +3,7 @@
 
 {% block title %}Registre - {{ site_brand.title_suffix }}{% endblock %}
 
-{% block content %}
-
+{% block head %}
 <style>
     /* Match profile page fix: disable the theme's inner scroll for this page only. */
     .register-page-root { height: auto !important; min-height: 100vh; }
@@ -12,6 +11,9 @@
     .register-page-root .main-content { overflow: visible !important; }
     .register-page-root .image { bottom: 0 !important; height: auto !important; }
 </style>
+{% endblock %}
+
+{% block content %}
 
 <!-- Preloader -->
 <div class="preloader">

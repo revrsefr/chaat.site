@@ -3,7 +3,8 @@
 {% load i18n %}
 {% block title %}home - {{ site_brand.title_suffix }}{% endblock %}
 {% block head %}
-    <link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=6">
+    <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=6" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=6"></noscript>
     <script defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
 {% endblock %}
 {% block content %}
@@ -115,7 +116,7 @@
                                             <label class="form-label" for="webchat-sexe">Sexe</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-gender-ambiguous"></i>
-                                                <select id="webchat-sexe" name="sexe" class="home-webchat-select" required>
+                                                <select id="webchat-sexe" name="sexe" class="home-webchat-select">
                                                     <option value="homme">Homme</option>
                                                     <option value="femme" selected>Femme</option>
                                                 </select>
@@ -125,7 +126,7 @@
                                             <label class="form-label" for="webchat-age">Âge</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-calendar2-week"></i>
-                                                <select id="webchat-age" name="age" class="home-webchat-select" required>
+                                                <select id="webchat-age" name="age" class="home-webchat-select">
                                                     <option value="18" selected>18</option>
                                                     <option value="19">19</option>
                                                     <option value="20">20</option>
@@ -214,7 +215,7 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/serveur.png' %}"  height="100px" width="100px" alt="serveur thumb">
+                                    <img src="{% static 'images/about/icon/serveur.png' %}" height="100" width="100" alt="serveur thumb">
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ server_count }}" data-speed="1500">{{ server_count }}</span></h3>
@@ -227,7 +228,7 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/utilisateurs.png' %}" height="100px" width="100px" alt="dating thumb">
+                                    <img src="{% static 'images/about/icon/utilisateurs.png' %}" height="100" width="100" alt="dating thumb">
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ user_count }}" data-speed="1500">{{ user_count }}</span></h3>
@@ -240,7 +241,7 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/operateurs.png' %}" height="100px" width="100px" alt="dating thumb">
+                                    <img src="{% static 'images/about/icon/operateurs.png' %}" height="100" width="100" alt="dating thumb">
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ oper_count }}" data-speed="1500">{{ oper_count }}</span></h3>
@@ -253,7 +254,7 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-									<img src="{% static 'images/about/icon/channels.png' %}" height="100px" width="100px"  alt="dating thumb">
+                                    <img src="{% static 'images/about/icon/channels.png' %}" height="100" width="100" alt="dating thumb">
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ channel_count }}" data-speed="1500">{{ channel_count }}</span></h3>

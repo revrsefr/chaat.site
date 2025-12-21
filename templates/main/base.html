@@ -1,6 +1,7 @@
-{% load static %}
+{% load static i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ CURRENT_LANGUAGE|default:'fr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,53 +13,68 @@
     <meta name="identifier-url" content="{{ site_brand.base_url }}/">
     <meta name="rating" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="keywords" content="chat en ligne, discussion instantanée, tchat gratuit, rencontres, chat sans inscription" />
-    <meta name="author" content="{{ site_brand.meta_author }}" />
-    <link rel="apple-touch-icon" sizes="120x120" href="../images/apple-touch-icon-120x120-precomposed.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="../images/apple-touch-icon-152x152-precomposed.png">
+    <meta name="keywords" content="chat en ligne, discussion instantanée, tchat gratuit, rencontres, chat sans inscription">
+    <meta name="author" content="{{ site_brand.meta_author }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'images/apple-touch-icon-120x120-precomposed.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'images/apple-touch-icon-152x152-precomposed.png' %}">
     <meta property="og:title" content="Rejoignez dès maintenant votre tchat gratuit sans inscription et discuter avec des milliers d'utilisateurs du monde entier. bon tchatche sur votre site de discussion !">
-    <meta property="og:description" content="Rejoignez notre chat gratuit pour discuter en direct avec de nouvelles personnes. Aucune inscription requise !" />
-    <meta property="og:image" content="{% static 'images/banner/shape/home3/01.png' %}" />
-    <meta property="og:url" content="{{ canonical_url }}" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="{{ site_brand.site_name }}" />
+    <meta property="og:description" content="Rejoignez notre chat gratuit pour discuter en direct avec de nouvelles personnes. Aucune inscription requise !">
+    <meta property="og:image" content="{% static 'images/banner/shape/home3/01.png' %}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ site_brand.site_name }}">
     <meta property="og:locale" content="fr_FR">
-    <meta itemprop="name" content="Chat en ligne - Discuter gratuitement" />
-    <meta itemprop="image" content="{% static 'images/banner/shape/home3/01.png' %}" />
     <link rel="canonical" href="{{ canonical_url }}">
 
 
     <title>{% block title %}{{ site_brand.default_title }}{% endblock %}</title>
     
     <!-- All stylesheet and icons css  -->
-	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="{% static 'css/animate.css' %}">
-	<link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-	<link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
-	<link rel="stylesheet" href="{% static 'css/lightcase.css' %}">
+    <!-- Critical CSS (keep render-blocking to avoid FOUC) -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+
+    <!-- Non-critical CSS (defer to reduce render blocking) -->
+    <link rel="preload" as="style" href="{% static 'css/animate.css' %}" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/animate.css' %}"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/swiper.min.css' %}" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/swiper.min.css' %}"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/lightcase.css' %}" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/lightcase.css' %}"></noscript>
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v={{ static_version }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></noscript>
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
-    <!-- Cookie consent UI styles -->
+    <!-- Cookie consent UI styles (theme-friendly, same IDs/classes) -->
     <style>
+        :root {
+            --cookie-bg: rgba(21, 34, 70, 0.98);
+            --cookie-border: rgba(255, 255, 255, 0.14);
+            --cookie-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+            --cookie-radius: 14px;
+        }
+
         #cookie-banner {
             display: none;
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: min(380px, calc(100vw - 40px));
-            background: rgba(0, 85, 164, 0.98);
+            left: 18px;
+            bottom: 18px;
+            margin: 0;
+            width: auto;
+            background: linear-gradient(135deg, rgba(33, 51, 102, 0.98), rgba(21, 34, 70, 0.98));
             color: #ffffff;
-            padding: 16px;
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            padding: 16px 16px;
+            border-radius: var(--cookie-radius);
+            border: 1px solid var(--cookie-border);
+            box-shadow: var(--cookie-shadow);
             text-align: left;
-            font-family: "Arial", sans-serif;
             opacity: 0;
-            transform: translateY(12px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
+            transform: translateY(14px);
+            transition: opacity 220ms ease, transform 220ms ease;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         #cookie-banner.show {
@@ -69,75 +85,130 @@
 
         .cookie-header {
             font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .cookie-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .cookie-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .cookie-title-site { display: inline; }
+        .cookie-title-generic { display: none; }
+
+        .cookie-icon {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+        }
+
+        .cookie-status {
+            font-size: 12px;
+            opacity: 0.9;
+            white-space: nowrap;
         }
 
         .cookie-description {
             font-size: 13px;
-            opacity: 0.95;
+            opacity: 0.92;
             margin: 0;
+            line-height: 1.45;
         }
 
         .cookie-buttons {
             margin-top: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
         .cookie-button {
-            border: none;
-            padding: 10px 12px;
+            border: 0;
+            padding: 12px 12px;
             cursor: pointer;
-            border-radius: 8px;
-            font-weight: 700;
-            transition: filter 0.2s ease;
+            border-radius: 12px;
+            font-weight: 800;
+            transition: transform 120ms ease, filter 120ms ease;
             text-align: center;
             width: 100%;
         }
 
-        .cookie-button:hover {
-            filter: brightness(0.95);
-        }
+        .cookie-button:hover { filter: brightness(0.98); }
+        .cookie-button:active { transform: translateY(1px); }
+        .cookie-button:focus-visible { outline: 3px solid rgba(255, 255, 255, 0.35); outline-offset: 2px; }
 
-        .cookie-accept {
-            background: #00C851;
-            color: white;
-        }
-
-        .cookie-decline {
-            background: #ff4444;
-            color: white;
-        }
-
-        .cookie-settings {
-            background: #ffbb33;
-            color: white;
-        }
+        .cookie-accept { background: #00C851; color: #fff; }
+        .cookie-decline { background: rgba(255, 255, 255, 0.10); color: #fff; border: 1px solid rgba(255, 255, 255, 0.20); }
+        .cookie-settings { background: #ffbb33; color: #13224a; }
 
         .cookie-links {
             margin-top: 10px;
             font-size: 12px;
+            opacity: 0.92;
+        }
+
+        .cookie-links a { color: rgba(255, 255, 255, 0.95); text-decoration: underline; }
+
+        @media (min-width: 520px) {
+            .cookie-buttons {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        /* Cookie badge mode (always visible, bottom-left) */
+        #cookie-banner.mini {
+            width: auto;
+            max-width: min(260px, calc(100vw - 36px));
+            padding: 10px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+
+        #cookie-banner.mini .cookie-description,
+        #cookie-banner.mini .cookie-buttons {
+            display: none;
+        }
+
+        #cookie-banner.mini .cookie-status { display: none; }
+
+        #cookie-banner.mini .cookie-title-site { display: none; }
+        #cookie-banner.mini .cookie-title-generic { display: inline; }
+
+        #cookie-banner.mini .cookie-links {
+            margin-top: 8px;
+            font-size: 12px;
             opacity: 0.95;
         }
 
-        .cookie-links a {
-            color: #ffffff;
-            text-decoration: underline;
+        #cookie-banner.mini .cookie-privacy,
+        #cookie-banner.mini .cookie-sep {
+            display: none;
         }
+
+        #cookie-banner.mini .cookie-links { margin-top: 0; }
+        #cookie-banner.mini .cookie-links a { text-decoration: none; }
+        #cookie-banner.mini .cookie-links a:hover { text-decoration: underline; }
 
         #cookie-backdrop {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.65);
             z-index: 999;
         }
 
-        #cookie-backdrop.show {
-            display: block;
-        }
+        #cookie-backdrop.show { display: block; }
 
         #cookie-modal {
             display: none;
@@ -145,36 +216,110 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: min(460px, calc(100vw - 40px));
-            background: rgba(0, 85, 164, 0.98);
-            color: white;
+            width: min(520px, calc(100vw - 36px));
+            background: linear-gradient(180deg, rgba(33, 51, 102, 0.98), rgba(21, 34, 70, 0.98));
+            color: #fff;
             padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            border-radius: var(--cookie-radius);
+            border: 1px solid var(--cookie-border);
+            box-shadow: var(--cookie-shadow);
             text-align: left;
             z-index: 1001;
+            backdrop-filter: blur(10px);
         }
 
-        #cookie-modal.show {
-            display: block;
+        #cookie-modal.show { display: block; }
+
+        #cookie-modal h3 { font-weight: 900; letter-spacing: 0.2px; }
+        #cookie-modal label { display: flex; align-items: center; gap: 10px; margin: 0; }
+        #cookie-modal input[type="checkbox"] { width: 18px; height: 18px; }
+
+        .cookie-option { margin: 12px 0; }
+        .cookie-option-title { font-weight: 800; }
+        .cookie-option-desc { margin: 6px 0 0 28px; font-size: 12px; opacity: 0.92; line-height: 1.35; }
+
+        /* Header account dropdown: keep it theme-consistent (scoped, minimal). */
+        .header-account-dropdown .dropdown-menu {
+            background: #213366;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 10px;
+            min-width: 240px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+        }
+        .header-account-dropdown .dropdown-item {
+            color: #fff;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: none;
+        }
+        .header-account-dropdown .dropdown-item:hover,
+        .header-account-dropdown .dropdown-item:focus {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f24570;
+        }
+        .header-account-dropdown .dropdown-divider {
+            border-top-color: rgba(255, 255, 255, 0.14);
+            margin: 8px 0;
+        }
+        .header-account-dropdown .dropdown-item i {
+            font-size: 1.05em;
+            line-height: 1;
+        }
+
+        /* Hide dropdown caret unless interacting (hover/focus/open). */
+        .header-account-dropdown .dropdown-toggle::after {
+            opacity: 0;
+            transition: opacity 150ms ease;
+        }
+        .header-account-dropdown:hover .dropdown-toggle::after,
+        .header-account-dropdown .dropdown-toggle:focus-visible::after,
+        .header-account-dropdown .dropdown-toggle[aria-expanded="true"]::after {
+            opacity: 1;
         }
     </style>
 
     <!-- Google Consent Mode v2 (for GTM) -->
-    <script>
+    <script data-cookieconsent="ignore">
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() {
+            dataLayer.push(arguments);
+        }
 
-        // Default: deny until user explicitly consents
+        // EU-specific settings
         gtag('consent', 'default', {
-            'ad_storage': 'denied',
-            'analytics_storage': 'denied',
-            'ad_user_data': 'denied',
             'ad_personalization': 'denied',
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'analytics_storage': 'denied',
             'functionality_storage': 'denied',
-            'security_storage': 'granted',
-            'wait_for_update': 500
+            'personalization_storage': 'denied',
+            'region': [
+                'GB','AT','BE','BG','CH','CY','DE','DK','EE','ES','FI',
+                'FR','GG','GR','HR','HU','IE','IM','IT','JE','LT','LU',
+                'LV','MT','NL','PL','PT','RO','SE','SI','SK'
+            ],
+            'wait_for_update': 500,
         });
+
+        // Default settings
+        gtag('consent', 'default', {
+            'ad_personalization': 'granted',
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'analytics_storage': 'granted',
+            'functionality_storage': 'granted',
+            'personalization_storage': 'granted',
+            'security_storage': 'granted',
+            'wait_for_update': 500,
+        });
+
+        gtag('set', 'ads_data_redaction', true);
+        gtag('set', 'url_passthrough', false);
     </script>
 
         <!-- Google Tag Manager (loads with consent defaults above) -->
@@ -186,10 +331,13 @@
             })(window,document,'script','dataLayer','GTM-5J4F54MR');
         </script>
 
-    <!-- Google Fonts -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-    </style>
+    <!-- Google Fonts (defer CSS to reduce render blocking) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    </noscript>
     {% block head %}{% endblock %}
 </head>
 <body>   
@@ -212,7 +360,29 @@
 
     <!-- Cookie Banner -->
     <div id="cookie-banner" role="dialog" aria-modal="true" aria-label="Consentement cookies">
-        <div class="cookie-header">{{ site_brand.site_name }} demande votre consentement</div>
+        <div class="cookie-header cookie-header-row">
+            <div class="cookie-title">
+                <svg class="cookie-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                    <defs>
+                        <linearGradient id="cookieGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#ffcc80" />
+                            <stop offset="1" stop-color="#ffb74d" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M32 6c9 0 17 4 22 10-5 4-11 6-17 6-6 0-11-2-15-6C19 10 25 6 32 6Z" fill="rgba(0,0,0,0.12)"/>
+                    <path d="M32 10c12.2 0 22 9.8 22 22S44.2 54 32 54 10 44.2 10 32c0-1.6.2-3.2.5-4.7C18 30 26 26 30 18c6 6 16 6 22 0 1.3 2.1 2 4.6 2 7.3 0 7.7-6.3 14-14 14-6.9 0-12.7-5-13.8-11.6-4.2 6.2-11.6 9.2-18.9 8.4C8.4 45.1 18.9 54 32 54Z" fill="rgba(0,0,0,0.08)"/>
+                    <circle cx="32" cy="32" r="22" fill="url(#cookieGrad)"/>
+                    <circle cx="22" cy="26" r="3.2" fill="#6d4c41" opacity="0.9"/>
+                    <circle cx="38" cy="24" r="2.8" fill="#6d4c41" opacity="0.9"/>
+                    <circle cx="42" cy="36" r="3.4" fill="#6d4c41" opacity="0.9"/>
+                    <circle cx="26" cy="40" r="2.6" fill="#6d4c41" opacity="0.9"/>
+                    <circle cx="32" cy="44" r="2.2" fill="#6d4c41" opacity="0.9"/>
+                </svg>
+                <span class="cookie-title-site">{{ site_brand.site_name }} demande votre consentement</span>
+                <span class="cookie-title-generic">Cookies</span>
+            </div>
+            <div id="cookie-status" class="cookie-status" aria-live="polite"></div>
+        </div>
         <p class="cookie-description">Nous utilisons des cookies pour améliorer votre expérience. Vous pouvez accepter, refuser, ou personnaliser vos choix.</p>
         <div class="cookie-buttons">
             <button id="cookie-accept" class="cookie-button cookie-accept" type="button">Accepter</button>
@@ -220,8 +390,8 @@
             <button id="cookie-decline" class="cookie-button cookie-decline" type="button">Refuser</button>
         </div>
         <div class="cookie-links">
-            <a href="/privacy/" rel="nofollow">Politique de confidentialité</a>
-            &nbsp;•&nbsp;
+            <a class="cookie-privacy" href="/privacy/" rel="nofollow">Politique de confidentialité</a>
+            <span class="cookie-sep">&nbsp;•&nbsp;</span>
             <a href="#" id="cookie-manage" rel="nofollow">Gérer mes cookies</a>
         </div>
     </div>
@@ -232,9 +402,34 @@
     <div id="cookie-modal" role="dialog" aria-modal="true" aria-label="Préférences des cookies">
         <h3 style="margin:0 0 8px 0;">Préférences des cookies</h3>
         <p style="margin:0 0 10px 0;">Choisissez les cookies que vous souhaitez autoriser :</p>
-        <label><input type="checkbox" id="cookie-analytics"> Mesure d'audience</label><br>
-        <label><input type="checkbox" id="cookie-functional"> Fonctionnels</label><br>
-        <label><input type="checkbox" id="cookie-advertising"> Publicitaires</label><br><br>
+
+        <div class="cookie-option">
+            <label for="cookie-analytics" class="cookie-option-title">
+                <input type="checkbox" id="cookie-analytics"> Mesure d'audience
+            </label>
+            <div class="cookie-option-desc">
+                Aide à comprendre la fréquentation (pages vues, temps de visite, erreurs) afin d’améliorer le site.
+            </div>
+        </div>
+
+        <div class="cookie-option">
+            <label for="cookie-functional" class="cookie-option-title">
+                <input type="checkbox" id="cookie-functional"> Fonctionnels
+            </label>
+            <div class="cookie-option-desc">
+                Permet au site de fonctionner correctement (préférences, sécurité, personnalisation de base).
+            </div>
+        </div>
+
+        <div class="cookie-option">
+            <label for="cookie-advertising" class="cookie-option-title">
+                <input type="checkbox" id="cookie-advertising"> Publicitaires
+            </label>
+            <div class="cookie-option-desc">
+                Utilisés pour afficher et mesurer des publicités, limiter la répétition et parfois proposer du contenu plus pertinent.
+            </div>
+        </div>
+
         <div class="cookie-buttons" style="margin-top:0;">
             <button id="save-cookie-settings" class="cookie-button cookie-accept" type="button">Sauvegarder</button>
             <button id="close-cookie-settings" class="cookie-button cookie-decline" type="button">Fermer</button>
@@ -264,6 +459,7 @@
             var banner = document.getElementById("cookie-banner");
             var modal = document.getElementById("cookie-modal");
             var backdrop = document.getElementById("cookie-backdrop");
+            var statusEl = document.getElementById("cookie-status");
 
             function consentToGrant(value) {
                 return value === "yes" ? "granted" : "denied";
@@ -274,6 +470,7 @@
                 gtag('consent', 'update', {
                     'analytics_storage': consentToGrant(analytics),
                     'functionality_storage': consentToGrant(functional),
+                    'personalization_storage': consentToGrant(functional),
                     'ad_storage': consentToGrant(advertising),
                     'ad_user_data': consentToGrant(advertising),
                     'ad_personalization': consentToGrant(advertising),
@@ -287,6 +484,28 @@
 
             function hideBanner() {
                 banner.classList.remove("show");
+            }
+
+            function setBannerMode(mode) {
+                if (mode === "mini") {
+                    banner.classList.add("mini");
+                } else {
+                    banner.classList.remove("mini");
+                }
+            }
+
+            function updateStatus(consent) {
+                if (!statusEl) return;
+                if (!consent) {
+                    statusEl.textContent = "";
+                    return;
+                }
+
+                var label = "Choix enregistré";
+                if (consent === "accepted") label = "Accepté";
+                else if (consent === "declined") label = "Refusé";
+                else if (consent === "custom") label = "Personnalisé";
+                statusEl.textContent = "Cookies : " + label;
             }
 
             function showModal() {
@@ -320,7 +539,9 @@
                 });
 
                 hideModal();
-                hideBanner();
+                updateStatus(consent);
+                setBannerMode("mini");
+                showBanner();
             }
 
             // Apply saved consent on load (so GTM sees it)
@@ -330,9 +551,28 @@
                     Cookies.get("cookie_functional") || "no",
                     Cookies.get("cookie_advertising") || "no"
                 );
-            } else {
+                updateStatus(Cookies.get("cookie_consent"));
+                setBannerMode("mini");
                 showBanner();
+            } else {
+                updateStatus(null);
+                setBannerMode("mini");
+                showBanner();
+                // Badge-only UX: still prompt once via modal
+                setTimeout(function() {
+                    syncModalFromCookies();
+                    showModal();
+                }, 250);
             }
+
+            // Make the badge itself open preferences
+            banner.addEventListener("click", function(e) {
+                var targetId = e && e.target ? e.target.id : "";
+                if (targetId === "cookie-accept" || targetId === "cookie-decline" || targetId === "cookie-settings") return;
+                if (modal.classList.contains("show")) return;
+                syncModalFromCookies();
+                showModal();
+            });
 
             document.getElementById("cookie-accept").addEventListener("click", function() {
                 setCookies("accepted", "yes", "yes", "yes");
@@ -379,17 +619,30 @@
     </script>
     
     <script>
-        function fetchUserCount() {
-            fetch(window.location.href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
-                .then(response => response.text())
-                .then(html => {
-                    let parser = new DOMParser();
-                    let doc = parser.parseFromString(html, "text/html");
-                    let newCount = doc.querySelector(".counter").innerText;
-                    document.querySelector(".counter").innerText = newCount;
-                });
-        }
-        setInterval(fetchUserCount, 5000); // ✅ Refresh every 5 seconds
+        (function() {
+            function fetchUserCount() {
+                var currentEl = document.querySelector(".counter");
+                if (!currentEl) return;
+
+                fetch(window.location.href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                    .then(function(response) { return response.text(); })
+                    .then(function(html) {
+                        var parser = new DOMParser();
+                        var doc = parser.parseFromString(html, "text/html");
+                        var newEl = doc.querySelector(".counter");
+                        if (!newEl) return;
+                        currentEl.innerText = newEl.innerText;
+                    })
+                    .catch(function() {
+                        // Ignore (page might block XHR, offline, or no counter on response)
+                    });
+            }
+
+            // ✅ Only run on pages that have the counter
+            if (document.querySelector(".counter")) {
+                setInterval(fetchUserCount, 5000);
+            }
+        })();
     </script>
                   
     {% endblock %}
