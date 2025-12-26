@@ -50,6 +50,11 @@ def sitemap_xslt(request):
     return HttpResponse(xml, content_type='text/xml')
 
 
+def robots_txt(request):
+    content = render_to_string('robots.txt')
+    return HttpResponse(content, content_type='text/plain')
+
+
 @csrf_exempt
 def save_cookie_consent(request):
     if request.method == "POST":

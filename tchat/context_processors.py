@@ -148,13 +148,12 @@ def site_footer(request):
         "information_links": configured.get(
             "information_links",
             [
-                {"label": "Network IRC", "url": _safe_reverse("irc_dashboard")},
+                {"label": "Network", "url": _safe_reverse("irc_dashboard")},
             ],
         ),
         "useful_links": configured.get(
             "useful_links",
             [
-                {"label": "Webchat", "url": _safe_reverse("webchat")},
                 {"label": "Membres", "url": _safe_reverse("community_membres")},
                 {"label": "Blog", "url": _safe_reverse("blog:blog_list")},
                 {"label": "Inscription", "url": _safe_reverse("register")},

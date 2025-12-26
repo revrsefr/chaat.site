@@ -4,12 +4,10 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.conf import settings
 from recaptcha.jwt_utils import decode_jwt
-from django.utils.timezone import now
 from recaptcha.models import VerificationToken
 from django.utils.timezone import now
 from django.core.cache import cache
 from django.views.decorators.http import require_GET
-from django.http import JsonResponse
 from datetime import timedelta
 
 
@@ -48,7 +46,7 @@ def check_token(request):
 
 def verify_session_token(request):
     jwt_token = request.GET.get("token")
-    client_ip = request.META.get('REMOTE_ADDR')
+    client_ip = get_client_ip(request)
 
     if not jwt_token:
         return render(request, "recaptcha/error.html", {
@@ -70,6 +68,19 @@ def verify_session_token(request):
             "message": "Invalid or expired token. Reconnect to IRC."
         })
 
+    token_ip = payload.get("ip")
+    if not token_ip:
+        cache.set(attempts_key, attempts + 1, timeout=600)
+        return render(request, "recaptcha/error.html", {
+            "message": "Token missing IP binding. Reconnect to IRC for a new verification link."
+        })
+
+    if token_ip != client_ip:
+        cache.set(attempts_key, attempts + 1, timeout=600)
+        return render(request, "recaptcha/error.html", {
+            "message": "IP mismatch for this verification link. Please verify from the same connection and device that is connected to IRC."
+        })
+
     # <-- Explicitly check if token is already verified -->
     if VerificationToken.objects.filter(token=jwt_token, is_verified=True).exists():
         return render(request, "recaptcha/error.html", {
@@ -86,7 +97,7 @@ def verify_session_token(request):
 
 
 def process_recaptcha(request):
-    client_ip = request.META.get('REMOTE_ADDR')
+    client_ip = get_client_ip(request)
 
     cache_key = f"recaptcha_attempts:{client_ip}"
     attempts = cache.get(cache_key, 0)
@@ -105,6 +116,15 @@ def process_recaptcha(request):
     if not payload:
         cache.set(cache_key, attempts + 1, timeout=600)
         return JsonResponse({"status": "error", "message": "Invalid or expired JWT."})
+
+    token_ip = payload.get("ip")
+    if not token_ip:
+        cache.set(cache_key, attempts + 1, timeout=600)
+        return JsonResponse({"status": "error", "message": "Token missing IP binding. Reconnect to IRC."})
+
+    if token_ip != client_ip:
+        cache.set(cache_key, attempts + 1, timeout=600)
+        return JsonResponse({"status": "error", "message": "IP mismatch for this token."})
 
     # Already verified?
     if VerificationToken.objects.filter(token=jwt_token, is_verified=True).exists():

@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from main.sitemaps import StaticViewSitemap, UserSitemap, BlogSitemap
 from django.shortcuts import redirect
 from accounts.admin import AdminLoginView
+from main.views import robots_txt
 
 
 
@@ -58,6 +59,8 @@ def sitemap_section(request, section):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("admin/login/", AdminLoginView.as_view(), name="admin_login"),
+    path('robots.txt', robots_txt, name='robots_txt'),
+    path('robot.txt', robots_txt, name='robot_txt'),
     path('', home_redirect, name='home'),  # ✅ Global `home` (redirects `/` -> `/main/home/`)
     path("main/", include("main.urls", namespace="main")), 
     path('accounts/', include('accounts.urls')), 
