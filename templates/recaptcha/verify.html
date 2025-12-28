@@ -1,113 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRCD's - Google reCAPTCHA </title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google reCAPTCHA v2 -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <style>
-        body, html {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #121212; /* Dark background */
-            color: #ffffff; /* Light text for contrast */
-            margin: 0;
-        }
-        .container {
-            max-width: 400px; /* Limit the maximum width of the card */
-        }
-        .card {
-            background-color: #1e1e1e; /* Dark card background */
-            color: #ffffff; /* Light text */
-            border: none; /* Remove default border */
-        }
-        .card-header {
-            background-color: #292929; /* Slightly lighter dark for header */
-            border-bottom: none; /* Remove header border */
-        }
-        .btn-primary {
-            background-color: #bb86fc; /* Purple button */
-            border-color: #bb86fc;
-        }
-        .btn-primary:hover {
-            background-color: #9c4dcc; /* Darker purple on hover */
-            border-color: #9c4dcc;
-        }
-        .form-control {
-            background-color: #1e1e1e; /* Match the card background */
-            color: #ffffff; /* Light text */
-            border: 1px solid #6c757d;
-        }
-        .form-control:focus {
-            background-color: #1e1e1e;
-            color: #ffffff;
-            border-color: #bb86fc;
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(187, 134, 252, 0.25);
-        }
-        a, a:hover {
-            color: #bb86fc; /* Match button color */
-            text-decoration: none;
-        }
-        .recaptcha-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 150px; /* Adjust height as needed */
-        }
-        .alert {
-            background-color: #292929; /* Dark alert background */
-            color: #ffffff; /* Light text */
-            border: 1px solid #bb86fc; /* Purple border */
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="card shadow">
-            <div class="card-header text-center">
-                <h3>IRCd's - Google reCAPTCHA</h3>
-            </div>
-            <div class="card-body">
-                <!-- Form -->
-                <form id="recaptcha-form" action="{% url 'recaptcha:process_recaptcha' %}" method="POST" onsubmit="submitForm(event)">
-                  {% csrf_token %}
-                    <!-- Hidden Fields -->
-                    <!-- Hidden JWT field in your existing form -->
-                    <input type="hidden" name="jwt" value="{{ jwt }}">
-                    <input type="hidden" name="mode" value="jwt">
-                    
-                    <!-- reCAPTCHA Widget -->
-                    <div class="recaptcha-container mb-3">
-                        <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
-                    </div>
-                    <!-- Submit Button -->
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Verify</button>
-                    </div>
-                </form>
-                
-                <!-- Message Containers -->
-                <div id="message-container" class="mt-3"></div>
-                <div id="token-container" class="alert alert-success mt-3 d-none">
-                    <h4 class="alert-heading">Verification successful!</h4>
-                    <p>Use this command in IRC to complete your verification:</p>
-                    <pre><code id="verification-token"></code></pre>
-                    <button class="btn btn-primary mt-2" onclick="copyToClipboard()">Copy</button>
+{% extends "main/base.html" %}
+
+{% block title %}IRCd - Vérification reCAPTCHA{% endblock %}
+
+{% block head %}
+{{ block.super }}
+{% include "recaptcha/_theme.html" %}
+{% endblock %}
+
+{% block content %}
+<main class="recaptcha-ui">
+    <div class="recaptcha-ui__wrap">
+        <div class="recaptcha-ui__card">
+            <header class="recaptcha-ui__header">
+                <p class="recaptcha-ui__eyebrow">Vérification de sécurité</p>
+                <h1 class="recaptcha-ui__title">IRCd - Google reCAPTCHA</h1>
+                <p class="recaptcha-ui__subtitle">Complétez le challenge, puis copiez/collez la commande dans IRC pour terminer.</p>
+            </header>
+
+            <form id="recaptcha-form" action="{% url 'recaptcha:process_recaptcha' %}" method="POST" onsubmit="submitForm(event)">
+                {% csrf_token %}
+                <input type="hidden" name="jwt" value="{{ jwt }}">
+                <input type="hidden" name="mode" value="jwt">
+
+                <div class="recaptcha-ui__recaptcha">
+                    <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+                </div>
+
+                <div class="recaptcha-ui__actions">
+                    <button type="submit" class="recaptcha-ui__button recaptcha-ui__button--primary">Vérifier</button>
+                    <a href="{% url 'main:home' %}" class="recaptcha-ui__button recaptcha-ui__button--secondary">Retour à l’accueil</a>
+                </div>
+            </form>
+
+            <div id="message-container"></div>
+
+            <div id="token-container" class="recaptcha-ui__token d-none">
+                <h4 class="alert-heading">Vérification réussie&nbsp;!</h4>
+                <p>Utilisez cette commande dans IRC pour finaliser votre vérification&nbsp;:</p>
+                <pre><code id="verification-token"></code></pre>
+                <div class="recaptcha-ui__actions" style="margin-top: 1rem;">
+                    <button type="button" class="recaptcha-ui__button recaptcha-ui__button--primary" onclick="copyToClipboard()">Copier</button>
                 </div>
             </div>
+
+            <p class="recaptcha-ui__hint"><strong>Besoin d’aide&nbsp;?</strong> Rejoignez <code>#!aide</code> sur IRC.</p>
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Custom JavaScript -->
     <script>
         // Utility function to get CSRF token from cookies
         function getCookie(name) {
@@ -132,7 +71,7 @@
             const form = event.target;
         
             if (!recaptchaResponse) {
-                displayMessage('Please complete the reCAPTCHA!', 'alert-danger');
+                displayMessage('Merci de compléter le reCAPTCHA.', 'alert-danger');
                 return;
             }
         
@@ -155,13 +94,13 @@
                         document.getElementById("verification-token").textContent = `/verify ${data.result}`;
                     } else {
                         // Display error message
-                        displayMessage(data.message || "An error occurred.", 'alert-danger');
+                        displayMessage(data.message || "Une erreur est survenue.", 'alert-danger');
                         grecaptcha.reset(); // Reset the reCAPTCHA
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    displayMessage('An error occurred. Please try again.', 'alert-danger');
+                    displayMessage('Une erreur est survenue. Veuillez réessayer.', 'alert-danger');
                 });
         }        
     
@@ -173,12 +112,12 @@
         function copyToClipboard() {
             const token = document.getElementById("verification-token").textContent;
             navigator.clipboard.writeText(token).then(() => {
-                displayMessage('Copied!', 'alert-success');
+                displayMessage('Copié&nbsp;!', 'alert-success');
             }, () => {
-                displayMessage('Failed to copy. Please copy manually.', 'alert-danger');
+                displayMessage('Impossible de copier automatiquement. Copiez manuellement.', 'alert-danger');
             });
         }
     </script>
-    
-</body>
-</html>
+
+</main>
+{% endblock %}
