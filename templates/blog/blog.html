@@ -1,4 +1,6 @@
 {% extends "main/base.html" %}
+{% load static %}
+{% load querystring %}
 {% block content %}
     
 <!-- preloader start here -->
@@ -17,13 +19,13 @@
 <!-- scrollToTop ending here -->
  
 <!-- ================> Page Header section start here <================== -->
-    <div class="pageheader bg_img" style="background-image: url(assets/images/bg-img/pageheader.jpg);">
+    <div class="pageheader bg_img" style="background-image: url('{% static "images/bg-img/pageheader.jpg" %}');">
         <div class="container">
             <div class="pageheader__content text-center">
                 <h2>Blog</h2>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center mb-0">
-                      <li class="breadcrumb-item"><a href="index.html">home</a></li>
+                      <li class="breadcrumb-item"><a href="{% url 'main:home' %}">home</a></li>
                       <li class="breadcrumb-item active" aria-current="page">Blog</li>
                     </ol>
                 </nav>
@@ -37,27 +39,63 @@
         <div class="section-wrapper">
             <div class="row justify-content-center pb-15">
                 <div class="col-lg-9 col-12">
+					{% if user.is_authenticated %}
+						<div class="mb-4">
+							<a href="{% url 'blog:blog_create' %}" class="default-btn reverse"><span>New Post</span></a>
+						</div>
+					{% endif %}
                     {% for post in posts %}
                         <article>
                             <div class="blog__item">
                                 <div class="blog__inner">
-                                    <div class="blog__thumb">
-                                        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                    <div class="blog__thumb blog__thumb--list">
+                                        <a href="{% url 'blog:blog_detail' post.slug %}" aria-label="Read {{ post.title }}">
+                                            {% if post.image %}
+                                                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                            {% else %}
+                                                <img src="{% static 'images/blog/01.jpg' %}" alt="{{ post.title }}">
+                                            {% endif %}
+                                        </a>
+
+                                        <div class="meta-date">
+                                            <div class="md-pre">
+                                                <h5>{{ post.created_at|date:"d" }}</h5>
+                                                <p>{{ post.created_at|date:"M" }}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="blog__content">
-                                        <h2><a href="{% url 'blog:blog_detail' post.slug %}">{{ post.title }}</a></h2>
-                                        <ul class="blog__date">
-                                            <li><span><i class="fa-solid fa-calendar-days"></i>{{ post.created_at|date:"d F Y" }}</span></li>
-                                            <li><span><i class="fa-solid fa-user"></i><a href="#">{{ post.author }}</a></span></li>
+
+                                    <div class="blog__content text-center">
+                                        <h2 class="mb-2">
+                                            <a href="{% url 'blog:blog_detail' post.slug %}">{{ post.title }}</a>
+                                        </h2>
+
+                                        <ul class="blog__date text-center">
+                                            <li>
+                                                <span>
+                                                    <i class="fa-solid fa-calendar-days"></i>{{ post.created_at|date:"d F Y" }}
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span>
+                                                    <i class="fa-solid fa-user"></i><a href="#">{{ post.author }}</a>
+                                                </span>
+                                            </li>
                                         </ul>
-                                        <p>{{ post.content|truncatewords:50 }}</p>
-                                        <a href="{% url 'blog:blog_detail' post.slug %}" class="default-btn reverse"><span>Read More</span></a>
+
+                                        <p>{{ post.content|striptags|truncatewords:40 }}</p>
+
+                                        <div class="text-center">
+                                            <a href="{% url 'blog:blog_detail' post.slug %}" class="default-btn reverse"><span>Read More</span></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </article>
                     {% empty %}
-                        <p>No blog posts available.</p>
+                        <div class="text-center py-4">
+                            <p class="mb-0">No blog posts available.</p>
+                        </div>
                     {% endfor %}
                 </div>
 
@@ -81,9 +119,15 @@
                                 <h5>Post Categories</h5>
                             </div>
                             <ul class="lab-ul widget-wrapper list-bg-none">
+                                <li>
+                                    <a href="{% url 'blog:blog_list' %}?{% qs category=None %}" class="d-flex flex-wrap justify-content-between">
+                                        <span><i class="fa-solid fa-angles-right"></i>Show all</span>
+                                        <span></span>
+                                    </a>
+                                </li>
                                 {% for category in categories %}
                                     <li>
-                                        <a href="#" class="d-flex flex-wrap justify-content-between">
+                                        <a href="{% url 'blog:blog_list' %}?{% qs category=category.category %}" class="d-flex flex-wrap justify-content-between">
                                             <span><i class="fa-solid fa-angles-right"></i>{{ category.category }}</span>
                                             <span>{{ category.count }}</span>
                                         </a>
@@ -103,10 +147,16 @@
                                 {% for recent in recent_posts %}
                                     <li class="d-flex flex-wrap justify-content-between">
                                         <div class="post-thumb">
-                                            <a href="{% url 'blog:blog_detail' recent.slug %}"><img src="{{ recent.image.url }}" alt="{{ recent.title }}"></a>
+                                            <a href="{% url 'blog:blog_detail' slug=recent.slug %}">
+                                                {% if recent.image %}
+                                                    <img src="{{ recent.image.url }}" alt="{{ recent.title }}">
+                                                {% else %}
+                                                    <img src="{% static 'images/blog/01.jpg' %}" alt="{{ recent.title }}">
+                                                {% endif %}
+                                            </a>
                                         </div>
                                         <div class="post-content ps-4">
-                                            <a href="{% url 'blog:blog_detail' recent.slug %}">
+                                            <a href="{% url 'blog:blog_detail' slug=recent.slug %}">
                                                 <h6>{{ recent.title }}</h6>
                                             </a>
                                             <p>{{ recent.created_at|date:"d F Y" }}</p>

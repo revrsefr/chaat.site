@@ -1,0 +1,13 @@
+{% extends "help/_help_base.html" %}
+
+{% block title %}Commandes ChanServ{% endblock %}
+
+{% block help_content %}
+<h2>ChanServ - Gestion du canal</h2>
+<div class="command-block" style="background:transparent;border:none;padding:0;margin:0;">
+  <code>/msg ChanServ REGISTER #channel &lt;description&gt;</code> — Enregistrer un canal<br>
+  <code>/msg ChanServ DROP #channel</code> — Annuler l'enregistrement du canal<br>
+  <code>/msg ChanServ ACCESS #channel ADD &lt;nick&gt; &lt;level&gt;</code> — Attribuer un accès
+</div>
+
+{% endblock %}

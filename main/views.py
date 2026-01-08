@@ -6,7 +6,15 @@ from irc.rpc_client import AnopeRPC
 from blog.models import BlogPost
 from django.http import JsonResponse  
 from django.conf import settings
+
 from django.views.decorators.csrf import csrf_exempt
+
+def webirc(request):
+    from django.template import TemplateDoesNotExist
+    try:
+        return render(request, 'webirc.html')
+    except TemplateDoesNotExist:
+        return HttpResponse('ERROR: webirc.html template not found in templates directory.', status=500)
 
 def home(request):
     latest_members = (

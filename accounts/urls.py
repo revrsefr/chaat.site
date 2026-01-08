@@ -6,6 +6,7 @@ from .views import (
     verify_email_view,
     generate_irc_app_password_view,
     revoke_irc_app_password_view,
+    password_reset_confirm_view, # <-- Added
 )
 from .api import register, login_api, login_token, change_password, change_email, verify_email, resend_email_verification
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -16,6 +17,7 @@ urlpatterns = [
     path("logout/", logout_view, name="logout"),
     path("verify-email/", verify_email_view, name="verify_email"),
     path("forgot-password/", forgot_password_view, name="forgot_password"),
+    path("reset/<uidb64>/<token>/", password_reset_confirm_view, name="password_reset_confirm"),
     path("change-password/", change_password_view, name="change_password"),
     path("change-email/", change_email_view, name="change_email"),
     path("profile/<str:username>/", profile_view, name="profile"),

@@ -1,0 +1,13 @@
+{% extends "help/_help_base.html" %}
+
+{% block title %}Commandes OperServ{% endblock %}
+
+{% block help_content %}
+<h2>OperServ - Opérations réseau</h2>
+<div class="command-block" style="background:transparent;border:none;padding:0;margin:0;">
+  <code>/msg OperServ STATS</code> — Statistiques du réseau<br>
+  <code>/msg OperServ KILL &lt;nick&gt; [reason]</code> — Déconnecter un utilisateur<br>
+  <code>/msg OperServ AKILL [duration] &lt;mask&gt; [reason]</code> — Ajouter une auto-kill
+</div>
+
+{% endblock %}

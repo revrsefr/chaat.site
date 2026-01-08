@@ -62,6 +62,15 @@
                     </div>
 
                     <div class="main-content inloginp">
+                                                {% if messages %}
+                                                    {% for message in messages %}
+                                                        {% if message.tags == "success" %}
+                                                            <div class="alert alert-success mt-3 text-center">{{ message }}</div>
+                                                        {% else %}
+                                                            <div class="alert alert-danger mt-3 text-center">{{ message }}</div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
                         <!-- ✅ Only allow the profile owner to edit -->
                         {% if request.user == user_profile %}
                         <!-- Theme-style tab buttons (reuse existing button styles) -->
@@ -219,6 +228,7 @@
                             <div class="sidebar-links" style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
                                 <a href="{% url 'account_settings' %}" class="default-btn reverse">{% trans "Paramètres du compte" %}</a>
                                 <a href="{% url 'change_password' %}" class="default-btn reverse">{% trans "Modifier le mot de passe" %}</a>
+                                <a href="{% url 'forgot_password' %}?email={{ user_profile.email|urlencode }}" class="default-btn reverse">{% trans "Réinitialiser le mot de passe par email" %}</a>
                                 <a href="{% url 'delete_account' %}" class="default-btn reverse text-danger">{% trans "Supprimer mon compte" %}</a>
                             </div>
                         </div>

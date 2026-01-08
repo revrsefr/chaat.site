@@ -1,13 +1,13 @@
 {% load static %}
 {% load i18n %}
 <header class="header header--style2" id="navbar">
-    <div class="header__top d-none d-lg-block">
+    <!--<div class="header__top d-none d-lg-block">
         <div class="container">
             <div class="header__top--area">
                 <div class="header__top--left">
                     <ul>
-                        <!--<li><i class="fa-solid fa-phone"></i> <span>+800-123-4567 6587</span></li>
-                        <li><i class="fa-solid fa-location-dot"></i> Beverley, New York 224 USA</li>-->
+                        <li><i class="fa-solid fa-phone"></i> <span>+800-123-4567 6587</span></li>
+                        <li><i class="fa-solid fa-location-dot"></i> Beverley, New York 224 USA</li>
                     </ul>
                 </div>
                 <div class="header__top--right">
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="header__bottom">
         <div class="container">
             <nav class="navbar navbar-expand-lg">
@@ -34,10 +34,12 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                     <div class="navbar-nav mainmenu">
                         <ul>
-                            <li class="active">
-                                <a href="#">{% trans "home" %}</a>
+                            <li>
+                                <a href="#">{% trans "Network" %}</a>
                                 <ul>
-                                    <li><a href="#" class="active">home</a></li>
+                                    <li><a href="{% url 'irc_dashboard' %}" target="_blank">{% trans "Network" %}</a></li>
+                                    <!--li><a href="blog-2.html">{% trans "Blog Style Two" %}</a></li>
+                                    <li><a href="#" target="_blank">{% trans "Blog Details" %}</a></li>-->
                                 </ul>
                             </li>
                             <li>
@@ -57,7 +59,7 @@
                                     <li><a href="#" target="_blank">{% trans "Blog Details" %}</a></li>-->
                                 </ul>
                             </li>
-                            <li><a href="#" target="_blank">{% trans "Contact" %}</a></li>
+                            
                         </ul>
                     </div>
                     <ul class="button-group">

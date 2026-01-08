@@ -65,6 +65,7 @@ urlpatterns = [
     path("main/", include("main.urls", namespace="main")), 
     path('accounts/', include('accounts.urls')), 
     path('irc/', include('irc.urls')),    # IRC app URLs
+    path('help/', include(('helpdocs.urls', 'helpdocs'), namespace='helpdocs')),
     path('community/', include('community.urls')),
     path('blog/', include('blog.urls')),
     path('locations/', include('locations.urls')),

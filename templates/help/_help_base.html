@@ -1,0 +1,195 @@
+{% extends "main/base.html" %}
+
+{% block title %}Aide — {{ title|default:"Documentation" }}{% endblock %}
+
+{% block content %}
+{% include 'recaptcha/_theme.html' %}
+
+<style>
+  .recaptcha-ui__nav-link {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.45rem 0.6rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background 160ms ease, color 160ms ease;
+  }
+  .recaptcha-ui__nav-link:hover { background: rgba(93,224,230,0.06); color: var(--accent); }
+  .doc-breadcrumb { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .doc-breadcrumb a { color: var(--muted); text-decoration: none; }
+  .doc-breadcrumb a:hover { color: var(--accent); }
+  .doc-header { margin-bottom: 0.8rem; }
+  .doc-header .recaptcha-ui__title { margin-bottom: 0.2rem; }
+  .help-section-title { border-bottom: 1px solid var(--panel-line); padding-bottom: 0.6rem; margin-bottom: 1rem; }
+  /* Make help pages wider and use more of the screen like professional docs */
+  .recaptcha-ui__wrap {
+    max-width: 1200px; /* override the small default */
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  @media (min-width: 1100px) {
+    .recaptcha-ui__wrap { max-width: 1400px; }
+  }
+  /* Make main card stretch and use available width */
+  .recaptcha-ui__card.main-card { width: 100%; }
+  aside .recaptcha-ui__card { padding: 0.75rem; }
+</style>
+
+<div class="recaptcha-ui">
+  <div class="recaptcha-ui__wrap">
+    <div style="display:grid;grid-template-columns:260px 1fr;gap:1.25rem;align-items:start;">
+      <aside style="position:sticky;top:2.5rem;">
+        <div class="recaptcha-ui__card" style="padding:1rem;max-width:260px;">
+          <h3 style="margin:0 0 0.5rem;color:var(--accent);">Documentation</h3>
+          <nav style="display:flex;flex-direction:column;gap:0.25rem;">
+            <a href="{% url 'helpdocs:help_index' %}" class="recaptcha-ui__nav-link">Présentation</a>
+            <a href="{% url 'helpdocs:ircd' %}" class="recaptcha-ui__nav-link">Administration IRCD</a>
+            <a href="{% url 'helpdocs:nickserv' %}" class="recaptcha-ui__nav-link">NickServ</a>
+            <a href="{% url 'helpdocs:chanserv' %}" class="recaptcha-ui__nav-link">ChanServ</a>
+            <a href="{% url 'helpdocs:memoserv' %}" class="recaptcha-ui__nav-link">MemoServ</a>
+            <a href="{% url 'helpdocs:operserv' %}" class="recaptcha-ui__nav-link">OperServ</a>
+          </nav>
+        </div>
+      </aside>
+
+      <main>
+        <div class="recaptcha-ui__card main-card" style="padding:1.5rem;">
+          <div class="doc-header">
+            <div class="doc-breadcrumb"><a href="{% url 'helpdocs:help_index' %}">Aide</a> / <span>{{ title|default:'IRCD et Services' }}</span></div>
+            <h1 class="recaptcha-ui__title">{{ title|default:'IRCD et Services' }}</h1>
+            {% if subtitle %}<p class="recaptcha-ui__subtitle">{{ subtitle }}</p>{% endif %}
+          </div>
+          <section id="help-content">
+            {% block help_content %}{% endblock %}
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+<script>
+  // SPA-like loader for help pages: intercept sidebar clicks, fetch page HTML,
+  // extract `#help-content` and title, then replace the current content.
+  (function() {
+    var navSelector = '.recaptcha-ui__card nav a';
+    var contentEl = document.getElementById('help-content');
+    var titleElSelector = '.recaptcha-ui__title';
+    var breadcrumbElSelector = '.doc-breadcrumb';
+
+    function setActiveLink(url) {
+      document.querySelectorAll(navSelector).forEach(function(a) {
+        a.classList.remove('active');
+        try {
+          var aPath = new URL(a.href, window.location.origin).pathname;
+          if (window.location.pathname === aPath || window.location.pathname.startsWith(aPath)) {
+            a.classList.add('active');
+          }
+        } catch (e) {}
+      });
+    }
+
+    function showLoader(show) {
+      var loader = document.getElementById('help-loader');
+      if (!loader) return;
+      loader.style.display = show ? 'flex' : 'none';
+    }
+
+    // badge removed: setBadge is no-op
+    function setBadge() {}
+
+    function extractAndReplace(html) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+
+      var newContent = doc.querySelector('#help-content');
+      if (newContent && contentEl) {
+        contentEl.innerHTML = newContent.innerHTML;
+      }
+
+      var newTitle = doc.querySelector(titleElSelector);
+      if (newTitle) {
+        document.querySelector(titleElSelector).textContent = newTitle.textContent;
+        document.title = newTitle.textContent + ' — Help';
+      }
+
+      var newBreadcrumb = doc.querySelector(breadcrumbElSelector);
+      if (newBreadcrumb) {
+        var cur = document.querySelector(breadcrumbElSelector);
+        if (cur) cur.innerHTML = newBreadcrumb.innerHTML;
+      }
+
+      setActiveLink(window.location.href);
+    }
+
+    async function loadUrl(url, push) {
+      try {
+        showLoader(true);
+        var res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        if (!res.ok) {
+          // fallback to full navigation on error
+          window.location.href = url;
+          return;
+        }
+        var text = await res.text();
+        extractAndReplace(text);
+        if (push) history.pushState({ url: url }, '', url);
+      } catch (e) {
+        console.error('Help load failed', e);
+        window.location.href = url; // hard fallback
+      } finally {
+        showLoader(false);
+        // no badge to update
+      }
+    }
+
+    // Intercept clicks on nav links
+    document.addEventListener('click', function(ev) {
+      var a = ev.target.closest && ev.target.closest(navSelector);
+      if (!a) return;
+      if (a.target && a.target !== '_self') return; // allow external targets
+      var href = a.href;
+      if (!href) return;
+      var sameOrigin = href.startsWith(window.location.origin) || href.startsWith('/');
+      if (!sameOrigin) return; // don't intercept external links
+
+      ev.preventDefault();
+      console.debug('Help nav click intercepted:', href);
+      if (href === window.location.href) return;
+      loadUrl(href, true);
+    }, true);
+
+    // Handle back/forward
+    window.addEventListener('popstate', function(ev) {
+      var url = (ev.state && ev.state.url) || window.location.href;
+      loadUrl(url, false);
+    });
+
+    // create loader element
+    (function createLoader() {
+      var card = document.querySelector('.recaptcha-ui__card');
+      if (!card) return;
+      var loader = document.createElement('div');
+      loader.id = 'help-loader';
+      loader.style.position = 'absolute';
+      loader.style.inset = '0';
+      loader.style.display = 'none';
+      loader.style.alignItems = 'center';
+      loader.style.justifyContent = 'center';
+      loader.style.background = 'linear-gradient(180deg, rgba(7,12,28,0.2), rgba(7,12,28,0.6))';
+      loader.style.borderRadius = card.style.borderRadius || '1.4rem';
+      loader.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;color:var(--ink)">\n<span class="spinner" style="width:40px;height:40px;border-radius:50%;border:4px solid rgba(255,255,255,0.08);border-top-color:var(--accent);animation:spin 800ms linear infinite"></span>\n<span>Loading…</span>\n</div>';
+      card.style.position = 'relative';
+      card.appendChild(loader);
+      var style = document.createElement('style');
+      style.innerHTML = '@keyframes spin { to { transform: rotate(360deg); } }';
+      document.head.appendChild(style);
+    })();
+
+    // initialize active link on first load
+    setActiveLink(window.location.href);
+  })();
+</script>

@@ -1,4 +1,8 @@
 {% extends "main/base.html" %}
+{% load blog_extras %}
+{% load sanitize_html %}
+{% load static %}
+{% load querystring %}
 {% block content %}
 
 <!-- preloader start here -->
@@ -17,7 +21,7 @@
 <!-- scrollToTop ending here -->
 
 <!-- ================> Page Header section start here <================== -->
-<div class="pageheader bg_img" style="background-image: url(assets/images/bg-img/pageheader.jpg);">
+<div class="pageheader bg_img" style="background-image: url('{% static "images/bg-img/pageheader.jpg" %}');">
 	<div class="container">
 		<div class="pageheader__content text-center">
 			<h2>Blog</h2>
@@ -43,14 +47,16 @@
 								<div class="blog__thumb">
 									<img src="{{ post.image.url }}" alt="{{ post.title }}">
 								</div>
-								<div class="blog__content">
+								<div class="blog__content text-center">
 									<h2>{{ post.title }}</h2>
-									<ul class="blog__date">
+									<ul class="blog__date text-center">
 										<li><span><i class="fa-solid fa-calendar-days"></i> {{ post.created_at|date:"d F Y" }}</span></li>
 										<li><span><i class="fa-solid fa-user"></i> <a href="#">{{ post.author }}</a></span></li>
 										<li><span><i class="fa-solid fa-comments"></i> <a href="#"> {{ comments.count }} Comments</a></span></li>
 									</ul>
-									<p>{{ post.content }}</p>
+									<div class="blog__post-body">
+										{{ post.content|sanitize_html }}
+									</div>
 
 									<!-- ✅ Tags Display -->
 									<div class="tags-area">
@@ -74,19 +80,25 @@
 					</article>
 					<!-- ✅ COMMENTS SECTION -->
 					<div class="comments">
-						<h4 class="comment-title">{{ post.comments.count }} Comments</h4>
+						<h4 class="comment-title">{{ comments.count }} Comments</h4>
 						<ul class="lab-ul comment-list">
-							{% for comment in post.comments.all %}
+							{% for comment in comments %}
 								<li class="comment">
 									<div class="com-item">
 										<div class="com-thumb">
-											<img src="https://www.gravatar.com/avatar/{{ comment.email|lower|make_list|join:'' }}" alt="user">
+												<img src="https://www.gravatar.com/avatar/{{ comment.email|gravatar_hash }}" alt="user">
 										</div>
 										<div class="com-content">
 											<div class="com-title">
 												<div class="com-title-meta">
 													<a href="#">{{ comment.name }}</a>
 													<span> {{ comment.created_at|date:"d F Y H:i" }} </span>
+													{% if user.is_authenticated and user.pk == post.author_id %}
+														<form action="{% url 'blog:delete_comment' slug=post.slug comment_id=comment.id %}" method="POST" style="display:inline; margin-left: 10px;">
+															{% csrf_token %}
+															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this comment?');">Delete</button>
+														</form>
+													{% endif %}
 												</div>
 											</div>
 											<p>{{ comment.content }}</p>
@@ -98,26 +110,26 @@
 							{% endfor %}
 						</ul>
 					</div>
-					<!-- ✅ COMMENT FORM -->
-					<div class="comment-respond">
-						<h4>Leave a Comment</h4>
-						<div class="add-comment">
-							<form action="{% url 'blog:blog_detail' slug=post.slug %}" method="POST" class="comment-form">
-								{% csrf_token %}
-								{{ form.non_field_errors }}
-					
-								<input name="name" type="text" placeholder="Name*" required value="{{ form.name.value|default_if_none:'' }}">
-								<input name="email" type="email" placeholder="Email*" required value="{{ form.email.value|default_if_none:'' }}">
-								<input name="website" type="text" placeholder="Website*" class="w-100" value="{{ form.website.value|default_if_none:'' }}">
-								<textarea name="content" rows="7" placeholder="Type Here Your Comment*" required>{{ form.comment.value|default_if_none:'' }}</textarea>
-								
-								<!-- ✅ reCAPTCHA widget -->
-								<div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
-					
-								<button type="submit" class="default-btn reverse"><span>Send Comment</span></button>
-							</form>
-						</div>
-					</div>
+					   <!-- ✅ COMMENT FORM -->
+					   <div class="comment-respond">
+						   <h4>Leave a Comment</h4>
+						   <div class="add-comment">
+							   {% if user.is_authenticated %}
+								   <form action="{% url 'blog:add_comment' slug=post.slug %}" method="POST" class="comment-form">
+									   {% csrf_token %}
+									   {{ form.non_field_errors }}
+									   <textarea name="content" rows="7" placeholder="Type Here Your Comment*" required>{{ form.content.value|default_if_none:'' }}</textarea>
+									   <!-- ✅ reCAPTCHA widget -->
+									   <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+									   <button type="submit" class="default-btn reverse"><span>Send Comment</span></button>
+								   </form>
+							   {% else %}
+								   <div class="alert alert-info text-center mt-3">
+									   You must be <a href="{% url 'login' %}?next={{ request.path }}">logged in</a> to leave a comment.
+								   </div>
+							   {% endif %}
+						   </div>
+					   </div>
 				</div>
 				<!-- ✅ SIDEBAR -->
 				<div class="col-lg-3 col-md-7 col-12">
@@ -142,14 +154,14 @@
 							<ul class="lab-ul widget-wrapper list-bg-none">
 								<!-- ✅ "Show All" at the top -->
 								<li>
-									<a href="{% url 'blog:blog_list' %}" class="d-flex flex-wrap justify-content-between">
+									<a href="{% url 'blog:blog_list' %}?{% qs category=None %}" class="d-flex flex-wrap justify-content-between">
 										<span><i class="fa-solid fa-angles-right"></i> Show all</span>
 										<span>{{ categories|length }}</span>
 									</a>
 								</li>
 								{% for category in categories %}
 									<li>
-										<a href="#" class="d-flex flex-wrap justify-content-between">
+										<a href="{% url 'blog:blog_list' %}?{% qs category=category.category %}" class="d-flex flex-wrap justify-content-between">
 											<span><i class="fa-solid fa-angles-right"></i> {{ category.category }}</span>
 											<span>{{ category.count }}</span>
 										</a>
@@ -170,7 +182,11 @@
 								<li class="d-flex flex-wrap justify-content-between">
 									<div class="post-thumb">
 										<a href="{% url 'blog:blog_detail' slug=recent.slug %}">
-											<img src="{{ recent.image.url }}" alt="{{ recent.title }}">
+											{% if recent.image %}
+												<img src="{{ recent.image.url }}" alt="{{ recent.title }}">
+											{% else %}
+												<img src="{% static 'images/blog/01.jpg' %}" alt="{{ recent.title }}">
+											{% endif %}
 										</a>
 									</div>
 									<div class="post-content ps-4">

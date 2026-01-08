@@ -14,6 +14,13 @@ from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 import secrets
 from django.urls import reverse
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.template.loader import render_to_string
+from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 
 from .models import IrcAppPassword
 from .utils import issue_email_verification_code, verify_email_code
@@ -156,8 +163,50 @@ def logout_view(request):
 
 # ✅ Render Forgot Password Page
 def forgot_password_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        user = CustomUser.objects.filter(email__iexact=email).first()
+        if user:
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_url = request.build_absolute_uri(
+                reverse("password_reset_confirm", kwargs={"uidb64": uid, "token": token})
+            )
+            subject = "Password Reset Request"
+            message = render_to_string("accounts/password_reset_email.html", {"reset_url": reset_url, "user": user})
+            send_mail(subject, message, None, [user.email])
+            messages.success(request, "A password reset link has been sent to your email.")
+        else:
+            messages.error(request, "No user found with that email.")
+        return redirect("forgot_password")
     return render(request, "accounts/forgot_password.html")
 
+
+def password_reset_confirm_view(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == "POST":
+            password1 = request.POST.get("new_password1")
+            password2 = request.POST.get("new_password2")
+            if password1 and password2 and password1 == password2:
+                try:
+                    validate_password(password1, user)
+                    user.set_password(password1)
+                    user.save()
+                    messages.success(request, "Your password has been reset.")
+                    return redirect("login")
+                except ValidationError as e:
+                    messages.error(request, ", ".join(e.messages))
+            else:
+                messages.error(request, "Passwords do not match.")
+        return render(request, "accounts/password_reset_confirm.html", {"validlink": True})
+    else:
+        messages.error(request, "The password reset link is invalid or has expired.")
+        return render(request, "accounts/password_reset_confirm.html", {"validlink": False})
 
 def verify_email_view(request):
     """Renders the email verification page and validates codes."""

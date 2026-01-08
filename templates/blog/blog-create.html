@@ -1,0 +1,66 @@
+{% extends "main/base.html" %}
+{% block content %}
+
+<div class="pageheader bg_img" style="background-image: url(assets/images/bg-img/pageheader.jpg);">
+	<div class="container">
+		<div class="pageheader__content text-center">
+			<h2>New Blog Post</h2>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb justify-content-center mb-0">
+					<li class="breadcrumb-item"><a href="{% url 'main:home' %}">home</a></li>
+					<li class="breadcrumb-item"><a href="{% url 'blog:blog_list' %}">Blog</a></li>
+					<li class="breadcrumb-item active" aria-current="page">New</li>
+				</ol>
+			</nav>
+		</div>
+	</div>
+</div>
+
+<div class="blog blog--style2 padding-top padding-bottom aside-bg">
+	<div class="container">
+		<div class="section-wrapper">
+			<div class="row justify-content-center">
+				<div class="col-lg-9 col-12">
+					<div class="comment-respond">
+						<h4>Create a Post</h4>
+						<div class="add-comment">
+							<form method="POST" enctype="multipart/form-data" class="comment-form">
+								{% csrf_token %}
+								{{ form.non_field_errors }}
+
+								{{ form.title.errors }}
+								<input type="text" name="title" placeholder="Title" class="w-100" value="{{ form.title.value|default_if_none:'' }}" required>
+
+								{{ form.content.errors }}
+								<textarea name="content" rows="10" placeholder="Write your post..." required>{{ form.content.value|default_if_none:'' }}</textarea>
+
+								{{ form.image.errors }}
+								<input type="file" name="image" class="w-100" accept="image/*" required>
+
+								{{ form.category.errors }}
+								<input type="text" name="category" placeholder="Category (optional)" class="w-100" value="{{ form.category.value|default_if_none:'' }}">
+
+								{{ form.tags.errors }}
+								<input type="text" name="tags" placeholder="Tags (comma separated)" class="w-100" value="{{ form.tags.value|default_if_none:'' }}">
+
+								{{ form.keywords.errors }}
+								<input type="text" name="keywords" placeholder="SEO keywords (optional)" class="w-100" value="{{ form.keywords.value|default_if_none:'' }}">
+
+								<div style="margin: 10px 0;">
+									<label style="display:flex; gap:10px; align-items:center;">
+										<input type="checkbox" name="is_published" {% if form.is_published.value %}checked{% endif %}>
+										<span>Published</span>
+									</label>
+								</div>
+
+								<button type="submit" class="default-btn reverse"><span>Create Post</span></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

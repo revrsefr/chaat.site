@@ -1,0 +1,14 @@
+{% extends "help/_help_base.html" %}
+
+{% block title %}Commandes NickServ{% endblock %}
+
+{% block help_content %}
+<h2>NickServ - Gestion de compte</h2>
+<div class="command-block" style="background:transparent;border:none;padding:0;margin:0;">
+  <code>/msg NickServ REGISTER &lt;password&gt; &lt;email&gt;</code> — Enregistrer un pseudonyme<br>
+  <code>/msg NickServ IDENTIFY &lt;password&gt;</code> — S'identifier<br>
+  <code>/msg NickServ GHOST &lt;nick&gt; &lt;password&gt;</code> — Déconnecter une session fantôme<br>
+  <code>/msg NickServ SET &lt;option&gt; &lt;value&gt;</code> — Modifier les paramètres du compte
+</div>
+
+{% endblock %}
