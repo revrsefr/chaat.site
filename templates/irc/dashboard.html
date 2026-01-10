@@ -5,485 +5,7 @@
 
 {% block head %}
 {{ block.super }}
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
-    :root {
-        --ink: #e8f3ff;
-        --muted: rgba(232, 243, 255, 0.65);
-        --accent: #5de0e6;
-        --accent-strong: #f8d66d;
-        --bg: radial-gradient(circle at 5% 20%, rgba(41, 67, 133, 0.55), transparent 45%),
-               radial-gradient(circle at 80% 0%, rgba(93, 224, 230, 0.25), transparent 45%),
-               #050b1a;
-        --panel: rgba(7, 12, 28, 0.85);
-        --panel-line: rgba(255, 255, 255, 0.05);
-        --success: #3dd598;
-        --danger: #ff6b6b;
-    }
-
-    .irc-dashboard {
-        font-family: 'Space Grotesk', 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        color: var(--ink);
-        background: var(--bg);
-        padding: 4rem 5vw 6rem;
-    }
-
-    .irc-dashboard h1,
-    .irc-dashboard h2,
-    .irc-dashboard h3,
-    .irc-dashboard h4 {
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        margin: 0;
-    }
-
-    .dashboard-hero {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2.5rem;
-        align-items: center;
-        margin-bottom: 3rem;
-    }
-
-    .hero-copy p {
-        color: var(--muted);
-        line-height: 1.6;
-        max-width: 52ch;
-    }
-
-    .eyebrow {
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        font-size: 0.75rem;
-        color: var(--accent);
-        margin-bottom: 0.6rem;
-    }
-
-    .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
-    }
-
-    .hero-actions a,
-    .hero-actions button {
-        border: none;
-        border-radius: 999px;
-        padding: 0.85rem 1.75rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 200ms ease, box-shadow 200ms ease;
-    }
-
-    .hero-actions a {
-        background: linear-gradient(120deg, var(--accent), var(--accent-strong));
-        color: #03121d;
-        text-decoration: none;
-        box-shadow: 0 12px 30px rgba(93, 224, 230, 0.3);
-    }
-
-    .hero-actions button {
-        background: transparent;
-        border: 1px solid var(--panel-line);
-        color: var(--ink);
-    }
-
-    .hero-actions a:hover,
-    .hero-actions button:hover {
-        transform: translateY(-2px);
-    }
-
-    .status-card {
-        background: var(--panel);
-        border: 1px solid var(--panel-line);
-        border-radius: 1.2rem;
-        padding: 1.8rem;
-        backdrop-filter: blur(18px);
-        min-height: 160px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .status-card span {
-        font-size: 2.25rem;
-        font-weight: 600;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1.2rem;
-        margin-bottom: 3rem;
-    }
-
-    .stat-card {
-        background: var(--panel);
-        border: 1px solid var(--panel-line);
-        border-radius: 1.2rem;
-        padding: 1.4rem 1.6rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at top, rgba(93, 224, 230, 0.35), transparent 55%);
-        opacity: 0;
-        transition: opacity 300ms ease;
-    }
-
-    .stat-card:hover::after {
-        opacity: 1;
-    }
-
-    .stat-label {
-        text-transform: uppercase;
-        font-size: 0.72rem;
-        letter-spacing: 0.2em;
-        color: var(--muted);
-    }
-
-    .stat-value {
-        font-size: 2.3rem;
-        font-weight: 600;
-        margin-top: 0.4rem;
-        display: block;
-    }
-
-    .panel {
-        background: var(--panel);
-        border: 1px solid var(--panel-line);
-        border-radius: 1.4rem;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 25px 65px rgba(0, 4, 17, 0.4);
-    }
-
-    .panel header {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        flex-wrap: wrap;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .panel header p {
-        color: var(--muted);
-        margin: 0;
-    }
-
-    .channel-controls {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-    }
-
-    .channel-controls input {
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid transparent;
-        padding: 0.65rem 1.25rem;
-        color: var(--ink);
-        min-width: 200px;
-    }
-
-    .channel-controls input::placeholder {
-        color: rgba(232, 243, 255, 0.5);
-    }
-
-    .channel-table {
-        border-radius: 1rem;
-        border: 1px solid var(--panel-line);
-        overflow: hidden;
-    }
-
-    .channel-table .row {
-        display: grid;
-        grid-template-columns: 2fr 2fr 5fr 1fr;
-        gap: 1rem;
-        padding: 0.9rem 1.2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .channel-table .row.head {
-        text-transform: uppercase;
-        letter-spacing: 0.18em;
-        font-size: 0.72rem;
-        background: rgba(255, 255, 255, 0.03);
-    }
-
-    .channel-table .row:last-child {
-        border-bottom: none;
-    }
-
-    .topic {
-        color: var(--muted);
-        font-size: 0.95rem;
-    }
-
-    .modes {
-        color: var(--muted);
-        font-size: 0.9rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        border-radius: 999px;
-        padding: 0.25rem 0.9rem;
-        font-size: 0.85rem;
-        background: rgba(255, 255, 255, 0.08);
-    }
-
-    .badge--success {
-        color: #052413;
-        background: rgba(61, 213, 152, 0.95);
-        box-shadow: 0 10px 25px rgba(61, 213, 152, 0.25);
-    }
-
-    .badge--danger {
-        color: #2a0505;
-        background: rgba(255, 107, 107, 0.95);
-        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.2);
-    }
-
-    .server-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1rem;
-    }
-
-    .server-card {
-        border: 1px solid var(--panel-line);
-        border-radius: 1rem;
-        padding: 1.1rem 1.25rem;
-    }
-
-    .stacked-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.65rem;
-    }
-
-    .stacked-list li {
-        list-style: none;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-        padding-bottom: 0.45rem;
-    }
-
-    .pill-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .pill-list span,
-    .pill-list button {
-        border-radius: 999px;
-        padding: 0.35rem 0.9rem;
-        background: rgba(255, 255, 255, 0.08);
-        font-size: 0.85rem;
-    }
-
-    .pill-list button {
-        border: 1px solid transparent;
-        color: var(--ink);
-        cursor: pointer;
-        transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .pill-list button:hover {
-        transform: translateY(-1px);
-        border-color: rgba(93, 224, 230, 0.45);
-        background: rgba(93, 224, 230, 0.14);
-    }
-
-    .pill-list button[aria-pressed="true"] {
-        background: rgba(93, 224, 230, 0.25);
-        border-color: rgba(93, 224, 230, 0.7);
-        box-shadow: 0 12px 28px rgba(93, 224, 230, 0.18);
-    }
-
-    .user-detail-card {
-        border-radius: 1.2rem;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: linear-gradient(160deg, rgba(93, 224, 230, 0.08), rgba(248, 214, 109, 0.03)) , rgba(7, 12, 28, 0.65);
-        box-shadow: 0 25px 60px rgba(0, 4, 17, 0.35);
-        padding: 1.25rem;
-        backdrop-filter: blur(16px);
-        position: relative;
-        overflow: hidden;
-        min-height: 260px;
-    }
-
-    .user-detail-card::before {
-        content: "";
-        position: absolute;
-        inset: -40% -30% auto;
-        height: 200px;
-        background: radial-gradient(circle at 30% 50%, rgba(93, 224, 230, 0.35), transparent 55%);
-        pointer-events: none;
-        opacity: 0.45;
-    }
-
-    .user-detail-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        margin-bottom: 1rem;
-        position: relative;
-        z-index: 1;
-    }
-
-    .user-ident {
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        min-width: 0;
-    }
-
-    .user-avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        display: grid;
-        place-items: center;
-        font-weight: 700;
-        color: #02121a;
-        background: linear-gradient(120deg, var(--accent), var(--accent-strong));
-        box-shadow: 0 16px 36px rgba(93, 224, 230, 0.24);
-        flex: 0 0 auto;
-    }
-
-    .user-titles {
-        min-width: 0;
-    }
-
-    .user-titles h3 {
-        font-size: 1.1rem;
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .user-titles p {
-        margin: 0.2rem 0 0;
-        color: var(--muted);
-        font-size: 0.9rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .user-badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.45rem;
-        justify-content: flex-end;
-    }
-
-    .badge--info {
-        background: rgba(93, 224, 230, 0.18);
-        border: 1px solid rgba(93, 224, 230, 0.35);
-        color: var(--ink);
-    }
-
-    .badge--warn {
-        background: rgba(248, 214, 109, 0.18);
-        border: 1px solid rgba(248, 214, 109, 0.35);
-        color: var(--ink);
-    }
-
-    .kv-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
-        position: relative;
-        z-index: 1;
-    }
-
-    .kv {
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 1rem;
-        padding: 0.85rem 1rem;
-        min-width: 0;
-    }
-
-    .kv dt {
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.18em;
-        color: rgba(232, 243, 255, 0.65);
-    }
-
-    .kv dd {
-        margin: 0.35rem 0 0;
-        font-size: 0.95rem;
-        color: var(--ink);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .user-channels {
-        grid-column: 1 / -1;
-    }
-
-    .user-channels dd {
-        white-space: normal;
-        line-height: 1.5;
-        max-height: 5.6em;
-        overflow: auto;
-    }
-
-    .empty-hint {
-        color: var(--muted);
-        font-size: 0.95rem;
-        margin: 0;
-        position: relative;
-        z-index: 1;
-    }
-
-    .dashboard-status {
-        font-size: 0.9rem;
-        color: var(--muted);
-        margin-top: 1.5rem;
-    }
-
-    @media (max-width: 768px) {
-        .irc-dashboard {
-            padding: 3rem 1.5rem;
-        }
-
-        .channel-table .row {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-            animation: none !important;
-            transition: none !important;
-        }
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/irc-dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -527,6 +49,39 @@
     <section class="panel">
         <header>
             <div>
+                <h2>Network history</h2>
+                <p>Current vs peak (from snapshots) + last 72h trend.</p>
+            </div>
+        </header>
+        <div class="history-grid">
+            <div>
+                <div class="history-table" role="table" aria-label="Network current and max">
+                    <div class="row head" role="row">
+                        <span>Metric</span>
+                        <span>Current</span>
+                        <span>Max</span>
+                    </div>
+                    <div id="history-rows"></div>
+                </div>
+                <p id="history-hint" class="dashboard-status">Snapshots pending…</p>
+            </div>
+            <div class="history-chart" aria-label="Network trend chart">
+                <div class="pill-list" id="history-series">
+                    <button type="button" data-series="users" aria-pressed="true">Users</button>
+                    <button type="button" data-series="channels" aria-pressed="true">Channels</button>
+                    <button type="button" data-series="servers" aria-pressed="false">Servers</button>
+                    <button type="button" data-series="operators" aria-pressed="false">Operators</button>
+                </div>
+                <div class="history-legend" id="history-legend" aria-label="Chart legend"></div>
+                <p class="history-help" id="history-help"></p>
+                <svg id="history-svg" viewBox="0 0 900 260" role="img" aria-label="Network history chart"></svg>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <header>
+            <div>
                 <h2>Active channels</h2>
                 <p>Top rooms ranked by population. Click the refresh control to pull fresh RPC stats on demand.</p>
             </div>
@@ -549,50 +104,103 @@
     <section class="panel">
         <header>
             <div>
+                <h2>Chanstats+</h2>
+                <p>Top channels + talkers from <code>chanstats_plus</code> (proxied via signed API).</p>
+            </div>
+        </header>
+        <div class="chanstats-grid">
+            <article>
+                <header>
+                    <h3>Top channels</h3>
+                    <p class="topic">Full counters (ranked by lines).</p>
+                </header>
+                <div class="chanstats-list" id="chanstats-top-channels"></div>
+            </article>
+            <article>
+                <header>
+                    <h3>Top nicks (channel)</h3>
+                    <p id="chanstats-channel-subtitle" class="topic">Choose a period and (optionally) a channel.</p>
+                </header>
+                <div class="chanstats-toolbar" aria-label="Chanstats filters">
+                    <div class="chanstats-group">
+                        <span class="chanstats-label">Period</span>
+                        <div class="chanstats-segmented" id="chanstats-period" role="group" aria-label="Chanstats period">
+                            <button type="button" data-period="daily" aria-pressed="true">Daily</button>
+                            <button type="button" data-period="weekly" aria-pressed="false">Weekly</button>
+                            <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
+                            <button type="button" data-period="total" aria-pressed="false">Total</button>
+                        </div>
+                    </div>
+                    <div class="chanstats-group grow">
+                        <span class="chanstats-label">Channel</span>
+                        <input
+                            type="text"
+                            id="chanstats-channel"
+                            class="chanstats-input"
+                            placeholder="#dev (optional)"
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                    </div>
+                </div>
+                <div class="chanstats-list" id="chanstats-top-in-channel"></div>
+            </article>
+            <article>
+                <header>
+                    <h3>Top nicks (global)</h3>
+                    <p class="topic">Full counters (ranked by lines).</p>
+                </header>
+                <div class="chanstats-list" id="chanstats-top-nicks-global"></div>
+            </article>
+        </div>
+    </section>
+
+    <section class="panel">
+        <header>
+            <div>
                 <h2>Servers</h2>
-                <p>Current uplinks synced via services.</p>
+                <p>Connected uplinks and services status.</p>
             </div>
         </header>
         <div class="server-grid" id="server-grid"></div>
     </section>
 
     <section class="panel">
-        <div class="server-grid">
-            <article>
-                <header>
-                    <h3>Operators on duty</h3>
-                    <p>Derived from <code>rpc_user</code>.</p>
-                </header>
-                <ul class="stacked-list" id="operator-list"></ul>
-            </article>
-            <article>
-                <header>
-                    <h3>Recently seen users</h3>
-                    <p>First 25 entries from <code>anope.listUsers</code>.</p>
-                </header>
-                <div class="pill-list" id="user-pills"></div>
-            </article>
-            <article>
-                <header>
-                    <h3>User details</h3>
-                    <p>Powered by <code>anope.user</code>.</p>
-                </header>
-                <div class="user-detail-card" id="user-detail-card" aria-live="polite">
-                    <div class="user-detail-header">
-                        <div class="user-ident">
-                            <div class="user-avatar" id="user-detail-avatar">?</div>
-                            <div class="user-titles">
-                                <h3 id="user-detail-title">Select a user</h3>
-                                <p id="user-detail-subtitle">Click a nickname to load live details.</p>
-                            </div>
+        <header>
+            <div>
+                <h2>Operators</h2>
+                <p>Currently authenticated operators and their classes.</p>
+            </div>
+        </header>
+        <ul class="stacked-list" id="operator-list"></ul>
+    </section>
+
+    <section class="panel">
+        <header>
+            <div>
+                <h2>Users</h2>
+                <p>Click a nickname to fetch live details.</p>
+            </div>
+        </header>
+        <div class="history-grid">
+            <div>
+                <div class="pill-list" id="user-pills" aria-label="Active users"></div>
+            </div>
+            <div class="user-detail-card" aria-live="polite">
+                <div class="user-detail-header">
+                    <div class="user-ident">
+                        <div class="user-avatar" id="user-detail-avatar">?</div>
+                        <div class="user-titles">
+                            <h3 id="user-detail-title">Select a user</h3>
+                            <p id="user-detail-subtitle">Click a nickname to load live details.</p>
                         </div>
-                        <div class="user-badges" id="user-detail-badges"></div>
                     </div>
-                    <div id="user-detail-body">
-                        <p class="empty-hint">Tip: this will show account, hostmask, TLS, and channels.</p>
-                    </div>
+                    <div class="user-badges" id="user-detail-badges"></div>
                 </div>
-            </article>
+                <div id="user-detail-body">
+                    <p class="empty-hint">Awaiting user list…</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -604,411 +212,5 @@
 
 {% block scripts %}
 {{ block.super }}
-<script>
-(() => {
-    const endpoints = JSON.parse(document.getElementById("irc-api-endpoints").textContent);
-    const initialPayload = JSON.parse(document.getElementById("irc-initial-payload").textContent || "{}");
-    const signatureNode = document.getElementById("irc-api-signature");
-    const apiSignature = signatureNode ? JSON.parse(signatureNode.textContent || "null") : null;
-    const state = {
-        overview: initialPayload.overview || null,
-        channels: initialPayload.channels || [],
-        servers: initialPayload.servers || [],
-        users: initialPayload.users || [],
-        operators: initialPayload.operators || [],
-    };
-
-    const statCards = document.querySelectorAll('.stat-card');
-    const channelRows = document.getElementById('channel-rows');
-    const channelCount = document.getElementById('channel-count');
-    const serverGrid = document.getElementById('server-grid');
-    const operatorList = document.getElementById('operator-list');
-    const userPills = document.getElementById('user-pills');
-    const userDetailAvatar = document.getElementById('user-detail-avatar');
-    const userDetailTitle = document.getElementById('user-detail-title');
-    const userDetailSubtitle = document.getElementById('user-detail-subtitle');
-    const userDetailBadges = document.getElementById('user-detail-badges');
-    const userDetailBody = document.getElementById('user-detail-body');
-    const lastSync = document.getElementById('last-sync');
-    const statusLine = document.getElementById('dashboard-status');
-    const searchInput = document.getElementById('channel-search');
-    const refreshButton = document.getElementById('refresh-dashboard');
-
-    const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 0 });
-
-    const userDetailCache = new Map();
-    const userDetailInflight = new Map();
-    let selectedUser = null;
-
-    function escapeHtml(value) {
-        return String(value ?? '')
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#39;');
-    }
-
-    function replaceChildren(parent, ...children) {
-        if (!parent) return;
-        parent.replaceChildren(...children.filter(Boolean));
-    }
-
-    function makeHint(text) {
-        const node = document.createElement('p');
-        node.className = 'empty-hint';
-        node.textContent = text;
-        return node;
-    }
-
-    function makeKv(label, value, { title } = {}) {
-        const dl = document.createElement('dl');
-        dl.className = 'kv';
-
-        const dt = document.createElement('dt');
-        dt.textContent = label;
-
-        const dd = document.createElement('dd');
-        dd.textContent = value;
-        if (title) dd.title = title;
-
-        dl.appendChild(dt);
-        dl.appendChild(dd);
-        return dl;
-    }
-
-    function formatUnix(ts) {
-        if (!ts) return '—';
-        const date = new Date(Number(ts) * 1000);
-        if (Number.isNaN(date.getTime())) return '—';
-        return date.toLocaleString();
-    }
-
-    function initialsFromNick(nick) {
-        const clean = String(nick || '').trim();
-        if (!clean) return '?';
-        const parts = clean.split(/[^a-zA-Z0-9]+/).filter(Boolean);
-        const seed = (parts[0] || clean).slice(0, 2);
-        return seed.toUpperCase();
-    }
-
-    function buildUserDetailUrl(nickname) {
-        const template = endpoints.user_detail_template;
-        if (template && template.includes('__NICK__')) {
-            return template.replace('__NICK__', encodeURIComponent(nickname));
-        }
-        // Fallback: append to users endpoint.
-        const base = (endpoints.users || '').replace(/\/?$/, '/');
-        return `${base}${encodeURIComponent(nickname)}/`;
-    }
-
-    function updateStats() {
-        if (!state.overview) {
-            statCards.forEach(card => card.querySelector('.stat-value').textContent = '--');
-            return;
-        }
-        statCards.forEach(card => {
-            const metric = card.getAttribute('data-metric');
-            const value = state.overview.counts?.[metric] ?? 0;
-            card.querySelector('.stat-value').textContent = formatter.format(value);
-        });
-        lastSync.textContent = new Date(state.overview.updated_at || Date.now()).toLocaleTimeString();
-    }
-
-    function renderChannels(filter = '') {
-        const query = filter.trim().toLowerCase();
-        const filtered = state.channels.filter(entry => {
-            if (!query) return true;
-            return entry.name?.toLowerCase().includes(query)
-                || (entry.topic_value || '').toLowerCase().includes(query)
-                || (entry.modes_display || '').toLowerCase().includes(query);
-        });
-        channelRows.innerHTML = '';
-        filtered.forEach(entry => {
-            const row = document.createElement('div');
-            row.className = 'row';
-
-            const nameEl = document.createElement('strong');
-            nameEl.textContent = entry.name || '';
-
-            const modesEl = document.createElement('span');
-            modesEl.className = 'modes';
-            modesEl.textContent = entry.modes_display || '—';
-
-            const topicEl = document.createElement('span');
-            topicEl.className = 'topic';
-            topicEl.textContent = entry.topic_value || '—';
-
-            const usersEl = document.createElement('span');
-            usersEl.className = 'badge';
-            usersEl.textContent = formatter.format(entry.user_count || 0);
-
-            row.appendChild(nameEl);
-            row.appendChild(modesEl);
-            row.appendChild(topicEl);
-            row.appendChild(usersEl);
-            channelRows.appendChild(row);
-        });
-        channelCount.textContent = filtered.length;
-    }
-
-    function renderServers() {
-        serverGrid.innerHTML = '';
-        state.servers.forEach(server => {
-            const card = document.createElement('div');
-            card.className = 'server-card';
-            const statusClass = server.synced ? 'badge--success' : 'badge--danger';
-
-            const title = document.createElement('h4');
-            title.textContent = server.name || 'services';
-
-            const description = document.createElement('p');
-            description.className = 'topic';
-            description.textContent = server.description || '—';
-
-            const badge = document.createElement('span');
-            badge.className = `badge ${statusClass}`;
-            badge.textContent = server.synced ? 'synced' : 'lagging';
-
-            card.appendChild(title);
-            card.appendChild(description);
-            card.appendChild(badge);
-            serverGrid.appendChild(card);
-        });
-    }
-
-    function renderOperators() {
-        operatorList.innerHTML = '';
-        if (!state.operators.length) {
-            const empty = document.createElement('li');
-            empty.textContent = 'No operators reported.';
-            operatorList.appendChild(empty);
-            return;
-        }
-        state.operators.forEach(entry => {
-            const row = document.createElement('li');
-
-            const nameEl = document.createElement('span');
-            nameEl.textContent = entry.name || 'oper';
-
-            const typeEl = document.createElement('span');
-            typeEl.className = 'badge';
-            typeEl.textContent = entry.opertype?.name || '—';
-
-            row.appendChild(nameEl);
-            row.appendChild(typeEl);
-            operatorList.appendChild(row);
-        });
-    }
-
-    function renderUsers() {
-        userPills.innerHTML = '';
-        if (!state.users.length) {
-            const awaiting = document.createElement('span');
-            awaiting.textContent = 'awaiting data…';
-            userPills.appendChild(awaiting);
-            return;
-        }
-
-        state.users.forEach(name => {
-            const pill = document.createElement('button');
-            pill.type = 'button';
-            pill.className = 'user-pill';
-            pill.dataset.nick = name;
-            pill.setAttribute('aria-pressed', String(name === selectedUser));
-            pill.textContent = name;
-            userPills.appendChild(pill);
-        });
-    }
-
-    function setUserDetailLoading(nickname) {
-        userDetailAvatar.textContent = initialsFromNick(nickname);
-        userDetailTitle.textContent = nickname || 'Loading…';
-        userDetailSubtitle.textContent = 'Fetching live details from services…';
-        userDetailBadges.innerHTML = '';
-        replaceChildren(userDetailBody, makeHint('Loading…'));
-    }
-
-    function setUserDetailEmpty(message) {
-        userDetailAvatar.textContent = '?';
-        userDetailTitle.textContent = 'Select a user';
-        userDetailSubtitle.textContent = 'Click a nickname to load live details.';
-        userDetailBadges.innerHTML = '';
-        replaceChildren(userDetailBody, makeHint(message));
-    }
-
-    function renderUserDetail(payload) {
-        const nick = payload?.nick || selectedUser || 'user';
-        userDetailAvatar.textContent = initialsFromNick(nick);
-        userDetailTitle.textContent = nick;
-
-        const ident = payload?.ident || '—';
-        const host = payload?.vhost || payload?.chost || payload?.host || '—';
-        const displayHost = ident !== '—' && host !== '—' ? `${ident}@${host}` : host;
-        userDetailSubtitle.textContent = displayHost;
-
-        const badges = [];
-        if (payload?.tls === true) badges.push({ label: 'TLS', cls: 'badge--success' });
-        if (payload?.tls === false) badges.push({ label: 'No TLS', cls: 'badge--danger' });
-        if (payload?.account?.display) badges.push({ label: `Account: ${payload.account.display}`, cls: 'badge--info' });
-        if (payload?.account?.opertype) badges.push({ label: payload.account.opertype, cls: 'badge--warn' });
-        if (payload?.away?.message) badges.push({ label: 'Away', cls: 'badge--warn' });
-
-        userDetailBadges.innerHTML = '';
-        badges.slice(0, 4).forEach(entry => {
-            const badge = document.createElement('span');
-            badge.className = `badge ${entry.cls || ''}`.trim();
-            badge.textContent = entry.label;
-            userDetailBadges.appendChild(badge);
-        });
-
-        const channels = Array.isArray(payload?.channels) ? payload.channels : [];
-        const channelText = channels.length ? channels.join(' ') : '—';
-
-        const realname = payload?.real || '—';
-        const server = payload?.server || '—';
-        const modes = Array.isArray(payload?.modes) ? payload.modes.join(' ') : (payload?.modes || '—');
-        const signon = formatUnix(payload?.signon);
-        const nickchanged = formatUnix(payload?.nickchanged);
-
-        const videntOrIdent = payload?.vident || payload?.ident || '—';
-        const vhostOrHost = payload?.vhost || payload?.chost || payload?.host || '—';
-        const vhostDisplay = `${videntOrIdent}@${vhostOrHost}`;
-        const vhostTitle = (payload?.vident || '') + (payload?.vhost ? '@' + payload.vhost : payload?.vhost || '—');
-
-        const grid = document.createElement('div');
-        grid.className = 'kv-grid';
-
-        grid.appendChild(makeKv('Realname', realname, { title: realname }));
-        grid.appendChild(makeKv('Server', server, { title: server }));
-        grid.appendChild(makeKv('Modes', modes, { title: modes }));
-        grid.appendChild(makeKv('Signon', signon));
-        grid.appendChild(makeKv('Nick changed', nickchanged));
-        grid.appendChild(makeKv('VHost / VIdent', vhostDisplay, { title: vhostTitle }));
-        grid.appendChild(makeKv('Away', payload?.away?.message || '—', { title: payload?.away?.message || '—' }));
-
-        const channelsKv = makeKv(`Channels (${channels.length})`, channelText);
-        channelsKv.classList.add('user-channels');
-        grid.appendChild(channelsKv);
-
-        replaceChildren(userDetailBody, grid);
-    }
-
-    async function fetchUserDetail(nickname) {
-        if (!nickname) return null;
-        if (userDetailCache.has(nickname)) return userDetailCache.get(nickname);
-        if (userDetailInflight.has(nickname)) return userDetailInflight.get(nickname);
-
-        const promise = (async () => {
-            const payload = await fetchEndpoint(buildUserDetailUrl(nickname));
-            userDetailCache.set(nickname, payload);
-            return payload;
-        })().finally(() => userDetailInflight.delete(nickname));
-
-        userDetailInflight.set(nickname, promise);
-        return promise;
-    }
-
-    function selectUser(nickname) {
-        selectedUser = nickname;
-        document.querySelectorAll('.user-pill').forEach(btn => {
-            btn.setAttribute('aria-pressed', String(btn.dataset.nick === selectedUser));
-        });
-    }
-
-    function setStatus(message, isError = false) {
-        statusLine.textContent = message;
-        statusLine.style.color = isError ? 'var(--danger)' : 'var(--muted)';
-    }
-
-    async function fetchEndpoint(url) {
-        const headers = { 'Accept': 'application/json' };
-        if (apiSignature) {
-            headers['X-Irc-Api-Signature'] = apiSignature;
-        }
-        const response = await fetch(url, { headers, credentials: 'same-origin' });
-        if (!response.ok) {
-            throw new Error(`Request failed (${response.status})`);
-        }
-        return response.json();
-    }
-
-    async function refreshAll() {
-        setStatus('Refreshing…');
-        try {
-            const [overview, channels, servers, users, operators] = await Promise.all([
-                fetchEndpoint(endpoints.overview),
-                fetchEndpoint(endpoints.channels),
-                fetchEndpoint(endpoints.servers),
-                fetchEndpoint(endpoints.users),
-                fetchEndpoint(endpoints.operators),
-            ]);
-            state.overview = overview;
-            state.channels = channels.results || channels;
-            state.servers = servers.results || servers;
-            state.users = users.results || users;
-            state.operators = operators.results || operators;
-            updateStats();
-            renderChannels(searchInput.value || '');
-            renderServers();
-            renderOperators();
-            renderUsers();
-
-            if (selectedUser && state.users.includes(selectedUser)) {
-                // Keep user detail fresh after refresh.
-                fetchUserDetail(selectedUser).then(renderUserDetail).catch(() => {});
-            } else if (!selectedUser && state.users.length) {
-                // Auto-select the first user for a "live" feel.
-                const first = state.users[0];
-                selectUser(first);
-                setUserDetailLoading(first);
-                fetchUserDetail(first).then(renderUserDetail).catch(() => {
-                    replaceChildren(userDetailBody, makeHint('Unable to load user details.'));
-                });
-            }
-            setStatus('Live data synced.');
-        } catch (error) {
-            console.error(error);
-            setStatus('Anope RPC temporarily unreachable.', true);
-        }
-    }
-
-    // Initial render from server-side payload
-    updateStats();
-    renderChannels();
-    renderServers();
-    renderOperators();
-    renderUsers();
-
-    if (state.users.length) {
-        const first = state.users[0];
-        selectUser(first);
-        setUserDetailLoading(first);
-        fetchUserDetail(first)
-            .then(renderUserDetail)
-            .catch(() => setUserDetailEmpty('Anope RPC temporarily unreachable.'));
-    } else {
-        setUserDetailEmpty('Awaiting user list…');
-    }
-
-    searchInput?.addEventListener('input', (event) => renderChannels(event.target.value));
-    refreshButton?.addEventListener('click', refreshAll);
-
-    userPills?.addEventListener('click', (event) => {
-        const button = event.target?.closest?.('button.user-pill');
-        const nickname = button?.dataset?.nick;
-        if (!nickname) return;
-        selectUser(nickname);
-        setUserDetailLoading(nickname);
-        fetchUserDetail(nickname)
-            .then(renderUserDetail)
-            .catch(() => {
-                replaceChildren(userDetailBody, makeHint('Unable to load user details right now.'));
-            });
-    });
-
-    // Auto refresh every 60 seconds
-    setInterval(refreshAll, 60000);
-})();
-</script>
+<script src="{% static 'js/irc-dashboard.js' %}" defer></script>
 {% endblock %}

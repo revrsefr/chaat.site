@@ -4,15 +4,226 @@
 {% block title %}{% trans "Mentions légales" %} - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block content %}
+<style>
+  /* Scoped styling for this page only (site theme is dark by default) */
+  .legal-page {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .legal-hero {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+  }
+
+  .legal-hero .legal-kicker {
+    color: rgba(255, 255, 255, 0.70);
+    margin: 0;
+  }
+
+  .legal-hero .legal-title {
+    letter-spacing: 0.2px;
+    margin: 0;
+  }
+
+  .legal-badge {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .legal-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.30);
+    overflow: hidden;
+  }
+
+  .legal-card .card-body {
+    padding: 18px 18px;
+  }
+
+  .legal-card h2 {
+    margin: 0 0 12px 0;
+    font-weight: 800;
+  }
+
+  .legal-kv {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .legal-kv li {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.10);
+  }
+
+  .legal-kv li:last-child {
+    border-bottom: 0;
+  }
+
+  .legal-k {
+    min-width: 220px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 800;
+  }
+
+  .legal-v {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .legal-v em {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .legal-note {
+    color: rgba(255, 255, 255, 0.70);
+  }
+
+  @media (max-width: 576px) {
+    .legal-kv li {
+      display: block;
+      padding: 12px 0;
+    }
+    .legal-k {
+      min-width: 0;
+      margin-bottom: 6px;
+    }
+  }
+</style>
+
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-9">
-      <h1 class="mb-3">{% trans "Mentions légales" %}</h1>
-      <p class="text-muted">{% trans "Contenu à compléter." %}</p>
-      <ul class="mb-0">
-        <li>{% trans "Éditeur" %}: {{ site_brand.site_name }}</li>
-        <li>{% trans "Domaine" %}: {{ site_brand.domain }}</li>
-      </ul>
+      <div class="legal-page">
+        <div class="legal-hero p-4 p-md-5 mb-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+            <div>
+              <p class="legal-kicker mb-2">Informations légales & conformité</p>
+              <h1 class="legal-title h2 mb-2">{% trans "Mentions légales" %}</h1>
+              <p class="legal-note mb-0">
+                Conformément à l’article 6 de la loi n°2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique (LCEN),
+                il est précisé aux utilisateurs du site <strong>{{ site_brand.site_name }}</strong> ({{ site_brand.domain }}) l’identité des différents intervenants.
+              </p>
+            </div>
+            <div class="legal-badge">
+              <i class="fa-solid fa-scale-balanced"></i>
+              <span>Maj : {{ legal.last_updated|date:"d/m/Y" }}</span>
+            </div>
+          </div>
+        </div>
+
+      <div class="card legal-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">1) Éditeur du site</h2>
+          <ul class="legal-kv">
+            <li><div class="legal-k">Nom / Raison sociale</div><div class="legal-v">{{ legal.publisher_name|default:site_brand.site_name }}</div></li>
+            <li><div class="legal-k">Domaine</div><div class="legal-v">{{ site_brand.domain }}</div></li>
+            <li><div class="legal-k">Adresse</div><div class="legal-v">{% if legal.publisher_address %}{{ legal.publisher_address|linebreaksbr }}{% else %}<em>À compléter</em>{% endif %}</div></li>
+            <li><div class="legal-k">Email</div><div class="legal-v">{% if legal.publisher_email %}{{ legal.publisher_email }}{% else %}<em>À compléter</em>{% endif %}</div></li>
+            <li><div class="legal-k">Téléphone</div><div class="legal-v">{% if legal.publisher_phone %}{{ legal.publisher_phone }}{% else %}<em>À compléter (optionnel)</em>{% endif %}</div></li>
+            <li><div class="legal-k">Statut</div><div class="legal-v">{% if legal.publisher_status %}{{ legal.publisher_status }}{% else %}<em>À compléter (ex: particulier / association / société)</em>{% endif %}</div></li>
+            <li><div class="legal-k">SIREN/SIRET</div><div class="legal-v">{% if legal.publisher_siren_siret %}{{ legal.publisher_siren_siret }}{% else %}<em>À compléter si applicable</em>{% endif %}</div></li>
+            <li><div class="legal-k">RCS</div><div class="legal-v">{% if legal.publisher_rcs %}{{ legal.publisher_rcs }}{% else %}<em>À compléter si applicable</em>{% endif %}</div></li>
+            <li><div class="legal-k">N° TVA intracommunautaire</div><div class="legal-v">{% if legal.publisher_vat_number %}{{ legal.publisher_vat_number }}{% else %}<em>À compléter si applicable</em>{% endif %}</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card legal-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">2) Directeur de la publication</h2>
+          <ul class="legal-kv">
+            <li><div class="legal-k">Nom</div><div class="legal-v">{% if legal.publication_director %}{{ legal.publication_director }}{% else %}<em>À compléter</em>{% endif %}</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card legal-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">3) Hébergeur</h2>
+          <ul class="legal-kv">
+            <li><div class="legal-k">Hébergeur</div><div class="legal-v">{% if legal.host_name %}{{ legal.host_name }}{% else %}<em>À compléter (ex: OVHcloud / Scaleway / Hetzner / etc.)</em>{% endif %}</div></li>
+            <li><div class="legal-k">Adresse</div><div class="legal-v">{% if legal.host_address %}{{ legal.host_address|linebreaksbr }}{% else %}<em>À compléter</em>{% endif %}</div></li>
+            <li><div class="legal-k">Téléphone</div><div class="legal-v">{% if legal.host_phone %}{{ legal.host_phone }}{% else %}<em>À compléter (optionnel)</em>{% endif %}</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card legal-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">4) Propriété intellectuelle</h2>
+          <p class="mb-0">
+            Le site, sa structure et ses contenus (textes, images, graphismes, logos, icônes, sons, logiciels) sont protégés par le droit de la propriété intellectuelle.
+            Toute reproduction, représentation, modification, publication, adaptation, totale ou partielle, de tout élément du site, quel que soit le moyen ou le procédé utilisé,
+            est interdite sans autorisation écrite préalable de l’éditeur, sauf exceptions légales.
+          </p>
+        </div>
+      </div>
+
+      <div class="card legal-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">5) Données personnelles (RGPD)</h2>
+          <p>
+            Des données personnelles peuvent être collectées lors de la création d’un compte, de la connexion et de l’utilisation des services.
+            Les traitements sont réalisés pour permettre le fonctionnement du service, la sécurité, la modération, ainsi que la gestion des comptes.
+          </p>
+          <ul class="legal-kv">
+            <li><div class="legal-k">Responsable de traitement</div><div class="legal-v">{% if legal.rgpd_controller %}{{ legal.rgpd_controller }}{% else %}<em>À compléter</em>{% endif %}</div></li>
+            <li><div class="legal-k">Contact RGPD</div><div class="legal-v">{% if legal.rgpd_contact_email %}{{ legal.rgpd_contact_email }}{% else %}<em>À compléter (email)</em>{% endif %}</div></li>
+            <li><div class="legal-k">Base légale</div><div class="legal-v">exécution du contrat (service), intérêt légitime (sécurité/modération), consentement (cookies non essentiels si applicable)</div></li>
+            <li><div class="legal-k">Durées de conservation</div><div class="legal-v">{% if legal.retention_policy %}{{ legal.retention_policy|linebreaksbr }}{% else %}<em>À compléter</em>{% endif %}</div></li>
+            <li><div class="legal-k">Droits</div><div class="legal-v">accès, rectification, effacement, limitation, opposition, portabilité, conformément au RGPD</div></li>
+            <li><div class="legal-k">Réclamation</div><div class="legal-v">vous pouvez introduire une réclamation auprès de la CNIL (www.cnil.fr)</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card legal-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">6) Cookies</h2>
+          <p class="mb-0">
+            Le site peut utiliser des cookies et/ou traceurs pour assurer son fonctionnement (ex: session, préférences) et, le cas échéant, pour la mesure d’audience.
+            Vous pouvez configurer votre navigateur pour refuser tout ou partie des cookies.
+          </p>
+        </div>
+      </div>
+
+      <div class="card legal-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">7) Responsabilité</h2>
+          <p class="mb-0">
+            L’éditeur s’efforce d’assurer au mieux l’exactitude et la mise à jour des informations diffusées.
+            Toutefois, il ne peut garantir l’exactitude, la complétude ou l’actualité des informations.
+            L’utilisateur est seul responsable de l’utilisation qu’il fait du site et des services.
+          </p>
+        </div>
+      </div>
+
+      <div class="card legal-card">
+        <div class="card-body">
+          <h2 class="h5 mb-3">8) Contact</h2>
+          <p class="mb-0">
+            Pour toute question, vous pouvez nous contacter à l’adresse suivante :
+            <strong>{% if legal.publisher_email %}{{ legal.publisher_email }}{% else %}<em>À compléter</em>{% endif %}</strong>.
+          </p>
+        </div>
+      </div>
+      </div>
     </div>
   </div>
 </div>

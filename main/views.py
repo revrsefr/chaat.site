@@ -8,6 +8,9 @@ from django.http import JsonResponse
 from django.conf import settings
 
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
+
+from .models import LegalMentions
 
 def webirc(request):
     from django.template import TemplateDoesNotExist
@@ -84,3 +87,12 @@ def save_cookie_consent(request):
 
         return response
     return JsonResponse({"status": "error"}, status=400)
+
+
+class LegalView(TemplateView):
+    template_name = "main/pages/legal.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["legal"] = LegalMentions.get_solo()
+        return context

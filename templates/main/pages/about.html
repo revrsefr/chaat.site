@@ -4,14 +4,103 @@
 {% block title %}{% trans "À propos" %} - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block content %}
+<style>
+  /* Scoped styling for this page only (site theme is dark by default) */
+  .info-page {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .info-hero {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+  }
+
+  .info-kicker {
+    color: rgba(255, 255, 255, 0.70);
+    margin: 0;
+  }
+
+  .info-title {
+    letter-spacing: 0.2px;
+    margin: 0;
+  }
+
+  .info-badge {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .info-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.30);
+    overflow: hidden;
+  }
+
+  .info-card .card-body {
+    padding: 18px 18px;
+  }
+
+  .info-note {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .info-card a {
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: underline;
+  }
+
+  .info-card a:hover {
+    color: #fff;
+  }
+
+  .info-card strong {
+    color: rgba(255, 255, 255, 0.95);
+  }
+</style>
+
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-9">
-      <h1 class="mb-3">{% trans "À propos" %}</h1>
-      <p class="text-muted mb-4">{% blocktrans trimmed with site_name=site_brand.site_name %}
-        Bienvenue sur {{ site_name }}. Notre objectif est de proposer un espace de discussion simple, rapide et convivial.
-      {% endblocktrans %}</p>
-      <p>{% trans "Besoin d'aide ? Rejoignez le salon" %} <strong>{{ footer.help_channel|default:"#aide" }}</strong>.</p>
+      <div class="info-page">
+        <div class="info-hero p-4 p-md-5 mb-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+            <div>
+              <p class="info-kicker mb-2">Présentation</p>
+              <h1 class="info-title h2 mb-0">{% trans "À propos" %}</h1>
+            </div>
+            <div class="info-badge">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>{{ site_brand.site_name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card info-card">
+          <div class="card-body">
+            <p class="info-note mb-4">{% blocktrans trimmed with site_name=site_brand.site_name %}
+              Bienvenue sur {{ site_name }}. Notre objectif est de proposer un espace de discussion simple, rapide et convivial.
+            {% endblocktrans %}</p>
+
+            <p class="mb-0">
+              {% trans "Besoin d'aide ? Rejoignez le salon" %} <strong>{{ footer.help_channel|default:"#aide" }}</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, save_cookie_consent, webirc
+from .views import home, save_cookie_consent, webirc, LegalView
 from django.views.generic import TemplateView
 
 app_name = "main"  # ✅ Set namespace for the 'main' app
@@ -13,5 +13,5 @@ urlpatterns = [
     # Simple informational pages (used by the footer)
     path("about/", TemplateView.as_view(template_name="main/pages/about.html"), name="about"),
     path("terms/", TemplateView.as_view(template_name="main/pages/terms.html"), name="terms"),
-    path("legal/", TemplateView.as_view(template_name="main/pages/legal.html"), name="legal"),
+    path("legal/", LegalView.as_view(), name="legal"),
 ]

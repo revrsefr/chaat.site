@@ -1,21 +1,69 @@
 import logging
 import secrets
+import re
+from datetime import timedelta
 from functools import cached_property
 
 from django.conf import settings
 from django.core import signing
 from django.shortcuts import render
+from django.utils import timezone
 from django.urls import reverse
-from rest_framework.exceptions import APIException, NotFound
+from rest_framework.exceptions import APIException, NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .models import TelemetrySnapshot
 from .permissions import IRCAPIAuthPermission
 from .rpc_client import RPCError
 from .services import AnopeStatsService
 
 
 logger = logging.getLogger(__name__)
+
+
+_CHANSTATS_PERIODS = {"total", "monthly", "weekly", "daily"}
+_CHANSTATS_METRICS = {
+    "letters",
+    "words",
+    "lines",
+    "actions",
+    "smileys_happy",
+    "smileys_sad",
+    "smileys_other",
+    "kicks",
+    "kicked",
+    "modes",
+    "topics",
+}
+
+
+def _parse_chanstats_query_params(request):
+    period = (request.query_params.get("period") or "daily").strip().lower()
+    if period not in _CHANSTATS_PERIODS:
+        raise ValidationError(detail="Invalid period (expected total/monthly/weekly/daily)")
+
+    metric = (request.query_params.get("metric") or "lines").strip().lower()
+    if metric not in _CHANSTATS_METRICS:
+        raise ValidationError(detail="Invalid metric")
+
+    limit_raw = request.query_params.get("limit") or "10"
+    try:
+        limit = int(limit_raw)
+    except ValueError:
+        limit = 10
+    limit = min(max(limit, 1), 100)
+
+    period_start = (request.query_params.get("period_start") or "").strip()
+    if period_start and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", period_start):
+        raise ValidationError(detail="Invalid period_start (expected YYYY-MM-DD)")
+
+    return {
+        "period": period,
+        "metric": metric,
+        "limit": limit,
+        "period_start": period_start or None,
+    }
 
 
 def webchat(request):
@@ -39,12 +87,62 @@ def dashboard(request):
         initial_payload["servers"] = service.server_listing()[:4]
         initial_payload["users"] = service.user_listing(limit=25)
         initial_payload["operators"] = service.operator_listing()
+
+        # chanstats_plus highlights
+        initial_payload["chanstats_top_channels"] = service.chanstatsplus_top_channels()
+        initial_payload["chanstats_top_nicks_global"] = service.chanstatsplus_top_nicks_global()
+
+        seed_channel = None
+        for entry in initial_payload.get("channels") or []:
+            name = (entry or {}).get("name")
+            if name:
+                seed_channel = name
+                break
+        initial_payload["chanstats_seed_channel"] = seed_channel
+        if seed_channel:
+            initial_payload["chanstats_top_in_channel"] = service.chanstatsplus_top_in_channel(seed_channel)
+
+        # DB-backed history (if snapshot collection is enabled).
+        since = timezone.now() - timedelta(hours=72)
+        history_qs = TelemetrySnapshot.objects.filter(recorded_at__gte=since).order_by("-recorded_at")[:200]
+        history_points = [
+            {
+                "recorded_at": snap.recorded_at.isoformat(),
+                "users": snap.user_count,
+                "channels": snap.channel_count,
+                "servers": snap.server_count,
+                "operators": snap.operator_count,
+            }
+            for snap in reversed(list(history_qs))
+        ]
+
+        def _max_row(field: str):
+            row = (
+                TelemetrySnapshot.objects.order_by(f"-{field}", "-recorded_at")
+                .values(field, "recorded_at")
+                .first()
+            )
+            if not row:
+                return None
+            return {"value": row.get(field, 0), "recorded_at": row["recorded_at"].isoformat()}
+
+        initial_payload["history"] = {
+            "range": {"hours": 72, "limit": 200},
+            "points": history_points,
+            "max": {
+                "users": _max_row("user_count"),
+                "channels": _max_row("channel_count"),
+                "servers": _max_row("server_count"),
+                "operators": _max_row("operator_count"),
+            },
+        }
     except RPCError as exc:
         logger.warning("Anope RPC unavailable during dashboard seed: %s", exc)
         initial_payload["error"] = "The IRC telemetry endpoint is temporarily unavailable."
 
     api_endpoints = {
         "overview": reverse("irc_api_network_overview"),
+        "history": reverse("irc_api_history"),
         "channels": reverse("irc_api_channels"),
         "servers": reverse("irc_api_servers"),
         "users": reverse("irc_api_users"),
@@ -53,6 +151,14 @@ def dashboard(request):
             kwargs={"nickname": "__NICK__"},
         ),
         "operators": reverse("irc_api_operators"),
+
+        # chanstats_plus
+        "chanstats_top_channels": reverse("irc_api_chanstatsplus_top_channels"),
+        "chanstats_top_nicks_global": reverse("irc_api_chanstatsplus_top_nicks_global"),
+        "chanstats_top_in_channel_template": reverse(
+            "irc_api_chanstatsplus_top_in_channel",
+            kwargs={"channel_name": "__CHAN__"},
+        ),
     }
 
     return render(
@@ -99,6 +205,64 @@ class NetworkOverviewView(AnopeAPIView):
         except RPCError as exc:
             self._raise_unavailable(exc)
         return Response(payload)
+
+
+class TelemetryHistoryView(APIView):
+    """Serves DB-collected history for charts (independent of live RPC)."""
+
+    permission_classes = (IRCAPIAuthPermission,)
+    throttle_scope = "irc_api"
+
+    def get(self, request):
+        hours_raw = (request.query_params.get("hours") or "72").strip()
+        limit_raw = (request.query_params.get("limit") or "200").strip()
+        try:
+            hours = int(hours_raw)
+        except ValueError:
+            hours = 72
+        try:
+            limit = int(limit_raw)
+        except ValueError:
+            limit = 200
+
+        hours = min(max(hours, 1), 24 * 30)
+        limit = min(max(limit, 10), 2000)
+
+        since = timezone.now() - timedelta(hours=hours)
+        qs = TelemetrySnapshot.objects.filter(recorded_at__gte=since).order_by("-recorded_at")[:limit]
+        points = [
+            {
+                "recorded_at": snap.recorded_at.isoformat(),
+                "users": snap.user_count,
+                "channels": snap.channel_count,
+                "servers": snap.server_count,
+                "operators": snap.operator_count,
+            }
+            for snap in reversed(list(qs))
+        ]
+
+        def _max_row(field: str):
+            row = (
+                TelemetrySnapshot.objects.order_by(f"-{field}", "-recorded_at")
+                .values(field, "recorded_at")
+                .first()
+            )
+            if not row:
+                return None
+            return {"value": row.get(field, 0), "recorded_at": row["recorded_at"].isoformat()}
+
+        return Response(
+            {
+                "range": {"hours": hours, "limit": limit},
+                "points": points,
+                "max": {
+                    "users": _max_row("user_count"),
+                    "channels": _max_row("channel_count"),
+                    "servers": _max_row("server_count"),
+                    "operators": _max_row("operator_count"),
+                },
+            }
+        )
 
 
 class ChannelListView(AnopeAPIView):
@@ -219,4 +383,50 @@ class OperatorListView(AnopeAPIView):
         except RPCError as exc:
             self._raise_unavailable(exc)
         return Response({"count": len(opers), "results": opers})
+
+
+class ChanstatsPlusTopChannelsView(AnopeAPIView):
+    def get(self, request):
+        params = _parse_chanstats_query_params(request)
+        try:
+            results = self.service.chanstatsplus_top_channels(
+                period=params["period"],
+                metric=params["metric"],
+                limit=params["limit"],
+                period_start=params["period_start"],
+            )
+        except RPCError as exc:
+            self._raise_unavailable(exc)
+        return Response({"count": len(results), "results": results, **params})
+
+
+class ChanstatsPlusTopNicksGlobalView(AnopeAPIView):
+    def get(self, request):
+        params = _parse_chanstats_query_params(request)
+        try:
+            results = self.service.chanstatsplus_top_nicks_global(
+                period=params["period"],
+                metric=params["metric"],
+                limit=params["limit"],
+                period_start=params["period_start"],
+            )
+        except RPCError as exc:
+            self._raise_unavailable(exc)
+        return Response({"count": len(results), "results": results, **params})
+
+
+class ChanstatsPlusTopInChannelView(AnopeAPIView):
+    def get(self, request, channel_name):
+        params = _parse_chanstats_query_params(request)
+        try:
+            results = self.service.chanstatsplus_top_in_channel(
+                channel=channel_name,
+                period=params["period"],
+                metric=params["metric"],
+                limit=params["limit"],
+                period_start=params["period_start"],
+            )
+        except RPCError as exc:
+            self._raise_unavailable(exc)
+        return Response({"channel": channel_name, "count": len(results), "results": results, **params})
 

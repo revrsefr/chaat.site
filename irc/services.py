@@ -197,3 +197,114 @@ class AnopeStatsService:
             return []
 
         return list(self._cached("opers.full", fetch, ttl=60))
+
+    # ------------------------------------------------------------------
+    # chanstats_plus (third-party)
+    # ------------------------------------------------------------------
+
+    _chanstats_periods = {"total", "monthly", "weekly", "daily"}
+    _chanstats_metrics = {
+        "letters",
+        "words",
+        "lines",
+        "actions",
+        "smileys_happy",
+        "smileys_sad",
+        "smileys_other",
+        "kicks",
+        "kicked",
+        "modes",
+        "topics",
+    }
+
+    def _clean_chanstats_period(self, period: Optional[str], default: str = "daily") -> str:
+        value = (period or "").strip().lower()
+        if value in self._chanstats_periods:
+            return value
+        return default
+
+    def _clean_chanstats_metric(self, metric: Optional[str], default: str = "lines") -> str:
+        value = (metric or "").strip().lower()
+        if value in self._chanstats_metrics:
+            return value
+        return default
+
+    @staticmethod
+    def _clean_limit(limit: Any, default: int = 10, max_value: int = 100) -> int:
+        try:
+            value = int(limit)
+        except (TypeError, ValueError):
+            value = default
+        value = max(1, value)
+        return min(value, max_value)
+
+    def chanstatsplus_top_channels(
+        self,
+        period: str = "daily",
+        metric: str = "lines",
+        limit: int = 10,
+        period_start: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        period = self._clean_chanstats_period(period)
+        metric = self._clean_chanstats_metric(metric)
+        limit = self._clean_limit(limit, default=10)
+        pstart = (period_start or "").strip()
+
+        cache_key = f"chanstatsplus.top_channels.{period}.{metric}.{limit}.{pstart or 'auto'}"
+
+        def fetch():
+            data = self.rpc.chanstatsplus_top_channels(period=period, metric=metric, limit=limit, period_start=pstart)
+            return data if isinstance(data, list) else []
+
+        return list(self._cached(cache_key, fetch, ttl=30))
+
+    def chanstatsplus_top_nicks_global(
+        self,
+        period: str = "daily",
+        metric: str = "lines",
+        limit: int = 10,
+        period_start: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        period = self._clean_chanstats_period(period)
+        metric = self._clean_chanstats_metric(metric)
+        limit = self._clean_limit(limit, default=10)
+        pstart = (period_start or "").strip()
+
+        cache_key = f"chanstatsplus.top_nicks_global.{period}.{metric}.{limit}.{pstart or 'auto'}"
+
+        def fetch():
+            data = self.rpc.chanstatsplus_top_nicks_global(period=period, metric=metric, limit=limit, period_start=pstart)
+            return data if isinstance(data, list) else []
+
+        return list(self._cached(cache_key, fetch, ttl=30))
+
+    def chanstatsplus_top_in_channel(
+        self,
+        channel: str,
+        period: str = "daily",
+        metric: str = "lines",
+        limit: int = 10,
+        period_start: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        channel_clean = (channel or "").strip()
+        if not channel_clean:
+            return []
+
+        period = self._clean_chanstats_period(period)
+        metric = self._clean_chanstats_metric(metric)
+        limit = self._clean_limit(limit, default=10)
+        pstart = (period_start or "").strip()
+
+        cache_key = f"chanstatsplus.top_in_channel.{channel_clean}.{period}.{metric}.{limit}.{pstart or 'auto'}"
+
+        def fetch():
+            data = self.rpc.chanstatsplus_top(
+                channel=channel_clean,
+                period=period,
+                metric=metric,
+                limit=limit,
+                period_start=pstart,
+            )
+            return data if isinstance(data, list) else []
+
+        return list(self._cached(cache_key, fetch, ttl=30))

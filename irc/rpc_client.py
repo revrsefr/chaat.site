@@ -103,6 +103,43 @@ class AnopeRPC:
     def command(self, account, service, *command):
         return self.run("anope.commands", account, service, *command)
 
+    # chanstats_plus (third-party)
+
+    def chanstatsplus_get_channel(self, channel, nick="", period="total", period_start=""):
+        return self.run("anope.chanstatsplus.getChannel", channel, nick, period, period_start)
+
+    def chanstatsplus_get_nick(self, nick, channel="", period="total", period_start=""):
+        return self.run("anope.chanstatsplus.getNick", nick, channel, period, period_start)
+
+    def chanstatsplus_top(self, channel="", period="total", metric="lines", limit=10, period_start=""):
+        return self.run("anope.chanstatsplus.top", channel, period, metric, limit, period_start)
+
+    def chanstatsplus_top_channels(self, period="total", metric="lines", limit=10, period_start=""):
+        return self.run("anope.chanstatsplus.topChannels", period, metric, limit, period_start)
+
+    def chanstatsplus_top_nicks_global(self, period="total", metric="lines", limit=10, period_start=""):
+        return self.run("anope.chanstatsplus.topNicksGlobal", period, metric, limit, period_start)
+
+    def chanstatsplus_list_nicks_in_channel(self, channel, period="total", period_start="", limit=50, offset=0):
+        return self.run(
+            "anope.chanstatsplus.listNicksInChannel",
+            channel,
+            period,
+            period_start,
+            limit,
+            offset,
+        )
+
+    def chanstatsplus_list_channels_for_nick(self, nick, period="total", period_start="", limit=50, offset=0):
+        return self.run(
+            "anope.chanstatsplus.listChannelsForNick",
+            nick,
+            period,
+            period_start,
+            limit,
+            offset,
+        )
+
     # Backwards compat alias used by early templates
     def get_channel(self, name):
         return self.channel(name)
