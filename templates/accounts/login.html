@@ -178,6 +178,8 @@
 
                         <form id="loginForm" action="{% url 'login' %}" method="POST" novalidate>
                             {% csrf_token %}
+
+                            <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
                             
                             <div class="form-group">
                                 <label>{% trans "Votre email ou Nom d'utilisateur" %}</label>
@@ -228,6 +230,8 @@
         var loginMain = document.getElementById('loginMain');
         var submitBtn = document.getElementById('submitBtn');
         var submitLabel = document.getElementById('submitLabel');
+
+        var nextInput = form ? form.querySelector('input[name="next"]') : null;
 
         var alertBox = document.getElementById('loginAlert');
         var alertTitle = document.getElementById('loginAlertTitle');
@@ -487,6 +491,13 @@
                 if (resp && resp.ok && data.ok) {
                     showAlert('success', i18n.loginSuccess || 'Connexion réussie', data.message || (i18n.redirecting || 'Redirection...'));
                     if (data.redirect_url) {
+                        // If the user came here because login was required for another page,
+                        // do a real navigation back to that page.
+                        var nextValue = (nextInput && nextInput.value) ? String(nextInput.value).trim() : '';
+                        if (nextValue) {
+                            try { window.location.assign(data.redirect_url); } catch (ex) { window.location.href = data.redirect_url; }
+                            return;
+                        }
                         try {
                             if (window.history && window.history.pushState) {
                                 window.history.pushState({}, '', data.redirect_url);

@@ -29,259 +29,52 @@
 
     <title>{% block title %}{{ site_brand.default_title }}{% endblock %}</title>
     
-    <!-- All stylesheet and icons css  -->
-    <!-- Critical CSS (keep render-blocking to avoid FOUC) -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <!-- Stylesheets: load non-blocking to improve mobile LCP -->
+    <style>
+        /* Minimal critical paint (avoid stark FOUC while main CSS loads) */
+        html, body { margin: 0; padding: 0; }
+        body { font-family: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+    </style>
 
-    <!-- Non-critical CSS (defer to reduce render blocking) -->
+    <style>
+        /* Ensure icon text remains visible while fonts load (Lighthouse: font-display). */
+        @font-face {
+            font-family: bootstrap-icons;
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src:
+                url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6") format("woff2"),
+                url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff?dd67030699838ea613ee6dbda90effa6") format("woff");
+        }
+    </style>
+
+    <link rel="preload" as="style" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <link rel="preload" as="style" href="{% static 'css/all.min.css' %}" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/all.min.css' %}"></noscript>
+
+    <!-- Non-critical CSS (already deferred) -->
     <link rel="preload" as="style" href="{% static 'css/animate.css' %}" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="{% static 'css/animate.css' %}"></noscript>
-    <link rel="preload" as="style" href="{% static 'css/swiper.min.css' %}" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/swiper.min.css' %}"></noscript>
-    <link rel="preload" as="style" href="{% static 'css/lightcase.css' %}" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/lightcase.css' %}"></noscript>
+
+    <link rel="preload" as="style" href="{% static 'css/style.css' %}?v={{ static_version }}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v={{ static_version }}">
+
+    <link rel="preload" as="style" href="{% static 'css/header-modern.css' %}?v={{ static_version }}">
+    <link rel="stylesheet" href="{% static 'css/header-modern.css' %}?v={{ static_version }}">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></noscript>
+
+    <link rel="preload" as="style" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}"></noscript>
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
-    <!-- Cookie consent UI styles (theme-friendly, same IDs/classes) -->
-    <style>
-        :root {
-            --cookie-bg: rgba(21, 34, 70, 0.98);
-            --cookie-border: rgba(255, 255, 255, 0.14);
-            --cookie-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
-            --cookie-radius: 14px;
-        }
-
-        #cookie-banner {
-            display: none;
-            position: fixed;
-            left: 18px;
-            bottom: 18px;
-            margin: 0;
-            width: auto;
-            background: linear-gradient(135deg, rgba(33, 51, 102, 0.98), rgba(21, 34, 70, 0.98));
-            color: #ffffff;
-            padding: 16px 16px;
-            border-radius: var(--cookie-radius);
-            border: 1px solid var(--cookie-border);
-            box-shadow: var(--cookie-shadow);
-            text-align: left;
-            opacity: 0;
-            transform: translateY(14px);
-            transition: opacity 220ms ease, transform 220ms ease;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-
-        #cookie-banner.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .cookie-header {
-            font-size: 16px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            letter-spacing: 0.2px;
-        }
-
-        .cookie-header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .cookie-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-        }
-
-        .cookie-title-site { display: inline; }
-        .cookie-title-generic { display: none; }
-
-        .cookie-icon {
-            width: 28px;
-            height: 28px;
-            flex: 0 0 28px;
-        }
-
-        .cookie-status {
-            font-size: 12px;
-            opacity: 0.9;
-            white-space: nowrap;
-        }
-
-        .cookie-description {
-            font-size: 13px;
-            opacity: 0.92;
-            margin: 0;
-            line-height: 1.45;
-        }
-
-        .cookie-buttons {
-            margin-top: 12px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
-        .cookie-button {
-            border: 0;
-            padding: 12px 12px;
-            cursor: pointer;
-            border-radius: 12px;
-            font-weight: 800;
-            transition: transform 120ms ease, filter 120ms ease;
-            text-align: center;
-            width: 100%;
-        }
-
-        .cookie-button:hover { filter: brightness(0.98); }
-        .cookie-button:active { transform: translateY(1px); }
-        .cookie-button:focus-visible { outline: 3px solid rgba(255, 255, 255, 0.35); outline-offset: 2px; }
-
-        .cookie-accept { background: #00C851; color: #fff; }
-        .cookie-decline { background: rgba(255, 255, 255, 0.10); color: #fff; border: 1px solid rgba(255, 255, 255, 0.20); }
-        .cookie-settings { background: #ffbb33; color: #13224a; }
-
-        .cookie-links {
-            margin-top: 10px;
-            font-size: 12px;
-            opacity: 0.92;
-        }
-
-        .cookie-links a { color: rgba(255, 255, 255, 0.95); text-decoration: underline; }
-
-        @media (min-width: 520px) {
-            .cookie-buttons {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-        }
-
-        /* Cookie badge mode (always visible, bottom-left) */
-        #cookie-banner.mini {
-            width: auto;
-            max-width: min(260px, calc(100vw - 36px));
-            padding: 10px 12px;
-            border-radius: 999px;
-            cursor: pointer;
-        }
-
-        #cookie-banner.mini .cookie-description,
-        #cookie-banner.mini .cookie-buttons {
-            display: none;
-        }
-
-        #cookie-banner.mini .cookie-status { display: none; }
-
-        #cookie-banner.mini .cookie-title-site { display: none; }
-        #cookie-banner.mini .cookie-title-generic { display: inline; }
-
-        #cookie-banner.mini .cookie-links {
-            margin-top: 8px;
-            font-size: 12px;
-            opacity: 0.95;
-        }
-
-        #cookie-banner.mini .cookie-privacy,
-        #cookie-banner.mini .cookie-sep {
-            display: none;
-        }
-
-        #cookie-banner.mini .cookie-links { margin-top: 0; }
-        #cookie-banner.mini .cookie-links a { text-decoration: none; }
-        #cookie-banner.mini .cookie-links a:hover { text-decoration: underline; }
-
-        #cookie-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 999;
-        }
-
-        #cookie-backdrop.show { display: block; }
-
-        #cookie-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: min(520px, calc(100vw - 36px));
-            background: linear-gradient(180deg, rgba(33, 51, 102, 0.98), rgba(21, 34, 70, 0.98));
-            color: #fff;
-            padding: 18px;
-            border-radius: var(--cookie-radius);
-            border: 1px solid var(--cookie-border);
-            box-shadow: var(--cookie-shadow);
-            text-align: left;
-            z-index: 1001;
-            backdrop-filter: blur(10px);
-        }
-
-        #cookie-modal.show { display: block; }
-
-        #cookie-modal h3 { font-weight: 900; letter-spacing: 0.2px; }
-        #cookie-modal label { display: flex; align-items: center; gap: 10px; margin: 0; }
-        #cookie-modal input[type="checkbox"] { width: 18px; height: 18px; }
-
-        .cookie-option { margin: 12px 0; }
-        .cookie-option-title { font-weight: 800; }
-        .cookie-option-desc { margin: 6px 0 0 28px; font-size: 12px; opacity: 0.92; line-height: 1.35; }
-
-        /* Header account dropdown: keep it theme-consistent (scoped, minimal). */
-        .header-account-dropdown .dropdown-menu {
-            background: #213366;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
-            padding: 10px;
-            min-width: 240px;
-            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-        }
-        .header-account-dropdown .dropdown-item {
-            color: #fff;
-            font-weight: 600;
-            border-radius: 12px;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-transform: none;
-        }
-        .header-account-dropdown .dropdown-item:hover,
-        .header-account-dropdown .dropdown-item:focus {
-            background: rgba(255, 255, 255, 0.08);
-            color: #f24570;
-        }
-        .header-account-dropdown .dropdown-divider {
-            border-top-color: rgba(255, 255, 255, 0.14);
-            margin: 8px 0;
-        }
-        .header-account-dropdown .dropdown-item i {
-            font-size: 1.05em;
-            line-height: 1;
-        }
-
-        /* Hide dropdown caret unless interacting (hover/focus/open). */
-        .header-account-dropdown .dropdown-toggle::after {
-            opacity: 0;
-            transition: opacity 150ms ease;
-        }
-        .header-account-dropdown:hover .dropdown-toggle::after,
-        .header-account-dropdown .dropdown-toggle:focus-visible::after,
-        .header-account-dropdown .dropdown-toggle[aria-expanded="true"]::after {
-            opacity: 1;
-        }
-    </style>
+    <!-- Cookie consent UI styles (professional, informative, accessible) -->
+    <link rel="preload" as="style" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}"></noscript>
 
     <!-- Google Consent Mode v2 (for GTM) -->
     <script data-cookieconsent="ignore">
@@ -290,7 +83,8 @@
             dataLayer.push(arguments);
         }
 
-        // EU-specific settings
+        // Default to DENIED until the user makes an explicit choice.
+        // The cookie-consent UI will call gtag('consent','update', ...) after selection.
         gtag('consent', 'default', {
             'ad_personalization': 'denied',
             'ad_storage': 'denied',
@@ -298,38 +92,44 @@
             'analytics_storage': 'denied',
             'functionality_storage': 'denied',
             'personalization_storage': 'denied',
-            'region': [
-                'GB','AT','BE','BG','CH','CY','DE','DK','EE','ES','FI',
-                'FR','GG','GR','HR','HU','IE','IM','IT','JE','LT','LU',
-                'LV','MT','NL','PL','PT','RO','SE','SI','SK'
-            ],
-            'wait_for_update': 500,
-        });
-
-        // Default settings
-        gtag('consent', 'default', {
-            'ad_personalization': 'granted',
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'analytics_storage': 'granted',
-            'functionality_storage': 'granted',
-            'personalization_storage': 'granted',
             'security_storage': 'granted',
             'wait_for_update': 500,
         });
 
         gtag('set', 'ads_data_redaction', true);
         gtag('set', 'url_passthrough', false);
-    </script>
 
-        <!-- Google Tag Manager (loads with consent defaults above) -->
-        <script>
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-5J4F54MR');
-        </script>
+        // Load GTM only if the user consented (prevents console/network errors when denied).
+        (function () {
+            var loaded = false;
+
+            function getCookie(name) {
+                var match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
+                return match ? decodeURIComponent(match[1]) : '';
+            }
+
+            window.__loadGTMIfConsented = function () {
+                if (loaded) return;
+                // Require explicit consent on at least one tracking category.
+                var analytics = getCookie('cookie_analytics') === 'yes';
+                var advertising = getCookie('cookie_advertising') === 'yes';
+                if (!analytics && !advertising) return;
+
+                loaded = true;
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-5J4F54MR';
+                var first = document.getElementsByTagName('script')[0];
+                first.parentNode.insertBefore(script, first);
+            };
+
+            // Attempt immediately for returning users (cookie already set).
+            window.__loadGTMIfConsented();
+        })();
+    </script>
 
     <!-- Google Fonts (defer CSS to reduce render blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -341,6 +141,8 @@
     {% block head %}{% endblock %}
 </head>
 <body>   
+
+    <div style="display:none">{% csrf_token %}</div>
 
     <!-- Google Tag Manager (noscript) -->
 
@@ -360,8 +162,8 @@
 
     <!-- Cookie Banner -->
     <div id="cookie-banner" role="dialog" aria-modal="true" aria-label="Consentement cookies">
-        <div class="cookie-header cookie-header-row">
-            <div class="cookie-title">
+        <div class="cookie-header-row">
+            <div class="cookie-title" aria-hidden="true">
                 <svg class="cookie-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
                     <defs>
                         <linearGradient id="cookieGrad" x1="0" y1="0" x2="1" y2="1">
@@ -381,9 +183,19 @@
                 <span class="cookie-title-site">{{ site_brand.site_name }} demande votre consentement</span>
                 <span class="cookie-title-generic">Cookies</span>
             </div>
-            <div id="cookie-status" class="cookie-status" aria-live="polite"></div>
+            <div class="cookie-mini-actions" aria-hidden="true">
+                <div id="cookie-status" class="cookie-status" aria-live="polite"></div>
+                <button id="cookie-mini-settings" class="cookie-mini-settings" type="button" aria-label="Ouvrir les préférences cookies">
+                    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path fill="currentColor" d="M12 2a10 10 0 1 0 10 10c0-.4 0-.8-.1-1.2-2.8.2-5.4-.8-7.2-2.6C12.9 6.4 12 4.2 12 2Zm0 4.2c.3 1.4 1 2.7 2.1 3.8 2 2 4.9 2.9 7.7 2.3A8 8 0 1 1 12 6.2Zm-3.2 6.5a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Zm3.7-2.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2Zm2.8 5.5a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Z"/>
+                    </svg>
+                </button>
+            </div>
         </div>
-        <p class="cookie-description">Nous utilisons des cookies pour améliorer votre expérience. Vous pouvez accepter, refuser, ou personnaliser vos choix.</p>
+        <p class="cookie-description">
+            Nous utilisons des cookies pour faire fonctionner le site, mesurer l’audience et (si vous l’autorisez) proposer des contenus/publicités plus pertinents.
+            Vous pouvez modifier vos préférences à tout moment.
+        </p>
         <div class="cookie-buttons">
             <button id="cookie-accept" class="cookie-button cookie-accept" type="button">Accepter</button>
             <button id="cookie-settings" class="cookie-button cookie-settings" type="button">Personnaliser</button>
@@ -391,8 +203,6 @@
         </div>
         <div class="cookie-links">
             <a class="cookie-privacy" href="/privacy/" rel="nofollow">Politique de confidentialité</a>
-            <span class="cookie-sep">&nbsp;•&nbsp;</span>
-            <a href="#" id="cookie-manage" rel="nofollow">Gérer mes cookies</a>
         </div>
     </div>
 
@@ -400,223 +210,140 @@
 
     <!-- Cookie Settings Modal -->
     <div id="cookie-modal" role="dialog" aria-modal="true" aria-label="Préférences des cookies">
-        <h3 style="margin:0 0 8px 0;">Préférences des cookies</h3>
-        <p style="margin:0 0 10px 0;">Choisissez les cookies que vous souhaitez autoriser :</p>
+        <div class="cookie-modal-header">
+            <div>
+                <h3 class="cookie-modal-title">Préférences des cookies</h3>
+                <p class="cookie-modal-subtitle">
+                    Choisissez ce que vous autorisez. Les cookies strictement nécessaires au fonctionnement du site peuvent être utilisés même en cas de refus.
+                    Les chiffres ci-dessous reflètent uniquement les cookies 1ère partie détectés dans votre navigateur.
+                </p>
+            </div>
+            <button id="close-cookie-settings" class="cookie-modal-close" type="button" aria-label="Fermer">
+                ✕
+            </button>
+        </div>
 
-        <div class="cookie-option">
-            <label for="cookie-analytics" class="cookie-option-title">
-                <input type="checkbox" id="cookie-analytics"> Mesure d'audience
-            </label>
-            <div class="cookie-option-desc">
-                Aide à comprendre la fréquentation (pages vues, temps de visite, erreurs) afin d’améliorer le site.
+        <div class="cookie-summary" aria-live="polite">
+            <div class="cookie-summary-row">
+                <span>État actuel</span>
+                <span class="cookie-pill" id="cookie-choice-pill">—</span>
+            </div>
+            <div class="cookie-summary-row">
+                <span>Cookies détectés (1ère partie)</span>
+                <strong><span id="cookie-count-total">0</span></strong>
+            </div>
+            <div class="cookie-summary-note">
+                Le compteur liste uniquement les cookies <strong>1ère partie</strong> visibles via <code>document.cookie</code>. Selon votre navigateur/adblock, il peut rester à 0 tant qu’aucun cookie n’a été posé (souvent après consentement + rechargement). Les cookies <strong>tiers</strong> ne sont pas détectables ici.
+            </div>
+            <div class="cookie-summary-row">
+                <span>Dernière mise à jour</span>
+                <strong><span id="cookie-last-updated">—</span></strong>
             </div>
         </div>
 
-        <div class="cookie-option">
-            <label for="cookie-functional" class="cookie-option-title">
-                <input type="checkbox" id="cookie-functional"> Fonctionnels
-            </label>
-            <div class="cookie-option-desc">
-                Permet au site de fonctionner correctement (préférences, sécurité, personnalisation de base).
+        <div class="cookie-grid">
+            <div class="cookie-card">
+                <div class="cookie-card-head">
+                    <div>
+                        <p class="cookie-card-title">Mesure d’audience</p>
+                        <div class="cookie-card-meta"><span id="cookie-count-analytics">0</span> détecté(s) • <span id="cookie-known-analytics">0</span> connu(s)</div>
+                    </div>
+                    <label class="cookie-switch" for="cookie-analytics">
+                        <input type="checkbox" id="cookie-analytics" aria-label="Mesure d’audience">
+                    </label>
+                </div>
+                <p class="cookie-card-desc">
+                    Permet de mesurer la fréquentation (pages vues, temps de visite, erreurs) afin d’améliorer le site. Exemple : Google Analytics / tags équivalents.
+                </p>
+                <details class="cookie-details">
+                    <summary>Voir les cookies détectés</summary>
+                    <ul class="cookie-cookie-list" id="cookie-list-analytics"></ul>
+                </details>
+            </div>
+
+            <div class="cookie-card">
+                <div class="cookie-card-head">
+                    <div>
+                        <p class="cookie-card-title">Fonctionnels</p>
+                        <div class="cookie-card-meta"><span id="cookie-count-functional">0</span> détecté(s) • <span id="cookie-known-functional">0</span> connu(s)</div>
+                    </div>
+                    <label class="cookie-switch" for="cookie-functional">
+                        <input type="checkbox" id="cookie-functional" aria-label="Fonctionnels">
+                    </label>
+                </div>
+                <p class="cookie-card-desc">
+                    Mémorise vos choix et améliore l’expérience (préférences, sécurité, sessions). La désactivation peut dégrader certaines fonctionnalités.
+                </p>
+                <details class="cookie-details">
+                    <summary>Voir les cookies détectés</summary>
+                    <ul class="cookie-cookie-list" id="cookie-list-functional"></ul>
+                </details>
+            </div>
+
+            <div class="cookie-card">
+                <div class="cookie-card-head">
+                    <div>
+                        <p class="cookie-card-title">Publicitaires</p>
+                        <div class="cookie-card-meta"><span id="cookie-count-advertising">0</span> détecté(s) • <span id="cookie-known-advertising">0</span> connu(s)</div>
+                    </div>
+                    <label class="cookie-switch" for="cookie-advertising">
+                        <input type="checkbox" id="cookie-advertising" aria-label="Publicitaires">
+                    </label>
+                </div>
+                <p class="cookie-card-desc">
+                    Utilisés pour mesurer des campagnes, limiter la répétition, et proposer des publicités plus pertinentes (selon votre consentement).
+                </p>
+                <details class="cookie-details">
+                    <summary>Voir les cookies détectés</summary>
+                    <ul class="cookie-cookie-list" id="cookie-list-advertising"></ul>
+                </details>
+            </div>
+
+            <div class="cookie-card">
+                <div class="cookie-card-head">
+                    <div>
+                        <p class="cookie-card-title">Sécurité (toujours actif)</p>
+                        <div class="cookie-card-meta">Protection anti-abus, sécurité du site</div>
+                    </div>
+                    <span class="cookie-pill">Activé</span>
+                </div>
+                <p class="cookie-card-desc">
+                    Certains stockages strictement nécessaires peuvent être utilisés pour protéger le site (ex. prévention des fraudes / sécurité).
+                </p>
             </div>
         </div>
 
-        <div class="cookie-option">
-            <label for="cookie-advertising" class="cookie-option-title">
-                <input type="checkbox" id="cookie-advertising"> Publicitaires
-            </label>
-            <div class="cookie-option-desc">
-                Utilisés pour afficher et mesurer des publicités, limiter la répétition et parfois proposer du contenu plus pertinent.
-            </div>
+        <div class="cookie-modal-actions">
+            <button id="cookie-modal-accept-all" class="cookie-button cookie-accept" type="button">Tout accepter</button>
+            <button id="cookie-modal-decline-all" class="cookie-button cookie-decline" type="button">Tout refuser</button>
+            <button id="save-cookie-settings" class="cookie-button cookie-settings" type="button">Sauvegarder</button>
         </div>
 
-        <div class="cookie-buttons" style="margin-top:0;">
-            <button id="save-cookie-settings" class="cookie-button cookie-accept" type="button">Sauvegarder</button>
-            <button id="close-cookie-settings" class="cookie-button cookie-decline" type="button">Fermer</button>
+        <div class="cookie-links" style="margin-top: 12px;">
+            <a href="/privacy/" rel="nofollow">Politique de confidentialité</a>
+            <span class="cookie-sep">&nbsp;•&nbsp;</span>
+            <a href="#" id="cookie-manage-modal" rel="nofollow">Modifier plus tard</a>
         </div>
     </div>
 
     {% block scripts %}
     
-    <script src="{% static 'js/vendor/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'js/vendor/modernizr-3.11.2.min.js' %}"></script>
-    <script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
-    <script src="{% static 'js/swiper.min.js' %}"></script>
-    <script src="{% static 'js/wow.js' %}"></script>
-    <script src="{% static 'js/counterup.js' %}"></script>
-    <script src="{% static 'js/jquery.countdown.min.js' %}"></script>
-    <script src="{% static 'js/lightcase.js' %}"></script>
-    <script src="{% static 'js/waypoints.min.js' %}"></script>
-    <script src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/plugins.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script defer src="{% static 'js/vendor/jquery-3.6.0.min.js' %}"></script>
+    <script defer src="{% static 'js/vendor/modernizr-3.11.2.min.js' %}"></script>
+
+    {# Page-specific vendor libs that must load AFTER jQuery and BEFORE main.js #}
+    {% block page_vendor_scripts %}{% endblock %}
+
+    <script defer src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script defer src="{% static 'js/plugins.js' %}"></script>
+    <script defer src="{% static 'js/main.js' %}?v={{ static_version }}"></script>
+
+    {# Page-specific scripts that can load after main.js #}
+    {% block page_scripts %}{% endblock %}
 
     <!-- Cookie consent logic -->
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var banner = document.getElementById("cookie-banner");
-            var modal = document.getElementById("cookie-modal");
-            var backdrop = document.getElementById("cookie-backdrop");
-            var statusEl = document.getElementById("cookie-status");
-
-            function consentToGrant(value) {
-                return value === "yes" ? "granted" : "denied";
-            }
-
-            function applyGoogleConsent(analytics, functional, advertising) {
-                if (typeof window.gtag !== "function") return;
-                gtag('consent', 'update', {
-                    'analytics_storage': consentToGrant(analytics),
-                    'functionality_storage': consentToGrant(functional),
-                    'personalization_storage': consentToGrant(functional),
-                    'ad_storage': consentToGrant(advertising),
-                    'ad_user_data': consentToGrant(advertising),
-                    'ad_personalization': consentToGrant(advertising),
-                    'security_storage': 'granted'
-                });
-            }
-
-            function showBanner() {
-                banner.classList.add("show");
-            }
-
-            function hideBanner() {
-                banner.classList.remove("show");
-            }
-
-            function setBannerMode(mode) {
-                if (mode === "mini") {
-                    banner.classList.add("mini");
-                } else {
-                    banner.classList.remove("mini");
-                }
-            }
-
-            function updateStatus(consent) {
-                if (!statusEl) return;
-                if (!consent) {
-                    statusEl.textContent = "";
-                    return;
-                }
-
-                var label = "Choix enregistré";
-                if (consent === "accepted") label = "Accepté";
-                else if (consent === "declined") label = "Refusé";
-                else if (consent === "custom") label = "Personnalisé";
-                statusEl.textContent = "Cookies : " + label;
-            }
-
-            function showModal() {
-                modal.classList.add("show");
-                backdrop.classList.add("show");
-            }
-
-            function hideModal() {
-                modal.classList.remove("show");
-                backdrop.classList.remove("show");
-            }
-
-            function syncModalFromCookies() {
-                document.getElementById("cookie-analytics").checked = Cookies.get("cookie_analytics") === "yes";
-                document.getElementById("cookie-functional").checked = Cookies.get("cookie_functional") === "yes";
-                document.getElementById("cookie-advertising").checked = Cookies.get("cookie_advertising") === "yes";
-            }
-
-            function setCookies(consent, analytics, functional, advertising) {
-                Cookies.set('cookie_consent', consent, { expires: 365, path: '/' });
-                Cookies.set('cookie_analytics', analytics, { expires: 365, path: '/' });
-                Cookies.set('cookie_functional', functional, { expires: 365, path: '/' });
-                Cookies.set('cookie_advertising', advertising, { expires: 365, path: '/' });
-
-                applyGoogleConsent(analytics, functional, advertising);
-
-                fetch("/cookie-consent/", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `analytics=${analytics}&functional=${functional}&advertising=${advertising}`
-                });
-
-                hideModal();
-                updateStatus(consent);
-                setBannerMode("mini");
-                showBanner();
-            }
-
-            // Apply saved consent on load (so GTM sees it)
-            if (Cookies.get("cookie_consent")) {
-                applyGoogleConsent(
-                    Cookies.get("cookie_analytics") || "no",
-                    Cookies.get("cookie_functional") || "no",
-                    Cookies.get("cookie_advertising") || "no"
-                );
-                updateStatus(Cookies.get("cookie_consent"));
-                setBannerMode("mini");
-                showBanner();
-            } else {
-                updateStatus(null);
-                setBannerMode("mini");
-                showBanner();
-                // Badge-only UX: still prompt once via modal
-                setTimeout(function() {
-                    syncModalFromCookies();
-                    showModal();
-                }, 250);
-            }
-
-            // Make the badge itself open preferences
-            banner.addEventListener("click", function(e) {
-                var targetId = e && e.target ? e.target.id : "";
-                if (targetId === "cookie-accept" || targetId === "cookie-decline" || targetId === "cookie-settings") return;
-                if (modal.classList.contains("show")) return;
-                syncModalFromCookies();
-                showModal();
-            });
-
-            document.getElementById("cookie-accept").addEventListener("click", function() {
-                setCookies("accepted", "yes", "yes", "yes");
-            });
-
-            document.getElementById("cookie-decline").addEventListener("click", function() {
-                setCookies("declined", "no", "no", "no");
-            });
-
-            document.getElementById("cookie-settings").addEventListener("click", function() {
-                syncModalFromCookies();
-                showModal();
-            });
-
-            document.getElementById("cookie-manage").addEventListener("click", function(e) {
-                e.preventDefault();
-                syncModalFromCookies();
-                showModal();
-            });
-
-            document.getElementById("close-cookie-settings").addEventListener("click", function() {
-                hideModal();
-            });
-
-            backdrop.addEventListener("click", function() {
-                hideModal();
-            });
-
-            document.addEventListener("keydown", function(e) {
-                if (e.key === "Escape") hideModal();
-            });
-
-            document.getElementById("save-cookie-settings").addEventListener("click", function() {
-                var analytics = document.getElementById("cookie-analytics").checked ? "yes" : "no";
-                var functional = document.getElementById("cookie-functional").checked ? "yes" : "no";
-                var advertising = document.getElementById("cookie-advertising").checked ? "yes" : "no";
-
-                var consent = "custom";
-                if (analytics === "yes" && functional === "yes" && advertising === "yes") consent = "accepted";
-                if (analytics === "no" && functional === "no" && advertising === "no") consent = "declined";
-                setCookies(consent, analytics, functional, advertising);
-            });
-        });
-    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
+    <script defer src="{% static 'js/cookie-consent.js' %}?v={{ static_version }}&cb=20260116"></script>
     
     <script>
         (function() {

@@ -23,6 +23,11 @@ from django.utils import timezone
 from datetime import timedelta
 import jwt
 
+import base64
+import hashlib
+import hmac
+import os
+
 from accounts.models import CustomUser, IrcAppPassword
 from accounts.tokens import get_tokens_for_user
 from accounts.utils import issue_email_verification_code, verify_email_code
@@ -33,6 +38,108 @@ from .utils import verify_recaptcha
 irc_api_logger = logging.getLogger("accounts.irc_api")
 auth_api_logger = logging.getLogger("accounts.auth_api")
 
+
+def _safe_scram_salt(*, saltlen: int) -> bytes:
+    """Generate a SCRAM salt whose *standard* base64 encoding avoids '+' and '/'.
+
+    Some IRC clients (notably adiirc/maddirc in our testing) appear to abort SCRAM
+    when the server-first "s=" attribute contains these characters.
+    """
+
+    if saltlen < 16:
+        saltlen = 16
+
+    for _ in range(256):
+        salt = os.urandom(saltlen)
+        salt_b64 = base64.b64encode(salt).decode("ascii")
+        if "+" not in salt_b64 and "/" not in salt_b64:
+            return salt
+
+    raise RuntimeError("failed to generate a client-compatible SCRAM salt")
+
+
+def _make_scram_sha512_verifier(password: str, *, iterations: int = 4096, saltlen: int = 16) -> str:
+    """Create an RFC5802 SCRAM-SHA-512 verifier string.
+
+    Format matches Anope's ns_sasl_scram_sha512 third-party module:
+    v=1,i=<iterations>,s=<b64salt>,sk=<b64storedkey>,sv=<b64serverkey>
+    """
+
+    if not isinstance(password, str) or not password:
+        raise ValueError("password must be a non-empty string")
+
+    try:
+        iterations = int(iterations)
+    except Exception:
+        iterations = 4096
+    if iterations < 4096:
+        iterations = 4096
+
+    try:
+        saltlen = int(saltlen)
+    except Exception:
+        saltlen = 16
+    if saltlen < 16:
+        saltlen = 16
+
+    salt = _safe_scram_salt(saltlen=saltlen)
+
+    salted_password = hashlib.pbkdf2_hmac(
+        "sha512",
+        password.encode("utf-8"),
+        salt,
+        iterations,
+        dklen=64,
+    )
+
+    client_key = hmac.new(salted_password, b"Client Key", hashlib.sha512).digest()
+    stored_key = hashlib.sha512(client_key).digest()
+    server_key = hmac.new(salted_password, b"Server Key", hashlib.sha512).digest()
+
+    b64 = lambda b: base64.b64encode(b).decode("ascii")
+    return f"v=1,i={iterations},s={b64(salt)},sk={b64(stored_key)},sv={b64(server_key)}"
+
+
+def _make_scram_sha256_verifier(password: str, *, iterations: int = 4096, saltlen: int = 16) -> str:
+    """Create an RFC5802 SCRAM-SHA-256 verifier string.
+
+    Format:
+    v=1,i=<iterations>,s=<b64salt>,sk=<b64storedkey>,sv=<b64serverkey>
+    """
+
+    if not isinstance(password, str) or not password:
+        raise ValueError("password must be a non-empty string")
+
+    try:
+        iterations = int(iterations)
+    except Exception:
+        iterations = 4096
+    if iterations < 4096:
+        iterations = 4096
+
+    try:
+        saltlen = int(saltlen)
+    except Exception:
+        saltlen = 16
+    if saltlen < 16:
+        saltlen = 16
+
+    salt = _safe_scram_salt(saltlen=saltlen)
+
+    salted_password = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt,
+        iterations,
+        dklen=32,
+    )
+
+    client_key = hmac.new(salted_password, b"Client Key", hashlib.sha256).digest()
+    stored_key = hashlib.sha256(client_key).digest()
+    server_key = hmac.new(salted_password, b"Server Key", hashlib.sha256).digest()
+
+    b64 = lambda b: base64.b64encode(b).decode("ascii")
+    return f"v=1,i={iterations},s={b64(salt)},sk={b64(stored_key)},sv={b64(server_key)}"
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -257,16 +364,36 @@ def login_token(request):
         )
         return Response({"error": "Username and password are required."}, status=status.HTTP_200_OK)
 
+    now = timezone.now()
+    app_pw_ttl_seconds = getattr(settings, "IRC_APP_PASSWORD_TTL_SECONDS", 120)
+    try:
+        app_pw_ttl_seconds = int(app_pw_ttl_seconds)
+    except Exception:
+        app_pw_ttl_seconds = 120
+    app_pw_ttl_seconds = min(max(app_pw_ttl_seconds, 10), 24 * 60 * 60)
+    app_pw_cutoff = now - timedelta(seconds=app_pw_ttl_seconds)
+
     user = authenticate(username=username, password=password)
     if not user:
         UserModel = get_user_model()
         user_obj = UserModel.objects.filter(username=username).first()
         if user_obj:
-            for app_pw in IrcAppPassword.objects.filter(user=user_obj, revoked_at__isnull=True).order_by("-created_at")[:10]:
+            for app_pw in (
+                IrcAppPassword.objects
+                .filter(
+                    user=user_obj,
+                    revoked_at__isnull=True,
+                    last_used__isnull=True,
+                    created_at__gte=app_pw_cutoff,
+                )
+                .order_by("-created_at")[:10]
+            ):
                 if check_password(password, app_pw.password):
                     user = user_obj
                     app_pw.last_used = timezone.now()
-                    app_pw.save(update_fields=["last_used"])
+                    # One-time use: revoke immediately after a successful auth.
+                    app_pw.revoked_at = app_pw.last_used
+                    app_pw.save(update_fields=["last_used", "revoked_at"])
                     break
     if not user or not getattr(user, "is_active", True) or not getattr(user, "email_verified", False):
         irc_api_logger.warning(
@@ -278,7 +405,6 @@ def login_token(request):
         )
         return Response({"error": "Invalid username or password."}, status=status.HTTP_200_OK)
 
-    now = timezone.now()
     exp = now + timedelta(days=1)
 
     signing_key = getattr(settings, "EXTJWT_SECRET", None) or getattr(settings, "SECRET_KEY")
@@ -295,7 +421,28 @@ def login_token(request):
     if isinstance(token, bytes):
         token = token.decode("utf-8")
 
-    return Response({"access_token": token, "email": getattr(user, "email", "") or ""}, status=status.HTTP_200_OK)
+    scram_iterations = getattr(settings, "IRC_SCRAM_ITERATIONS", 4096)
+    scram_saltlen = getattr(settings, "IRC_SCRAM_SALTLEN", 16)
+    try:
+        scram_verifier = _make_scram_sha512_verifier(password, iterations=scram_iterations, saltlen=scram_saltlen)
+    except Exception:
+        irc_api_logger.exception("login_token scram_verifier_error username=%r", username)
+        scram_verifier = ""
+
+    try:
+        scram256_verifier = _make_scram_sha256_verifier(password, iterations=scram_iterations, saltlen=scram_saltlen)
+    except Exception:
+        irc_api_logger.exception("login_token scram256_verifier_error username=%r", username)
+        scram256_verifier = ""
+
+    return Response({
+        "access_token": token,
+        "email": getattr(user, "email", "") or "",
+        # Optional: allow Anope to cache a SCRAM verifier for SASL SCRAM-SHA-512.
+        "scram_sha512_verifier": scram_verifier,
+        # Optional: allow Anope to cache a SCRAM verifier for SASL SCRAM-SHA-256.
+        "scram_sha256_verifier": scram256_verifier,
+    }, status=status.HTTP_200_OK)
 
 
 # Make ScopedRateThrottle apply the intended scope.

@@ -7,7 +7,7 @@ from blog.models import BlogPost
 from django.http import JsonResponse  
 from django.conf import settings
 
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.views.generic import TemplateView
 
 from .models import LegalMentions
@@ -19,6 +19,7 @@ def webirc(request):
     except TemplateDoesNotExist:
         return HttpResponse('ERROR: webirc.html template not found in templates directory.', status=500)
 
+@ensure_csrf_cookie
 def home(request):
     latest_members = (
         CustomUser.objects.filter(public=True)

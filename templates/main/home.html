@@ -3,11 +3,22 @@
 {% load i18n %}
 {% block title %}home - {{ site_brand.title_suffix }}{% endblock %}
 {% block head %}
-    <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=6" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=6"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=16" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=16"></noscript>
 
-    <!-- LCP: preload hero image and give it high priority -->
-    <link rel="preload" as="image" href="{% static 'images/banner/bg.jpg' %}" fetchpriority="high">
+        <!-- LCP: preload the SAME resource the <picture> will select (prevents LCP load delay) -->
+        <link rel="preload" as="image"
+            href="{% static 'images/banner/bg-558.webp' %}"
+            media="(max-width: 991px)"
+            type="image/webp"
+            fetchpriority="high">
+        <link rel="preload" as="image"
+            href="{% static 'images/banner/bg-1116.webp' %}"
+            media="(min-width: 992px)"
+            type="image/webp"
+            fetchpriority="high">
+    <link rel="preload" as="style" href="{% static 'css/swiper.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
 
     <style>
         /* LCP: render hero background as an <img> so fetchpriority applies */
@@ -20,15 +31,38 @@
             object-fit: cover;
             z-index: 0;
         }
+        .banner.banner--style3 .banner-bg-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
         .banner.banner--style3 > .container { position: relative; z-index: 1; }
     </style>
 
     <script defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
+    <script defer src="{% static 'js/home-webchat-irc-token.js' %}?v=3"></script>
 {% endblock %}
 {% block content %}
     <!-- ================> Banner section start here <================== -->
     <div class="banner banner--style3 padding-top bg_img">
-        <img class="banner-bg" src="{% static 'images/banner/bg.jpg' %}" alt="" aria-hidden="true" fetchpriority="high" loading="eager" decoding="async">
+        <picture class="banner-bg-wrap" aria-hidden="true">
+            <source
+                type="image/webp"
+                srcset="{% static 'images/banner/bg-558.webp' %} 558w, {% static 'images/banner/bg-1116.webp' %} 1116w"
+                sizes="100vw"
+            >
+            <img
+                class="banner-bg"
+                src="{% static 'images/banner/bg.jpg' %}"
+                width="1116"
+                height="563"
+                alt=""
+                aria-hidden="true"
+                fetchpriority="high"
+                loading="eager"
+                decoding="async"
+            >
+        </picture>
         
         <div class="container">
             <div class="row g-0 justify-content-center justify-content-xl-between">
@@ -43,7 +77,20 @@
                 </div>
                 <div class="col-lg-6 col-12 wow fadeInUp" data-wow-duration="1.5s">
                     <div class="banner__thumb text-xl-end">
-                        <img src="{% static 'images/banner/03.png' %}" alt="banner">
+                        <picture>
+                            <source
+                                type="image/webp"
+                                srcset="{% static 'images/banner/03-558.webp' %} 558w, {% static 'images/banner/03-1116.webp' %} 1116w"
+                                sizes="(max-width: 991px) 80vw, 558px"
+                            >
+                            <img
+                                src="{% static 'images/banner/03.png' %}"
+                                alt="banner"
+                                width="558"
+                                height="576"
+                                decoding="async"
+                            >
+                        </picture>
                         <div class="banner__thumb--shape">
                             <div class="shapeimg">
                                 <img src="{% static 'images/banner/shape/home3/01.png' %}" alt="dating thumb">
@@ -59,6 +106,10 @@
     </div>
     <!-- ================> Banner section end here <================== -->
 
+    {% block page_vendor_scripts %}
+        <script defer src="{% static 'js/swiper.min.js' %}"></script>
+        <script defer src="{% static 'js/counterup.js' %}"></script>
+    {% endblock %}
     <div class="about about--style2 padding-top pt-xl-0">
 		<div class="container">
 			<div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
@@ -86,7 +137,17 @@
                                                 <div class="swiper-slide">
                                                     <div class="ragi__thumb">
                                                         <a href="{% url 'member_profile' username=m.username %}" title="{{ m.username }}">
-                                                            <img src="{{ m.avatar_url }}" alt="{{ m.username }}">
+                                                            <img
+                                                                src="{% if m.avatar_thumb_100_url %}{{ m.avatar_thumb_100_url }}{% elif m.avatar_url %}{{ m.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
+                                                                srcset="{{ m.avatar_thumb_100_url }} 100w, {{ m.avatar_thumb_320_url }} 320w, {{ m.avatar_url }} 1024w"
+                                                                sizes="100px"
+                                                                width="100"
+                                                                height="100"
+                                                                alt="{{ m.username }}"
+                                                                loading="lazy"
+                                                                decoding="async"
+                                                                onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';"
+                                                            >
                                                         </a>
                                                     </div>
                                                 </div>
@@ -105,10 +166,10 @@
 					</div>
 					<div class="col">
 						<div class="about__right">
-                            <div class="home-webchat-card">
+                            <div class="home-webchat-card" id="home-webchat">
                                 <div class="home-webchat-title">
-                                    <h3>Entrer sans inscription</h3>
-                                    <p>Choisis un pseudo et rejoins le tchat en 1 clic.</p>
+                                    <h3>Rejoins le tchat maintenant</h3>
+                                    <p>Choisis un pseudo et lance la discussion en un clic — sans inscription.</p>
                                 </div>
                                 <form action="{% url 'webchat' %}" method="GET" class="home-webchat-form" target="_blank" id="form-desktop">
                                     <div class="row g-3">
@@ -145,32 +206,20 @@
                                             <label class="form-label" for="webchat-age">Âge</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-calendar2-week"></i>
-                                                <select id="webchat-age" name="age" class="home-webchat-select">
-                                                    <option value="18" selected>18</option>
-                                                    <option value="19">19</option>
-                                                    <option value="20">20</option>
-                                                    <option value="21">21</option>
-                                                    <option value="22">22</option>
-                                                    <option value="23">23</option>
-                                                    <option value="24">24</option>
-                                                    <option value="25">25</option>
-                                                    <option value="26">26</option>
-                                                    <option value="27">27</option>
-                                                    <option value="28">28</option>
-                                                    <option value="29">29</option>
-                                                    <option value="30">30</option>
-                                                    <option value="31">31</option>
-                                                    <option value="32">32</option>
-                                                    <option value="33">33</option>
-                                                    <option value="34">34</option>
-                                                    <option value="35">35</option>
-                                                    <option value="36">36</option>
-                                                    <option value="37">37</option>
-                                                    <option value="38">38</option>
-                                                    <option value="39">39</option>
-                                                    <option value="40">40</option>
-                                                </select>
+                                                <input
+                                                    type="number"
+                                                    id="webchat-age"
+                                                    name="age"
+                                                    class="home-webchat-input"
+                                                    min="18"
+                                                    max="99"
+                                                    value="18"
+                                                    inputmode="numeric"
+                                                    placeholder="18"
+                                                    autocomplete="off"
+                                                >
                                             </div>
+                                            <div class="home-webchat-hint">Entre 18 et 99 ans.</div>
                                         </div>
                                         <div class="col-lg-6 col-12">
                                             <label class="form-label" for="webchat-ville">Ville</label>
@@ -207,9 +256,59 @@
                                             </div>
                                             <div class="home-webchat-hint">Tu peux mettre un autre salon (ex: #Rencontre).</div>
                                         </div>
+
+                                        <input type="hidden" name="show_password" value="false">
+
+                                        {% if user.is_authenticated %}
+                                            <div class="col-12">
+                                                <div class="home-webchat-toggle" role="group" aria-label="Option mot de passe">
+                                                    <div class="home-webchat-toggle-row">
+                                                        <div class="home-webchat-toggle-text">
+                                                            <div class="home-webchat-toggle-title">Accès sécurisé (token)</div>
+                                                            <div class="home-webchat-toggle-sub">Active cette option pour générer un token IRC — tu pourras le copier et le coller dans le champ « Mot de passe » du webchat.</div>
+                                                        </div>
+                                                        <label class="home-webchat-switch" for="webchat-show-password">
+                                                            <input
+                                                                class="home-webchat-switch-input"
+                                                                type="checkbox"
+                                                                id="webchat-show-password"
+                                                                name="show_password"
+                                                                value="true"
+                                                                data-token-endpoint="{% url 'generate_irc_app_password' username=user.username %}"
+                                                            >
+                                                            <span class="home-webchat-switch-ui" aria-hidden="true"></span>
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="home-webchat-token" id="home-webchat-token" hidden>
+                                                        <div class="home-webchat-token-head">
+                                                            <div class="home-webchat-token-title">Ton token IRC (à copier)</div>
+                                                            <button type="button" class="home-webchat-token-regenerate" id="home-webchat-token-regenerate">Régénérer</button>
+                                                        </div>
+                                                        <div class="home-webchat-token-row">
+                                                            <input type="password" class="home-webchat-token-input" id="home-webchat-token-input" value="" readonly autocomplete="off" spellcheck="false" aria-label="Token IRC">
+                                                            <button type="button" class="home-webchat-token-reveal" id="home-webchat-token-reveal" aria-pressed="false" aria-label="Afficher/masquer le token">Afficher</button>
+                                                            <button type="button" class="home-webchat-token-copy" id="home-webchat-token-copy">Copier</button>
+                                                        </div>
+                                                        <div class="home-webchat-token-hint" id="home-webchat-token-hint">Valable quelques instants et utilisable une seule fois. Colle-le dans le champ « Mot de passe » du webchat après ouverture.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="col-12">
+                                                <div class="home-webchat-token home-webchat-token--locked">
+                                                    <div class="home-webchat-token-title">Mot de passe</div>
+                                                    <div class="home-webchat-token-hint">Disponible uniquement pour les membres connectés.</div>
+                                                    <div class="home-webchat-token-actions">
+                                                        <a class="home-webchat-token-login" href="{% url 'login' %}?next={{ request.path|urlencode }}%23home-webchat" target="_self">Se connecter</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
                                         <div class="col-12">
                                             <button type="submit" class="default-btn d-block home-webchat-submit">
-                                                <span>Entrer dans le tchat <i class="bi bi-chat-dots"></i></span>
+                                                <span>Accéder au tchat <i class="bi bi-chat-dots"></i></span>
                                             </button>
                                         </div>
                                     </div>
@@ -234,7 +333,10 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/serveur.png' %}" height="100" width="100" alt="serveur thumb">
+                                    <picture>
+                                        <source type="image/webp" srcset="{% static 'images/about/icon/serveur-100.webp' %}">
+                                        <img src="{% static 'images/about/icon/serveur.png' %}" width="100" height="100" alt="serveur thumb" loading="lazy" decoding="async">
+                                    </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ server_count }}" data-speed="1500">{{ server_count }}</span></h3>
@@ -247,7 +349,10 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/utilisateurs.png' %}" height="100" width="100" alt="dating thumb">
+                                    <picture>
+                                        <source type="image/webp" srcset="{% static 'images/about/icon/utilisateurs-100.webp' %}">
+                                        <img src="{% static 'images/about/icon/utilisateurs.png' %}" width="100" height="100" alt="dating thumb" loading="lazy" decoding="async">
+                                    </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ user_count }}" data-speed="1500">{{ user_count }}</span></h3>
@@ -260,7 +365,10 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/operateurs.png' %}" height="100" width="100" alt="dating thumb">
+                                    <picture>
+                                        <source type="image/webp" srcset="{% static 'images/about/icon/operateurs-100.webp' %}">
+                                        <img src="{% static 'images/about/icon/operateurs.png' %}" width="100" height="100" alt="dating thumb" loading="lazy" decoding="async">
+                                    </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ oper_count }}" data-speed="1500">{{ oper_count }}</span></h3>
@@ -273,7 +381,10 @@
 						<div class="about__item text-center">
 							<div class="about__inner">
 								<div class="about__thumb">
-                                    <img src="{% static 'images/about/icon/channels.png' %}" height="100" width="100" alt="dating thumb">
+                                    <picture>
+                                        <source type="image/webp" srcset="{% static 'images/about/icon/channels-100.webp' %}">
+                                        <img src="{% static 'images/about/icon/channels.png' %}" width="100" height="100" alt="dating thumb" loading="lazy" decoding="async">
+                                    </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ channel_count }}" data-speed="1500">{{ channel_count }}</span></h3>
@@ -302,7 +413,17 @@
                         <div class="member__inner">
                             <div class="member__thumb">
                                 <a href="{% url 'member_profile' username=m.username %}" title="{{ m.username }}">
-                                    <img src="{{ m.avatar_url }}" alt="{{ m.username }}">
+                                    <img
+                                        src="{% if m.avatar_thumb_320_url %}{{ m.avatar_thumb_320_url }}{% elif m.avatar_url %}{{ m.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
+                                        srcset="{{ m.avatar_thumb_100_url }} 100w, {{ m.avatar_thumb_320_url }} 320w, {{ m.avatar_url }} 1024w"
+                                        sizes="(max-width: 991px) 45vw, 261px"
+                                        width="261"
+                                        height="261"
+                                        alt="{{ m.username }}"
+                                        loading="lazy"
+                                        decoding="async"
+                                        onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';"
+                                    >
                                 </a>
                             </div>
                             <div class="member__content">
@@ -371,7 +492,10 @@
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/06.png' %}" alt="dating thumb">
+                                        <picture>
+                                            <source type="image/webp" srcset="{% static 'images/work/06.webp' %}">
+                                            <img src="{% static 'images/work/06.png' %}" alt="dating thumb" loading="lazy" decoding="async">
+                                        </picture>
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "100% Match de gens" %}</h3>
@@ -436,7 +560,16 @@
                         <div class="story__inner">
                             <div class="story__thumb">
                                 <a href="{% url 'blog:blog_detail' slug=post.slug %}">
-                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                    <img
+                                        src="{{ post.image_thumb_326_url|default:post.image.url }}"
+                                        srcset="{{ post.image_thumb_326_url }} 326w, {{ post.image_thumb_652_url }} 652w, {{ post.image.url }} 1200w"
+                                        sizes="(max-width: 991px) 90vw, 326px"
+                                        width="326"
+                                        height="326"
+                                        alt="{{ post.title }}"
+                                        loading="lazy"
+                                        decoding="async"
+                                    >
                                 </a>
                                 <span class="member__activity member__activity--offline">{{ post.category }}</span>
                             </div>
@@ -446,7 +579,17 @@
                                 </a>
                                 <div class="story__content--author">
                                     <div class="story__content--thumb">
-                                        <img src="{{ post.author.avatar_url }}" alt="{{ post.author.username }}">
+                                        <img
+                                            src="{% if post.author.avatar_thumb_100_url %}{{ post.author.avatar_thumb_100_url }}{% elif post.author.avatar_url %}{{ post.author.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
+                                            srcset="{{ post.author.avatar_thumb_100_url }} 100w, {{ post.author.avatar_thumb_320_url }} 320w, {{ post.author.avatar_url }} 1024w"
+                                            sizes="42px"
+                                            width="42"
+                                            height="42"
+                                            alt="{{ post.author.username }}"
+                                            loading="lazy"
+                                            decoding="async"
+                                            onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';"
+                                        >
                                     </div>
                                     <div class="story__content--content">
                                         <h6>{{ post.author.username }}</h6>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from rest_framework.request import Request
 from django.contrib.auth import login, authenticate
 from rest_framework.test import APIRequestFactory  # Creates API-like requests
@@ -21,6 +22,9 @@ from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+from django.utils.http import url_has_allowed_host_and_scheme
+from typing import Optional
+from datetime import timedelta
 
 from .models import IrcAppPassword
 from .utils import issue_email_verification_code, verify_email_code
@@ -48,6 +52,28 @@ def register_view(request):
 def login_view(request):
     wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
 
+    def get_safe_next_url() -> Optional[str]:
+        next_url = (request.POST.get("next") or request.GET.get("next") or "").strip()
+        if not next_url:
+            return None
+        if url_has_allowed_host_and_scheme(
+            url=next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return next_url
+        return None
+
+    if request.user.is_authenticated:
+        next_url = get_safe_next_url()
+        if wants_json:
+            return JsonResponse({
+                "ok": True,
+                "redirect_url": next_url or reverse("profile", kwargs={"username": request.user.username}),
+                "username": request.user.username,
+            })
+        return redirect(next_url or reverse("profile", kwargs={"username": request.user.username}))
+
     if request.method == "POST":
         username = (request.POST.get("username") or "").strip()
         password = request.POST.get("password")
@@ -67,7 +93,7 @@ def login_view(request):
                 request.session["access_token"] = data["access_token"]
                 request.session["refresh_token"] = data["refresh_token"]
 
-                redirect_url = reverse("profile", kwargs={"username": user.username})
+                redirect_url = get_safe_next_url() or reverse("profile", kwargs={"username": user.username})
                 if wants_json:
                     return JsonResponse({
                         "ok": True,
@@ -284,7 +310,19 @@ def profile_view(request, username):
         form = ProfileUpdateForm(instance=user_profile)
 
     irc_app_password_plain = request.session.pop("irc_app_password_plain", None)
-    irc_app_password_count = IrcAppPassword.objects.filter(user=user_profile, revoked_at__isnull=True).count()
+    app_pw_ttl_seconds = getattr(settings, "IRC_APP_PASSWORD_TTL_SECONDS", 120)
+    try:
+        app_pw_ttl_seconds = int(app_pw_ttl_seconds)
+    except Exception:
+        app_pw_ttl_seconds = 120
+    app_pw_ttl_seconds = min(max(app_pw_ttl_seconds, 10), 24 * 60 * 60)
+    cutoff = timezone.now() - timedelta(seconds=app_pw_ttl_seconds)
+    irc_app_password_count = IrcAppPassword.objects.filter(
+        user=user_profile,
+        revoked_at__isnull=True,
+        last_used__isnull=True,
+        created_at__gte=cutoff,
+    ).count()
 
     return render(request, "accounts/profile.html", {
         "user_profile": user_profile,
@@ -297,11 +335,16 @@ def profile_view(request, username):
 @login_required
 def generate_irc_app_password_view(request, username):
     user_profile = get_object_or_404(CustomUser, username=username)
+    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
     if request.user != user_profile:
+        if wants_json:
+            return JsonResponse({"error": "Forbidden"}, status=403)
         messages.error(request, "Vous n'avez pas la permission d'effectuer cette action.")
         return redirect("home")
 
     if request.method != "POST":
+        if wants_json:
+            return JsonResponse({"error": "Method not allowed"}, status=405)
         return redirect("profile", username=user_profile.username)
 
     # Revoke existing active tokens for simplicity (single active token).
@@ -309,10 +352,11 @@ def generate_irc_app_password_view(request, username):
 
     plain = secrets.token_urlsafe(24)
     IrcAppPassword.objects.create(user=user_profile, password=make_password(plain))
-
-    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
     if wants_json:
-        return JsonResponse({"token": plain, "active": 1})
+        resp = JsonResponse({"token": plain, "active": 1})
+        resp["Cache-Control"] = "no-store, max-age=0"
+        resp["Pragma"] = "no-cache"
+        return resp
 
     request.session["irc_app_password_plain"] = plain
     messages.success(request, "Nouveau mot de passe IRC généré. Copiez-le maintenant (affiché une seule fois).")

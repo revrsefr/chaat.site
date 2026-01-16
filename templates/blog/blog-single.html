@@ -45,7 +45,14 @@
 						<div class="blog__item">
 							<div class="blog__inner">
 								<div class="blog__thumb">
-									<img src="{{ post.image.url }}" alt="{{ post.title }}">
+									<img
+										src="{{ post.image_thumb_652_url|default:post.image.url }}"
+										srcset="{{ post.image_thumb_326_url }} 326w, {{ post.image_thumb_652_url }} 652w, {{ post.image.url }} 1400w"
+										sizes="(max-width: 991px) 90vw, 900px"
+										alt="{{ post.title }}"
+										loading="lazy"
+										decoding="async"
+									>
 								</div>
 								<div class="blog__content text-center">
 									<h2>{{ post.title }}</h2>
@@ -224,4 +231,8 @@
 </div>
 <!-- ================> Blog section end here <================== -->
 
+{% endblock %}
+
+{% block page_scripts %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}

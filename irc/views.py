@@ -38,6 +38,10 @@ _CHANSTATS_METRICS = {
 }
 
 
+def _yesterday_period_start() -> str:
+    return (timezone.localdate() - timedelta(days=1)).isoformat()
+
+
 def _parse_chanstats_query_params(request):
     period = (request.query_params.get("period") or "daily").strip().lower()
     if period not in _CHANSTATS_PERIODS:
@@ -92,6 +96,16 @@ def dashboard(request):
         initial_payload["chanstats_top_channels"] = service.chanstatsplus_top_channels()
         initial_payload["chanstats_top_nicks_global"] = service.chanstatsplus_top_nicks_global()
 
+        # If the current day has no activity yet, fall back to yesterday so the
+        # dashboard doesn't look broken right after midnight.
+        effective_pstart = None
+        if not initial_payload["chanstats_top_channels"] and not initial_payload["chanstats_top_nicks_global"]:
+            effective_pstart = _yesterday_period_start()
+            initial_payload["chanstats_top_channels"] = service.chanstatsplus_top_channels(period_start=effective_pstart)
+            initial_payload["chanstats_top_nicks_global"] = service.chanstatsplus_top_nicks_global(period_start=effective_pstart)
+
+        initial_payload["chanstats_effective_period_start"] = effective_pstart
+
         seed_channel = None
         for entry in initial_payload.get("channels") or []:
             name = (entry or {}).get("name")
@@ -101,6 +115,11 @@ def dashboard(request):
         initial_payload["chanstats_seed_channel"] = seed_channel
         if seed_channel:
             initial_payload["chanstats_top_in_channel"] = service.chanstatsplus_top_in_channel(seed_channel)
+            if effective_pstart and not initial_payload.get("chanstats_top_in_channel"):
+                initial_payload["chanstats_top_in_channel"] = service.chanstatsplus_top_in_channel(
+                    seed_channel,
+                    period_start=effective_pstart,
+                )
 
         # DB-backed history (if snapshot collection is enabled).
         since = timezone.now() - timedelta(hours=72)
@@ -397,6 +416,21 @@ class ChanstatsPlusTopChannelsView(AnopeAPIView):
             )
         except RPCError as exc:
             self._raise_unavailable(exc)
+
+        if params["period"] == "daily" and not params["period_start"] and not results:
+            try:
+                pstart = _yesterday_period_start()
+                results = self.service.chanstatsplus_top_channels(
+                    period=params["period"],
+                    metric=params["metric"],
+                    limit=params["limit"],
+                    period_start=pstart,
+                )
+                if results:
+                    params = {**params, "period_start": pstart, "fallback": "yesterday"}
+            except RPCError as exc:
+                self._raise_unavailable(exc)
+
         return Response({"count": len(results), "results": results, **params})
 
 
@@ -412,6 +446,21 @@ class ChanstatsPlusTopNicksGlobalView(AnopeAPIView):
             )
         except RPCError as exc:
             self._raise_unavailable(exc)
+
+        if params["period"] == "daily" and not params["period_start"] and not results:
+            try:
+                pstart = _yesterday_period_start()
+                results = self.service.chanstatsplus_top_nicks_global(
+                    period=params["period"],
+                    metric=params["metric"],
+                    limit=params["limit"],
+                    period_start=pstart,
+                )
+                if results:
+                    params = {**params, "period_start": pstart, "fallback": "yesterday"}
+            except RPCError as exc:
+                self._raise_unavailable(exc)
+
         return Response({"count": len(results), "results": results, **params})
 
 
@@ -428,5 +477,21 @@ class ChanstatsPlusTopInChannelView(AnopeAPIView):
             )
         except RPCError as exc:
             self._raise_unavailable(exc)
+
+        if params["period"] == "daily" and not params["period_start"] and not results:
+            try:
+                pstart = _yesterday_period_start()
+                results = self.service.chanstatsplus_top_in_channel(
+                    channel=channel_name,
+                    period=params["period"],
+                    metric=params["metric"],
+                    limit=params["limit"],
+                    period_start=pstart,
+                )
+                if results:
+                    params = {**params, "period_start": pstart, "fallback": "yesterday"}
+            except RPCError as exc:
+                self._raise_unavailable(exc)
+
         return Response({"channel": channel_name, "count": len(results), "results": results, **params})
 

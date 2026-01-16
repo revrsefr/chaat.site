@@ -200,7 +200,7 @@
                         <div class="story__item style2">
                             <div class="story__inner">
                                 <div class="story__thumb position-relative">
-                                    <img src="{{ member.avatar_url }}" alt="{{ member.username }}">
+                                    <img src="{% if member.avatar_url %}{{ member.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ member.username }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';">
                                     <span class="member__activity {% if member.last_login and member.last_login > active_threshold %}online{% else %}member__activity--ofline{% endif %}"></span>
                                 </div>
                                 <div class="story__content px-0 pb-0">
@@ -258,7 +258,7 @@
                                             {% for u in newest_members %}
                                                 <li>
                                                     <div class="d-flex align-items-center" style="gap: 10px;">
-                                                        <img src="{{ u.avatar_url }}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;">
+                                                        <img src="{% if u.avatar_url %}{{ u.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" loading="lazy" decoding="async" onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';">
                                                         <div>
                                                             <a href="{% url 'member_profile' username=u.username %}"><strong>{{ u.username }}</strong></a>
                                                             <div style="font-size: 12px; opacity: .8;">{% if u.last_login %}{{ u.last_login|timesince }} ago{% else %}Inactive{% endif %}</div>
@@ -275,7 +275,7 @@
                                             {% for u in popular_members %}
                                                 <li>
                                                     <div class="d-flex align-items-center" style="gap: 10px;">
-                                                        <img src="{{ u.avatar_url }}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;">
+                                                        <img src="{% if u.avatar_url %}{{ u.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" loading="lazy" decoding="async" onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';">
                                                         <div>
                                                             <a href="{% url 'member_profile' username=u.username %}"><strong>{{ u.username }}</strong></a>
                                                             <div style="font-size: 12px; opacity: .8;">{% if u.last_login %}{{ u.last_login|timesince }} ago{% else %}Inactive{% endif %}</div>

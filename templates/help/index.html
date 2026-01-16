@@ -1,9 +1,9 @@
 {% extends "help/_help_base.html" %}
 
-{% block title %}Présentation de l'aide{% endblock %}
+{% block title %}Wiki: Présentation de l'aide{% endblock %}
 
 {% block help_content %}
-<p class="recaptcha-ui__message">Bienvenue dans la documentation officielle IRCD & Services de ce réseau. Utilisez la navigation à gauche pour explorer les commandes des opérateurs et des services, les exemples et les bonnes pratiques. Cette documentation est destinée aux administrateurs et aux utilisateurs avancés.</p>
+<p class="recaptcha-ui__message">Bienvenue dans la documentation officielle IRCD & Services de ce réseau. Utilisez la navigation à gauche pour explorer les commandes des opérateurs et des services, les exemples et les bonnes pratiques. Cette documentation est destinée aux administrateurs et aux utilisateurs avancés.</p><br>
 
 <h3 class="help-section-title">Prise en main</h3>
 <p class="recaptcha-ui__message">Si vous êtes opérateur, commencez par la section <a href="{% url 'helpdocs:ircd' %}">Administration IRCD</a> pour apprendre l'authentification des opérateurs, les bans et le contrôle du serveur. Les mainteneurs de services doivent consulter les pages spécifiques (NickServ, ChanServ, MemoServ, OperServ) pour la syntaxe des commandes et des exemples.</p>

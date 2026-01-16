@@ -3,11 +3,11 @@
 {% block content %}
 
 {% if request.GET.nick %}
-    {% with nick=request.GET.nick sexe=request.GET.sexe age=request.GET.age ville=request.GET.ville channels=request.GET.channel show_password=request.GET.show_password %}
+    {% with nick=request.GET.nick sexe=request.GET.sexe age=request.GET.age ville=request.GET.ville channels=request.GET.channel show_password=request.GET.show_password|default:'false' %}
         <script type="text/javascript">
             var dispositivo = navigator.userAgent.toLowerCase();
             if (dispositivo.search(/iphone|ipod|ipad|android/) > -1) {
-                document.location = "https://kiwiirc.chaat.site/?nick={{ nick|urlencode }}&sexe={{ sexe|urlencode }}&age={{ age|urlencode }}&ville={{ ville|urlencode }}&channels={{ channels|urlencode }}{% if show_password %}&show_password={{ show_password|urlencode }}{% endif %}";
+                document.location = "https://kiwiirc.chaat.site/?nick={{ nick|urlencode }}&sexe={{ sexe|urlencode }}&age={{ age|urlencode }}&ville={{ ville|urlencode }}&channels={{ channels|urlencode }}&show_password={{ show_password|urlencode }}";
             }
         </script>
 
@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12 content-area" id="primary">
                         <main class="site-main" id="main" role="main"><br>
-                            <iframe src="https://kiwiirc.chaat.site/?nick={{ nick|urlencode }}&sexe={{ sexe|urlencode }}&age={{ age|urlencode }}&ville={{ ville|urlencode }}&channels={{ channels|urlencode }}{% if show_password %}&show_password={{ show_password|urlencode }}{% endif %}" width="600px" height="700px" border="1"></iframe>
+                            <iframe src="https://kiwiirc.chaat.site/?nick={{ nick|urlencode }}&sexe={{ sexe|urlencode }}&age={{ age|urlencode }}&ville={{ ville|urlencode }}&channels={{ channels|urlencode }}&show_password={{ show_password|urlencode }}" width="600px" height="700px" border="1"></iframe>
                         </main>
                     </div>
                 </div>

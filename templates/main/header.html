@@ -25,7 +25,16 @@
     <div class="header__bottom">
         <div class="container">
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="{% url 'main:home' %}"><img src="{% static 'images/logo/logo.png' %}" alt="logo"></a>
+                <a class="navbar-brand" href="{% url 'main:home' %}">
+                    <img
+                        src="{% static 'images/logo/logo.png' %}"
+                        srcset="{% static 'images/logo/logo.png' %} 1x, {% static 'images/logo/logo@1.5x.png' %} 1.5x, {% static 'images/logo/logo@2x.png' %} 2x"
+                        width="93"
+                        height="23"
+                        alt="logo"
+                        decoding="async"
+                    >
+                </a>
                 <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -64,6 +73,12 @@
                     </div>
                     <ul class="button-group">
                         {% if request.user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'main:home' %}#home-webchat" class="default-btn header-cta">
+                                    <i class="bi bi-chat-dots"></i>
+                                    <span>{% trans "Accéder au tchat" %}</span>
+                                </a>
+                            </li>
                             <li class="dropdown header-account-dropdown">
                                 <a
                                     href="#"
@@ -105,7 +120,13 @@
                                 </ul>
                             </li>
                         {% else %}
-                            <li><a href="{% url 'login' %}" class="default-btn login"><i class="fa-solid fa-user"></i> <span>{% trans "S'identifier" %}</span> </a></li>
+                            <li>
+                                <a href="{% url 'main:home' %}#home-webchat" class="default-btn header-cta">
+                                    <i class="bi bi-chat-dots"></i>
+                                    <span>{% trans "Accéder au tchat" %}</span>
+                                </a>
+                            </li>
+                            <li><a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="default-btn login"><i class="fa-solid fa-user"></i> <span>{% trans "S'identifier" %}</span> </a></li>
                             <li><a href="{% url 'register' %}" class="default-btn signup"><i class="fa-solid fa-users"></i> <span>{% trans "Créer un compte" %}</span> </a></li>
                         {% endif %}
                     </ul>

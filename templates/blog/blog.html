@@ -51,7 +51,16 @@
                                     <div class="blog__thumb blog__thumb--list">
                                         <a href="{% url 'blog:blog_detail' post.slug %}" aria-label="Read {{ post.title }}">
                                             {% if post.image %}
-                                                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                                <img
+                                                    src="{{ post.image_thumb_326_url|default:post.image.url }}"
+                                                    srcset="{{ post.image_thumb_326_url }} 326w, {{ post.image_thumb_652_url }} 652w, {{ post.image.url }} 1200w"
+                                                    sizes="(max-width: 991px) 90vw, 326px"
+                                                    width="326"
+                                                    height="326"
+                                                    alt="{{ post.title }}"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                >
                                             {% else %}
                                                 <img src="{% static 'images/blog/01.jpg' %}" alt="{{ post.title }}">
                                             {% endif %}
