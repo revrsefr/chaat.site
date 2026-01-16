@@ -9,7 +9,7 @@
                         <div class="footer__item footer--about h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h4 class="text-nowrap"><i class="fa-solid fa-circle-info"></i> {% trans "À propos" %}</h4>
+                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-circle-info"></i> {% trans "À propos" %}</h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
@@ -38,7 +38,7 @@
                         <div class="footer__item footer--support h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h4 class="text-nowrap"><i class="fa-solid fa-circle-info"></i> {% trans "Informations" %}</h4>
+                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-circle-info"></i> {% trans "Informations" %}</h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
@@ -82,7 +82,7 @@
                         <div class="footer__item footer--support h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h4 class="text-nowrap"><i class="fa-solid fa-link"></i> {% trans "Liens utiles" %}</h4>
+                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-link"></i> {% trans "Liens utiles" %}</h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
@@ -117,7 +117,7 @@
                         <div class="footer__item footer--support h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h4 class="text-nowrap"><i class="fa-solid fa-newspaper"></i> {% trans "Articles récents" %}</h4>
+                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-newspaper"></i> {% trans "Articles récents" %}</h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
@@ -140,7 +140,7 @@
                         <div class="footer__item footer--activity h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h4 class="text-nowrap"><i class="fa-solid fa-users"></i> {% trans "Derniers inscrits" %}</h4>
+                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-users"></i> {% trans "Derniers inscrits" %}</h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul class="footer__latest-list">
@@ -157,7 +157,7 @@
                                                         alt="{{ member.username }}"
                                                         loading="lazy"
                                                         decoding="async"
-                                                        onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';"
+                                                        onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
                                                     >
                                                     <div class="footer__user">
                                                         <span class="footer__username">{{ member.username }}</span>

@@ -2,16 +2,112 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Login - {{ site_brand.title_suffix }}{% endblock %}
+{% block title %}{% trans "Connexion" %} - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block head %}
 <style>
-    /* Theme-first: keep this page using the existing log-reg layout.
-       Only add tiny, scoped enhancements (no custom layout framework). */
-    .login-page-root { height: auto !important; min-height: 100vh; }
-    .login-page-root .log-reg-inner { max-height: none !important; height: auto !important; overflow: visible !important; }
+    /* Pro, mobile-first login.
+       Keep existing JS + form behavior, only adjust layout and visuals. */
+    .login-page-root {
+        height: auto !important;
+        min-height: 100vh;
+        padding: 48px 0 64px;
+        background:
+            radial-gradient(1100px 520px at 12% 18%, rgba(242, 69, 112, 0.20), transparent 55%),
+            radial-gradient(900px 480px at 92% 12%, rgba(33, 51, 102, 0.28), transparent 55%),
+            linear-gradient(180deg, #0b1220 0%, #0e1630 100%);
+    }
+
+    /* Remove the big side image everywhere (desktop + mobile). */
+    .login-page-root .image { display: none !important; }
+
+    .login-page-root .log-reg-inner {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 26px 22px 22px !important;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 20px 70px rgba(0, 0, 0, 0.40);
+        backdrop-filter: blur(10px);
+    }
+
+    .login-page-root .section-header.inloginp { padding-top: 0 !important; margin-bottom: 14px; }
+    .login-page-root .section-header .title {
+        color: #0b1220 !important;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        text-transform: none !important;
+    }
+    .login-page-root .login-subtitle {
+        margin: 0;
+        color: rgba(15, 23, 42, 0.72);
+        font-size: 0.98rem;
+        line-height: 1.45;
+        text-transform: none !important;
+    }
+
+    /* Undo global theme capitalization for a more professional look. */
+    .login-page-root,
+    .login-page-root a,
+    .login-page-root label,
+    .login-page-root .default-btn,
+    .login-page-root .default-btn span {
+        text-transform: none !important;
+    }
+
     .login-page-root .main-content.inloginp { overflow: visible !important; }
-    .login-page-root .image { bottom: 0 !important; height: auto !important; }
+
+    /* The original theme assumes a dark login background (white text).
+       Our card is light, so force readable text colors inside the card. */
+    .login-page-root .log-reg-inner,
+    .login-page-root .log-reg-inner * {
+        color: #0b1220;
+    }
+    .login-page-root .login-subtitle,
+    .login-page-root .login-back {
+        color: rgba(15, 23, 42, 0.72) !important;
+    }
+    .login-page-root .f-pass,
+    .login-page-root .f-pass span,
+    .login-page-root .text-center {
+        color: rgba(15, 23, 42, 0.78) !important;
+    }
+    .login-page-root .f-pass a {
+        color: #f24570 !important;
+    }
+    .login-page-root .f-pass a:hover {
+        color: #d9375f !important;
+        text-decoration: underline;
+    }
+
+    /* Keep buttons readable (theme sets these, but be explicit). */
+    .login-page-root .default-btn,
+    .login-page-root .default-btn span {
+        color: #fff !important;
+    }
+
+    /* Modern green CTA for the login submit button (page-scoped). */
+    .login-page-root #submitBtn.default-btn {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 55%, #15803d 100%) !important;
+        border: 1px solid rgba(21, 128, 61, 0.55) !important;
+        box-shadow: 0 16px 40px rgba(22, 163, 74, 0.25);
+    }
+    .login-page-root #submitBtn.default-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 20px 55px rgba(22, 163, 74, 0.33);
+        filter: saturate(1.06);
+    }
+    .login-page-root #submitBtn.default-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 12px 32px rgba(22, 163, 74, 0.22);
+    }
+    .login-page-root #submitBtn.default-btn:focus {
+        box-shadow:
+            0 16px 40px rgba(22, 163, 74, 0.25),
+            0 0 0 4px rgba(34, 197, 94, 0.22) !important;
+    }
 
     @keyframes subtleShake {
         0% { transform: translateX(0); }
@@ -50,9 +146,9 @@
         transform: translateY(-50%);
         z-index: 2;
         pointer-events: auto;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.15);
-        color: rgba(255,255,255,0.85);
+        background: rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.10);
+        color: rgba(0,0,0,0.70);
         width: 36px;
         height: 36px;
         border-radius: 12px;
@@ -60,19 +156,63 @@
         place-items: center;
         cursor: pointer;
     }
-    /* When theme renders light inputs, keep button visible. */
-    .password-toggle.light {
-        background: rgba(0,0,0,0.04);
-        border-color: rgba(0,0,0,0.10);
-        color: rgba(0,0,0,0.70);
+
+    .login-brand-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
     }
+    .login-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: #0b1220;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+    }
+    .login-brand img { width: 34px; height: 34px; }
+    .login-back {
+        color: rgba(15, 23, 42, 0.72);
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .login-back:hover { text-decoration: underline; color: rgba(15, 23, 42, 0.86); }
+
+    .login-page-root .form-group label {
+        color: rgba(15, 23, 42, 0.92) !important;
+        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+    }
+    .login-page-root .my-form-control {
+        border: 1px solid rgba(15, 23, 42, 0.14) !important;
+        border-radius: 14px;
+        height: 52px;
+        padding: 0 16px !important;
+        background: #fff !important;
+        color: #0b1220 !important;
+        box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+    }
+    .login-page-root .my-form-control:focus {
+        border-color: rgba(242, 69, 112, 0.55) !important;
+        box-shadow: 0 0 0 4px rgba(242, 69, 112, 0.18) !important;
+        outline: none;
+    }
+    .login-page-root .default-btn {
+        width: 100%;
+        border-radius: 14px;
+        padding: 14px 18px;
+    }
+    .login-page-root .f-pass { margin-top: 10px; margin-bottom: 14px; }
 
     .login-loading { opacity: 0.9; cursor: not-allowed; }
     .spinner {
         width: 14px;
         height: 14px;
-        border: 2px solid rgba(255,255,255,0.55);
-        border-top-color: rgba(255,255,255,1);
+        border: 2px solid rgba(15,23,42,0.30);
+        border-top-color: rgba(15,23,42,0.80);
         border-radius: 999px;
         display: inline-block;
         vertical-align: -2px;
@@ -80,45 +220,33 @@
         animation: spin 0.75s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (min-width: 992px) {
+        .login-page-root .log-reg-inner { padding: 30px 28px 26px !important; }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Preloader -->
-<div class="preloader">
-    <div class="preloader-inner">
-        <div class="preloader-icon">
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-</div>
-
-<!-- Scroll to Top -->
-<a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
-
-<section class="log-reg login-page-root">
-    <div class="top-menu-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-7"></div>
-                <div class="col-lg-4 col-5">
-                    <a href="{% url 'main:home' %}" class="backto-home">
-                        <i class="fas fa-chevron-left"></i> {% trans "Back to Home" %}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<section class="log-reg login-page-root" aria-label="Login">
     <div class="container">
-        <div class="row">
-            <div class="image image-log"></div>
-            <div class="col-lg-7">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6 col-xl-5">
                 <div class="log-reg-inner" id="loginCard">
+                    <div class="login-brand-row">
+                        <a class="login-brand" href="{% url 'main:home' %}" aria-label="chaat.site">
+                            <img src="{% static 'images/logo/mark-2026-v4.svg' %}" alt="" aria-hidden="true" decoding="async">
+                            <span>chaat.site</span>
+                        </a>
+                        <a href="{% url 'main:home' %}" class="login-back">
+                            <i class="fas fa-chevron-left"></i> {% trans "Retour à l'accueil" %}
+                        </a>
+                    </div>
+
                     <div class="section-header inloginp">
-                        <h2 class="title">{% trans "Acceder a vote compte.." %}</h2>
+                        <h1 class="title">{% trans "Accéder à votre compte" %}</h1>
+                        <p class="login-subtitle">{% trans "Connectez-vous pour accéder à votre profil et rejoindre le tchat." %}</p>
                     </div>
 
                     <div class="main-content inloginp" id="loginMain">
@@ -191,7 +319,7 @@
                                 <label>{% trans "Mot de passe" %}</label>
                                 <div class="password-wrap">
                                     <input type="password" name="password" id="password" class="my-form-control" placeholder="{% trans "Entrer votre mot de passe" %}" autocomplete="current-password" required>
-                                    <button type="button" class="password-toggle light" id="togglePassword" aria-label="Toggle password visibility">
+                                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                 </div>
@@ -211,7 +339,7 @@
                                 </button>
                             </div>
 
-                            <div class="text-center" style="margin-top: 10px; opacity: 0.85; font-size: 12px;">
+                            <div class="text-center" style="margin-top: 10px; opacity: 0.78; font-size: 12px;">
                                 {% trans "Astuce : vous pouvez utiliser votre email ou votre pseudo." %}
                             </div>
                         </form>

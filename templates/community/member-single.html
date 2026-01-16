@@ -65,15 +65,17 @@
 		<div class="header__bottom">
 			<div class="container">
 				<nav class="navbar navbar-expand-lg">
-                    <a class="navbar-brand" href="{% url 'main:home' %}">
+                    <a class="navbar-brand" href="{% url 'main:home' %}" aria-label="chaat.site">
                         <img
-                            src="{% static 'images/logo/logo.png' %}"
-                            srcset="{% static 'images/logo/logo.png' %} 1x, {% static 'images/logo/logo@1.5x.png' %} 1.5x, {% static 'images/logo/logo@2x.png' %} 2x"
-                            width="93"
-                            height="23"
-                            alt="logo"
+                            src="{% static 'images/logo/mark-2026-v4.svg' %}"
+                            width="56"
+                            height="56"
+                            alt=""
+                            class="brand-mark"
+                            aria-hidden="true"
                             decoding="async"
                         >
+                        <span class="brand-name" aria-hidden="true">chaat.site</span>
                     </a>
 					<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
 						data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"

@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}home - {{ site_brand.title_suffix }}{% endblock %}
+{% block title %}Accueil - {{ site_brand.title_suffix }}{% endblock %}
 {% block head %}
     <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=16" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=16"></noscript>
@@ -37,6 +37,23 @@
             z-index: 0;
         }
         .banner.banner--style3 > .container { position: relative; z-index: 1; }
+
+        .banner__brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .banner__brand img {
+            width: 56px;
+            height: 56px;
+        }
+        .banner__brand-name {
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: inherit;
+            line-height: 1;
+        }
     </style>
 
     <script defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
@@ -69,9 +86,19 @@
                 <div class="col-lg-5 col-12 wow fadeInLeft" data-wow-duration="1.5s">
                     <div class="banner__content">
                         <div class="banner__title">
-                            <h2>Redécouvrez le plaisir<span> de </span> discuter en ligne !</h2>
-                            <p>{% trans "Discuter gratuitement avec des personnes proches de chez vous." %}</p>
-                            <a href="#" class="default-btn style-2"><span>La discussion en ligne, c'est plus fun que jamais !</span></a>
+                            <div class="banner__brand">
+                                <img
+                                    src="{% static 'images/logo/mark-2026-v4.svg' %}"
+                                    width="56"
+                                    height="56"
+                                    alt="Logo chaat.site"
+                                    decoding="async"
+                                >
+                                <span class="banner__brand-name">chaat.site</span>
+                            </div>
+                            <h2>Le tchat IRC<span> pour </span> connecter tout le monde.</h2>
+                            <p>{% trans "Discute gratuitement, en temps réel, avec des personnes près de chez toi — ou à l’autre bout du monde." %}</p>
+                            <a href="#" class="default-btn style-2"><span>Rejoindre le tchat en un clic</span></a>
                         </div>
                     </div>
                 </div>
@@ -85,7 +112,7 @@
                             >
                             <img
                                 src="{% static 'images/banner/03.png' %}"
-                                alt="banner"
+                                alt="Illustration du tchat"
                                 width="558"
                                 height="576"
                                 decoding="async"
@@ -93,11 +120,11 @@
                         </picture>
                         <div class="banner__thumb--shape">
                             <div class="shapeimg">
-                                <img src="{% static 'images/banner/shape/home3/01.png' %}" alt="dating thumb">
+                                <img src="{% static 'images/banner/shape/home3/01.png' %}" alt="Décoration">
                             </div>
                         </div>
                         <div class="banner__thumb--title">
-                            <h4>{% trans "#!accueil!  #!célibataires  #!40anset+ " %}</h4>
+                            <p class="h4 m-0">{% trans "#!Accueil #!Musique #!Jeux" %}</p>
                         </div>
                     </div>
                 </div>
@@ -109,6 +136,15 @@
     {% block page_vendor_scripts %}
         <script defer src="{% static 'js/swiper.min.js' %}"></script>
         <script defer src="{% static 'js/counterup.js' %}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('[data-background]').forEach((el) => {
+                    const bg = el.getAttribute('data-background');
+                    if (!bg) return;
+                    el.style.backgroundImage = `url('${bg}')`;
+                });
+            });
+        </script>
     {% endblock %}
     <div class="about about--style2 padding-top pt-xl-0">
 		<div class="container">
@@ -119,12 +155,12 @@
 							<div class="about__top">
                                 <div class="about__content">
                                     <h3>{{ site_brand.site_name }}</h3>
-									<p>C'est là où il est facile de discuter gratuitement avec des milliers de personnes.</p>
+                                <p>Un tchat IRC moderne pour discuter librement avec une communauté bienveillante, à tout âge.</p>
 								</div>
 							</div>
 							<div class="about__bottom">
 								<div class="about__bottom--head">
-									<h5>Derniers membres inscrits</h5>
+                                    <p class="h5 m-0 fw-semibold">Nouveaux membres</p>
 									<div class="about__bottom--navi">
 										<div class="ragi-prev"><i class="fa-solid fa-chevron-left"></i></div>
 										<div class="ragi-next active"><i class="fa-solid fa-chevron-right"></i></div>
@@ -146,7 +182,7 @@
                                                                 alt="{{ m.username }}"
                                                                 loading="lazy"
                                                                 decoding="async"
-                                                                onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';"
+                                                                onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
                                                             >
                                                         </a>
                                                     </div>
@@ -154,7 +190,7 @@
                                             {% empty %}
                                                 <div class="swiper-slide">
                                                     <div class="ragi__thumb">
-                                                        <img src="{% static 'images/ragi/01.jpg' %}" alt="member">
+														<img src="{% static 'images/ragi/01.jpg' %}" alt="Membre">
                                                     </div>
                                                 </div>
                                             {% endfor %}
@@ -168,13 +204,13 @@
 						<div class="about__right">
                             <div class="home-webchat-card" id="home-webchat">
                                 <div class="home-webchat-title">
-                                    <h3>Rejoins le tchat maintenant</h3>
-                                    <p>Choisis un pseudo et lance la discussion en un clic — sans inscription.</p>
+                                    <h3>Entre sur le tchat maintenant</h3>
+                                    <p>Choisis un pseudo et discute tout de suite — sans inscription, sans appli, sans prise de tête.</p>
                                 </div>
                                 <form action="{% url 'webchat' %}" method="GET" class="home-webchat-form" target="_blank" id="form-desktop">
                                     <div class="row g-3">
                                         <div class="col-lg-6 col-12">
-                                            <label class="form-label" for="webchat-nick">Pseudo</label>
+										<label class="form-label" for="webchat-nick">Pseudo</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-person"></i>
                                                 <input
@@ -185,25 +221,25 @@
                                                     placeholder="{% if user.is_authenticated %}{{ user.username }}{% else %}Entrer un pseudo{% endif %}"
                                                     {% if user.is_authenticated %}value="{{ user.username }}"{% endif %}
                                                     pattern=".{3,}"
-                                                    title="Saisissez un pseudo avec minimum 3 caractères."
+                                                    title="Saisis un pseudo (3 caractères minimum)."
                                                     required
                                                     autocomplete="nickname"
                                                 >
                                             </div>
-                                            <div class="home-webchat-hint">Minimum 3 caractères.</div>
+                                            <div class="home-webchat-hint">3 caractères minimum.</div>
                                         </div>
                                         <div class="col-lg-6 col-12">
-                                            <label class="form-label" for="webchat-sexe">Sexe</label>
+										<label class="form-label" for="webchat-sexe">Genre</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-gender-ambiguous"></i>
                                                 <select id="webchat-sexe" name="sexe" class="home-webchat-select">
-                                                    <option value="homme">Homme</option>
-                                                    <option value="femme" selected>Femme</option>
+											<option value="homme">Homme</option>
+											<option value="femme" selected>Femme</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-12">
-                                            <label class="form-label" for="webchat-age">Âge</label>
+										<label class="form-label" for="webchat-age">Âge (optionnel)</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-calendar2-week"></i>
                                                 <input
@@ -219,10 +255,10 @@
                                                     autocomplete="off"
                                                 >
                                             </div>
-                                            <div class="home-webchat-hint">Entre 18 et 99 ans.</div>
+										<div class="home-webchat-hint">Entre 18 et 99 ans.</div>
                                         </div>
                                         <div class="col-lg-6 col-12">
-                                            <label class="form-label" for="webchat-ville">Ville</label>
+										<label class="form-label" for="webchat-ville">Ville (optionnel)</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-geo-alt"></i>
                                                 <input
@@ -230,7 +266,7 @@
                                                     id="webchat-ville"
                                                     name="ville"
                                                     class="home-webchat-input"
-                                                    placeholder="Tape ta ville (ex: Paris)"
+                                                    placeholder="Tape ta ville (ex. : Paris)"
                                                     list="webchat-ville-list"
                                                     autocomplete="address-level2"
                                                     data-cities-endpoint="{% url 'get_cities' %}"
@@ -238,10 +274,10 @@
                                                 <datalist id="webchat-ville-list"></datalist>
                                                 <div class="home-webchat-suggestions" id="webchat-ville-suggestions" hidden></div>
                                             </div>
-                                            <div class="home-webchat-hint">Tape au moins 2 lettres pour voir des suggestions.</div>
+										<div class="home-webchat-hint">Tape au moins 2 lettres pour voir des suggestions.</div>
                                         </div>
                                         <div class="col-12">
-                                            <label class="form-label" for="webchat-channel">Salon</label>
+										<label class="form-label" for="webchat-channel">Salon IRC</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-hash"></i>
                                                 <input
@@ -254,7 +290,7 @@
                                                     autocomplete="off"
                                                 >
                                             </div>
-                                            <div class="home-webchat-hint">Tu peux mettre un autre salon (ex: #Rencontre).</div>
+										<div class="home-webchat-hint">Tu peux choisir un autre salon (ex. : #Tech, #Musique, #Gaming).</div>
                                         </div>
 
                                         <input type="hidden" name="show_password" value="false">
@@ -264,8 +300,8 @@
                                                 <div class="home-webchat-toggle" role="group" aria-label="Option mot de passe">
                                                     <div class="home-webchat-toggle-row">
                                                         <div class="home-webchat-toggle-text">
-                                                            <div class="home-webchat-toggle-title">Accès sécurisé (token)</div>
-                                                            <div class="home-webchat-toggle-sub">Active cette option pour générer un token IRC — tu pourras le copier et le coller dans le champ « Mot de passe » du webchat.</div>
+												<div class="home-webchat-toggle-title">Connexion sécurisée (token IRC)</div>
+												<div class="home-webchat-toggle-sub">Active cette option pour générer un token IRC. Tu pourras le copier-coller dans le champ « mot de passe » du webchat.</div>
                                                         </div>
                                                         <label class="home-webchat-switch" for="webchat-show-password">
                                                             <input
@@ -282,25 +318,25 @@
 
                                                     <div class="home-webchat-token" id="home-webchat-token" hidden>
                                                         <div class="home-webchat-token-head">
-                                                            <div class="home-webchat-token-title">Ton token IRC (à copier)</div>
-                                                            <button type="button" class="home-webchat-token-regenerate" id="home-webchat-token-regenerate">Régénérer</button>
+												<div class="home-webchat-token-title">Ton token IRC (à copier)</div>
+												<button type="button" class="home-webchat-token-regenerate" id="home-webchat-token-regenerate">Régénérer</button>
                                                         </div>
                                                         <div class="home-webchat-token-row">
-                                                            <input type="password" class="home-webchat-token-input" id="home-webchat-token-input" value="" readonly autocomplete="off" spellcheck="false" aria-label="Token IRC">
-                                                            <button type="button" class="home-webchat-token-reveal" id="home-webchat-token-reveal" aria-pressed="false" aria-label="Afficher/masquer le token">Afficher</button>
-                                                            <button type="button" class="home-webchat-token-copy" id="home-webchat-token-copy">Copier</button>
+												<input type="password" class="home-webchat-token-input" id="home-webchat-token-input" value="" readonly autocomplete="off" spellcheck="false" aria-label="Token IRC">
+												<button type="button" class="home-webchat-token-reveal" id="home-webchat-token-reveal" aria-pressed="false" aria-label="Afficher/masquer le token">Afficher</button>
+												<button type="button" class="home-webchat-token-copy" id="home-webchat-token-copy">Copier</button>
                                                         </div>
-                                                        <div class="home-webchat-token-hint" id="home-webchat-token-hint">Valable quelques instants et utilisable une seule fois. Colle-le dans le champ « Mot de passe » du webchat après ouverture.</div>
+												<div class="home-webchat-token-hint" id="home-webchat-token-hint">Valable quelques instants et utilisable une seule fois. Colle-le dans le champ « mot de passe » du webchat une fois ouvert.</div>
                                                     </div>
                                                 </div>
                                             </div>
                                         {% else %}
                                             <div class="col-12">
                                                 <div class="home-webchat-token home-webchat-token--locked">
-                                                    <div class="home-webchat-token-title">Mot de passe</div>
-                                                    <div class="home-webchat-token-hint">Disponible uniquement pour les membres connectés.</div>
+											<div class="home-webchat-token-title">Mot de passe (membres)</div>
+											<div class="home-webchat-token-hint">Disponible lorsque tu es connecté.</div>
                                                     <div class="home-webchat-token-actions">
-                                                        <a class="home-webchat-token-login" href="{% url 'login' %}?next={{ request.path|urlencode }}%23home-webchat" target="_self">Se connecter</a>
+												<a class="home-webchat-token-login" href="{% url 'login' %}?next={{ request.path|urlencode }}%23home-webchat" target="_self">Se connecter</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -308,7 +344,7 @@
 
                                         <div class="col-12">
                                             <button type="submit" class="default-btn d-block home-webchat-submit">
-                                                <span>Accéder au tchat <i class="bi bi-chat-dots"></i></span>
+										<span>Ouvrir le webchat <i class="bi bi-chat-dots"></i></span>
                                             </button>
                                         </div>
                                     </div>
@@ -324,8 +360,8 @@
 	<div class="about padding-top padding-bottom">
 		<div class="container">
 			<div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
-				<h2>Tout commence dans le tchat...</h2>
-				<p>Apprenez d'eux et essayez de vous faire remarquer sur ce forum. Cela augmentera à coup sûr votre visibilité et vos chances de retrouver l'être aimé.</p>
+                <h2>Tout commence dans un salon…</h2>
+                <p>Un message, un sujet, une discussion. Ici, on vient pour échanger, apprendre, rire et créer du lien — entre jeunes, moins jeunes, et tout le monde entre les deux.</p>
 			</div>
 			<div class="section__wrapper">
 				<div class="row g-4 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-sm-2 row-cols-1">
@@ -335,12 +371,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/serveur-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/serveur.png' %}" width="100" height="100" alt="serveur thumb" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/serveur.png' %}" width="100" height="100" alt="Icône serveur" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ server_count }}" data-speed="1500">{{ server_count }}</span></h3>
-                                    <p>Serveurs</p>
+									<p>Serveurs IRC</p>
                                 </div>
 							</div>
 						</div>
@@ -351,12 +387,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/utilisateurs-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/utilisateurs.png' %}" width="100" height="100" alt="dating thumb" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/utilisateurs.png' %}" width="100" height="100" alt="Icône utilisateurs" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ user_count }}" data-speed="1500">{{ user_count }}</span></h3>
-                                    <p>Utilisateurs</p>
+									<p>Membres</p>
                                 </div>
 							</div>
 						</div>
@@ -367,12 +403,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/operateurs-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/operateurs.png' %}" width="100" height="100" alt="dating thumb" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/operateurs.png' %}" width="100" height="100" alt="Icône opérateurs" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ oper_count }}" data-speed="1500">{{ oper_count }}</span></h3>
-                                    <p>Opérateurs IRC</p>
+									<p>Opérateurs IRC</p>
                                 </div>                                
 							</div>
 						</div>
@@ -383,12 +419,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/channels-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/channels.png' %}" width="100" height="100" alt="dating thumb" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/channels.png' %}" width="100" height="100" alt="Icône salons" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ channel_count }}" data-speed="1500">{{ channel_count }}</span></h3>
-                                    <p>Salons</p>
+									<p>Salons</p>
                                 </div>                                
 							</div>
 						</div>
@@ -400,11 +436,11 @@
     <!-- ================> About section end here <================== -->
 
     <!-- ================> Member section start here <================== -->
-    <div class="member member--style3 padding-top padding-bottom" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
+    <div class="member member--style3 padding-top padding-bottom" data-background="{% static 'images/banner/bg.jpg' %}">
         <div class="container">
             <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
-                <h2>{% trans "Nos membres" %}</h2>
-                <p>En tant que membre, tu peux donner un peu plus d'infos sur toi en créant tes albums photos pour provoquer des rencontres plus rapides...</p>
+                <h2>{% trans "La communauté" %}</h2>
+                <p>Des profils, des centres d’intérêt et des salons pour discuter. Ici, on privilégie les échanges simples, humains et respectueux.</p>
             </div>
             <div class="section__wrapper">
                 <div class="row g-0 mx-12-none justify-content-center wow fadeInUp" data-wow-duration="1.5s">
@@ -422,28 +458,28 @@
                                         alt="{{ m.username }}"
                                         loading="lazy"
                                         decoding="async"
-                                        onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';"
+                                        onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
                                     >
                                 </a>
                             </div>
                             <div class="member__content">
-                                <a href="{% url 'member_profile' username=m.username %}"><h5>{{ m.username }}</h5></a>
+								<a href="{% url 'member_profile' username=m.username %}"><span class="h5 d-inline-block mb-0">{{ m.username }}</span></a>
                                 <p>
                                     {% if m.last_login %}
-                                        Active il y a {{ m.last_login|timesince }}
+                                        Dernière activité : il y a {{ m.last_login|timesince }}
                                     {% else %}
-                                        Inactive
+                                        Nouveau membre
                                     {% endif %}
                                 </p>
                             </div>
                         </div>
                     </div>
                     {% empty %}
-                    <p class="text-center text-muted">{% trans "Aucun membre disponible pour le moment." %}</p>
+					<p class="text-center text-muted">{% trans "Aucun profil à afficher pour le moment." %}</p>
                     {% endfor %}
                 </div>
                 <div class="text-center mt-4 wow fadeInUp" data-wow-duration="2s">
-                    <a href="{% url 'community_membres' %}" class="default-btn"><span>{% trans "Commu" %} <i class="ms-2 fas fa-users"></i></span></a>
+				<a href="{% url 'community_membres' %}" class="default-btn"><span>{% trans "Voir la communauté" %} <i class="ms-2 fas fa-users"></i></span></a>
                 </div>
             </div>
         </div>
@@ -453,37 +489,33 @@
    
 
     <!-- ================> Work section start here <================== -->
-    <div class="work padding-top padding-bottom bg_img" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
+    <div class="work padding-top padding-bottom bg_img" data-background="{% static 'images/banner/bg.jpg' %}">
         <div class="container">
             <div class="section__header text-center wow fadeInUp" data-wow-duration="1.5s">
-                <h2>
-                    {% blocktrans trimmed with site_name=site_brand.site_name %}
-                        Pourquoi choisir {{ site_name }} ?
-                    {% endblocktrans %}
-                </h2>
+				<h2>
+					{% blocktrans trimmed with site_name=site_brand.site_name %}
+						Pourquoi choisir {{ site_name }} ?
+					{% endblocktrans %}
+				</h2>
             </div>
             <div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
                 <div class="d-xl-flex align-items-start work__area">
                     <div class="nav flex-xl-column nav-pills me-xl-4 work__tablist" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <button class="nav-link" id="work__tab1-tab" data-bs-toggle="pill" data-bs-target="#work__tab1" type="button" role="tab" aria-controls="work__tab1" aria-selected="true"><img src="{% static 'images/work/01.png' %}" alt="dating thumb" class="me-3"><span>Trouvez votre moitie</span></button>
-                        <button class="nav-link active" id="work__tab2-tab" data-bs-toggle="pill" data-bs-target="#work__tab2" type="button" role="tab" aria-controls="work__tab2" aria-selected="false"><img src="{% static 'images/work/02.png' %}" alt="dating thumb" class="me-3"><span>100% Match de gens</span></button>
-                        <button class="nav-link" id="work__tab3-tab" data-bs-toggle="pill" data-bs-target="#work__tab3" type="button" role="tab" aria-controls="work__tab3" aria-selected="false"><img src="{% static 'images/work/03.png' %}" alt="dating thumb" class="me-3"><span>Trouvez un/une amie</span></button>
-                        <button class="nav-link" id="work__tab4-tab" data-bs-toggle="pill" data-bs-target="#work__tab4" type="button" role="tab" aria-controls="work__tab4" aria-selected="false"><img src="{% static 'images/work/04.png' %}" alt="dating thumb" class="me-3"><span>Vivre des histoires</span></button>
+						<button class="nav-link" id="work__tab1-tab" data-bs-toggle="pill" data-bs-target="#work__tab1" type="button" role="tab" aria-controls="work__tab1" aria-selected="true"><img src="{% static 'images/work/01.png' %}" alt="Illustration" class="me-3"><span>Choisis ton pseudo</span></button>
+						<button class="nav-link active" id="work__tab2-tab" data-bs-toggle="pill" data-bs-target="#work__tab2" type="button" role="tab" aria-controls="work__tab2" aria-selected="false"><img src="{% static 'images/work/02.png' %}" alt="Illustration" class="me-3"><span>Des gens, pas des bots</span></button>
+						<button class="nav-link" id="work__tab3-tab" data-bs-toggle="pill" data-bs-target="#work__tab3" type="button" role="tab" aria-controls="work__tab3" aria-selected="false"><img src="{% static 'images/work/03.png' %}" alt="Illustration" class="me-3"><span>Trouve ton salon</span></button>
+						<button class="nav-link" id="work__tab4-tab" data-bs-toggle="pill" data-bs-target="#work__tab4" type="button" role="tab" aria-controls="work__tab4" aria-selected="false"><img src="{% static 'images/work/04.png' %}" alt="Illustration" class="me-3"><span>Crée des liens</span></button>
                     </div>
                     <div class="tab-content work__tabcontent" id="v-pills-tabContent">
                         <div class="tab-pane fade" id="work__tab1" role="tabpanel" aria-labelledby="work__tab1-tab">
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/05.png' %}" alt="dating thumb">
+                                        <img src="{% static 'images/work/05.png' %}" alt="illustration">
                                     </div>
                                     <div class="work__content">
-                                        <h3>{% trans "Trouvez votre moitie" %}</h3>
-                                        <p>
-                                            {% blocktrans trimmed with site_name=site_brand.site_name %}
-                                                Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de {{ site_name }}. tout ce que vous avez à faire est de suivre votre instinct et de faire vibrer votre cœur !
-                                            {% endblocktrans %}
-                                        </p>
+                                        <h3>{% trans "Choisis ton pseudo" %}</h3>
+									<p>Avec {{ site_brand.site_name }}, tu entres dans le tchat en quelques secondes : un pseudo, un salon, et c’est parti. Simple, rapide, efficace.</p>
                                     </div>
                                 </div>
                             </div>
@@ -494,16 +526,12 @@
                                     <div class="work__thumb">
                                         <picture>
                                             <source type="image/webp" srcset="{% static 'images/work/06.webp' %}">
-                                            <img src="{% static 'images/work/06.png' %}" alt="dating thumb" loading="lazy" decoding="async">
+                                            <img src="{% static 'images/work/06.png' %}" alt="illustration" loading="lazy" decoding="async">
                                         </picture>
                                     </div>
                                     <div class="work__content">
-                                        <h3>{% trans "100% Match de gens" %}</h3>
-                                        <p>
-                                            {% blocktrans trimmed with site_name=site_brand.site_name %}
-                                                Nos utilisateurs sont réels, {{ site_name }} est libre de bots et de faux comptes.
-                                            {% endblocktrans %}
-                                        </p>
+                                        <h3>{% trans "Des gens, pas des bots" %}</h3>
+									<p>Sur {{ site_brand.site_name }}, on favorise les vraies discussions : moins de bruit, plus d’échanges. Anti-spam et modération pour garder une ambiance saine.</p>
                                     </div>
                                 </div>
                             </div>
@@ -512,11 +540,11 @@
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/07.png' %}" alt="dating thumb">
+                                        <img src="{% static 'images/work/07.png' %}" alt="illustration">
                                     </div>
                                     <div class="work__content">
-                                        <h3>{% trans "Trouvez une amie" %}</h3>
-                                        <p>{% trans "Parce que l'amitié est aussi très importante pour nous, et devrait l'être aussi pour vous." %}</p>
+                                        <h3>{% trans "Trouve ton salon" %}</h3>
+									<p>{% trans "Du général aux passions : musique, tech, jeux, entraide… Rejoins un salon, ou crée le tien en 10 secondes." %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -525,15 +553,11 @@
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/08.png' %}" alt="dating thumb">
+                                        <img src="{% static 'images/work/08.png' %}" alt="illustration">
                                     </div>
                                     <div class="work__content">
-                                        <h3>{% trans "Live The Story" %}</h3>
-                                        <p>
-                                            {% blocktrans trimmed with site_name=site_brand.site_name %}
-                                                Les étapes simples à suivre pour avoir une excellente expérience d’utilisation de {{ site_name }}. Tout ce que tu as à faire, c'est de suivre ton instinct et de surprendre ton cœur !
-                                            {% endblocktrans %}
-                                        </p>
+                                        <h3>{% trans "Crée des liens" %}</h3>
+									<p>Des discussions simples, des gens de tous âges, des sujets qui rassemblent. Viens pour parler, reste pour la vibe.</p>
                                     </div>
                                 </div>
                             </div>
@@ -546,11 +570,11 @@
     <!-- ================> Work section end here <================== -->
 
    <!-- ================> Story section start here <================== -->
-<div class="story padding-top padding-bottom" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
+<div class="story padding-top padding-bottom" data-background="{% static 'images/banner/bg.jpg' %}">
     <div class="container">
         <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
-            <h2>{% trans "blog" %}</h2>
-            <p>Le partage c'est la vie..</p>
+            <h2>{% trans "Le blog" %}</h2>
+			<p>Actus, coulisses, guides et idées de salons — pour mieux discuter.</p>
         </div>
         <div class="section__wrapper wow fadeInUp" data-wow-duration="2s">
             <div class="row g-4 justify-content-center row-cols-lg-3 row-cols-sm-2 row-cols-1">
@@ -575,7 +599,7 @@
                             </div>
                             <div class="story__content">
                                 <a href="{% url 'blog:blog_detail' slug=post.slug %}">
-                                    <h4>{{ post.title }}</h4>
+								<p class="h4 mb-0">{{ post.title }}</p>
                                 </a>
                                 <div class="story__content--author">
                                     <div class="story__content--thumb">
@@ -588,11 +612,11 @@
                                             alt="{{ post.author.username }}"
                                             loading="lazy"
                                             decoding="async"
-                                            onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';"
+                                            onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
                                         >
                                     </div>
                                     <div class="story__content--content">
-                                        <h6>{{ post.author.username }}</h6>
+									<p class="mb-0 fw-semibold">{{ post.author.username }}</p>
                                         <p>{{ post.created_at|date:"F j, Y" }}</p>
                                     </div>
                                 </div>
@@ -601,7 +625,7 @@
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-center text-muted">{% trans "Aucun article de blog disponible pour le moment." %}</p>
+				<p class="text-center text-muted">{% trans "Aucun article de blog disponible pour le moment." %}</p>
                 {% endfor %}
             </div>
         </div>
@@ -610,7 +634,7 @@
 <!-- ================> Story section end here <================== -->
 
     <!-- ================> Work section start here <================== -->
-    <div class="work work--style2 padding-top padding-bottom bg_img" style="background-image: url('{% static 'images/banner/bg.jpg' %}');">
+    <div class="work work--style2 padding-top padding-bottom bg_img" data-background="{% static 'images/banner/bg.jpg' %}">
         <div class="container">
             <div class="section__wrapper">
                 <div class="row g-4 justify-content-center">
@@ -618,11 +642,11 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
                                 </div>
                                 <div class="work__content">
-                                    <h3>{% trans "Confiance et sécurité" %}</h3>
-                                    <p>{% trans "Notre tchat utilise la technologie SSL ce qui permet au site de sécuriser les échanges de données par chiffrement." %}</p>
+                                    <h3>{% trans "Confiance & sécurité" %}</h3>
+									<p>{% trans "Les échanges sont chiffrés (TLS/SSL) pour protéger tes données en transit. On préfère la simplicité, pas la surveillance." %}</p>
 
                                 </div>
                             </div>
@@ -632,11 +656,11 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
                                 </div>
                                 <div class="work__content">
-                                    <h3>{% trans "De nombreux thèmes" %}</h3>
-                                    <p>{% trans "Retrouvez de nombreux salons de discussions sur des sujets divers et variés." %}</p>
+                                    <h3>{% trans "Des salons pour tous" %}</h3>
+									<p>{% trans "Des salons variés, des sujets du quotidien aux passions. Tu peux aussi créer ton propre salon et lancer la discussion." %}</p>
                                     
                                 </div>
                             </div>
@@ -646,11 +670,11 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
                                 </div>
                                 <div class="work__content">
-                                    <h3>{% trans "Des milliers d'utilisateurs" %}</h3>
-                                    <p>{% trans "À toute heure du jour ou de la nuit vous pouvez discuter avec des milliers d'utilisateurs qui sont toujours au rendez-vous !" %}</p>
+                                    <h3>{% trans "Du monde à toute heure" %}</h3>
+									<p>{% trans "Le tchat ne dort jamais : viens dire bonjour le matin, à la pause, ou tard le soir. Il y a toujours quelqu’un pour échanger." %}</p>
                                     
                                 </div>
                             </div>
@@ -660,11 +684,11 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="dating thumb">
+                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
                                 </div>
                                 <div class="work__content">
-                                    <h3>{% trans "Avec un tchat totalement gratuit" %}</h3>
-                                    <p>{% trans "Un lieu de rencontre pour un échange convivial sans interruption et sans prise de tête 24h/24 7j/7. C'est rapide, simple et sans inscription." %}</p>
+                                    <h3>{% trans "Gratuit, simple, sans friction" %}</h3>
+									<p>{% trans "Un espace pour discuter tranquillement 24/7. Rapide, simple, sans inscription obligatoire : tu entres, tu parles, tu restes si tu veux." %}</p>
                                     
                                 </div>
                             </div>

@@ -1,51 +1,322 @@
 {% extends "main/base.html" %}
 {% load static %}
 
-{% block title %}Registre - {{ site_brand.title_suffix }}{% endblock %}
+{% block title %}Inscription - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block head %}
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css"></noscript>
+<script defer src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/fr.js"></script>
+
 <style>
-    /* Match profile page fix: disable the theme's inner scroll for this page only. */
-    .register-page-root { height: auto !important; min-height: 100vh; }
-    .register-page-root .log-reg-inner { max-height: none !important; height: auto !important; overflow: visible !important; }
+    /* Pro, mobile-first register.
+       Keep existing JS + form behavior, only adjust layout and visuals. */
+    .register-page-root {
+        height: auto !important;
+        min-height: 100vh;
+        padding: 48px 0 64px;
+        background:
+            radial-gradient(1100px 520px at 12% 18%, rgba(34, 197, 94, 0.18), transparent 55%),
+            radial-gradient(900px 480px at 92% 12%, rgba(33, 51, 102, 0.28), transparent 55%),
+            linear-gradient(180deg, #0b1220 0%, #0e1630 100%);
+    }
+
+    /* Remove the big side image everywhere (desktop + mobile). */
+    .register-page-root .image { display: none !important; }
+
+    .register-page-root .log-reg-inner {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 26px 22px 22px !important;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 20px 70px rgba(0, 0, 0, 0.40);
+        backdrop-filter: blur(10px);
+    }
+
+    /* Undo global theme capitalization for a more professional look. */
+    .register-page-root,
+    .register-page-root a,
+    .register-page-root label,
+    .register-page-root .default-btn,
+    .register-page-root .default-btn span {
+        text-transform: none !important;
+    }
+
+    /* Match login.html: light card background, dark readable text. */
+    .register-page-root .log-reg-inner,
+    .register-page-root .log-reg-inner * {
+        color: #0b1220;
+    }
+
+    .register-brand-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    .register-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: #0b1220;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+    }
+    .register-brand img { width: 34px; height: 34px; }
+    .register-back {
+        color: rgba(15, 23, 42, 0.72);
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .register-back:hover { text-decoration: underline; color: rgba(15, 23, 42, 0.86); }
+
+    .register-page-root .section-header { margin-bottom: 14px; }
+    .register-page-root .section-header .title {
+        color: #0b1220 !important;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        text-transform: none !important;
+    }
+    .register-subtitle {
+        margin: 0;
+        color: rgba(15, 23, 42, 0.72);
+        font-size: 0.98rem;
+        line-height: 1.45;
+        text-transform: none !important;
+    }
+
+    /* Override theme's `.log-reg .log-reg-inner .section-header P { color: #fff; }` */
+    .register-page-root .section-header p,
+    .register-page-root .register-subtitle {
+        color: rgba(15, 23, 42, 0.72) !important;
+    }
+
     .register-page-root .main-content { overflow: visible !important; }
-    .register-page-root .image { bottom: 0 !important; height: auto !important; }
+
+    .register-page-root .form-group label {
+        color: rgba(15, 23, 42, 0.92) !important;
+        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+    }
+
+    /* Modern field rhythm + label treatment */
+    .register-page-root .main-content { margin-top: 6px; }
+    .register-page-root .form-group { margin-bottom: 14px; }
+    .register-page-root .form-group label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.04);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        letter-spacing: 0.01em;
+        line-height: 1;
+    }
+
+    /* Inputs: slightly more premium */
+    .register-page-root .my-form-control::placeholder {
+        color: rgba(15, 23, 42, 0.45) !important;
+    }
+    .register-page-root input[type="date"].my-form-control {
+        padding-right: 14px !important;
+    }
+    .register-page-root .my-form-control:hover {
+        border-color: rgba(15, 23, 42, 0.20) !important;
+    }
+    .register-page-root .my-form-control {
+        border: 1px solid rgba(15, 23, 42, 0.14) !important;
+        border-radius: 14px;
+        height: 52px;
+        padding: 0 16px !important;
+        background: #fff !important;
+        color: #0b1220 !important;
+        box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+    }
+    .register-page-root .my-form-control:focus {
+        border-color: rgba(34, 197, 94, 0.55) !important;
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18) !important;
+        outline: none;
+    }
+
+    /* Birthday picker: make Flatpickr alt input look like our controls */
+    .register-page-root .register-date-wrap .flatpickr-input[readonly],
+    .register-page-root .register-date-wrap .flatpickr-input {
+        background: #fff !important;
+        cursor: pointer;
+    }
+    .register-page-root .register-date-wrap .flatpickr-alt-input {
+        border: 1px solid rgba(15, 23, 42, 0.14) !important;
+        border-radius: 14px !important;
+        height: 52px !important;
+        padding: 0 44px 0 16px !important;
+        background: #fff !important;
+        color: #0b1220 !important;
+        box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+    }
+    .register-page-root .register-date-wrap .flatpickr-alt-input::placeholder {
+        color: rgba(15, 23, 42, 0.45) !important;
+    }
+
+    .register-page-root .register-date-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        opacity: 0.70;
+        pointer-events: none;
+    }
+
+    .register-page-root .banner__inputlist {
+        border-radius: 14px;
+        border: 1px solid rgba(15, 23, 42, 0.14);
+        background: #fff;
+        padding: 10px 12px;
+    }
+    .register-page-root .banner__inputlist label { color: rgba(15, 23, 42, 0.90) !important; }
+
+    /* Radio group: make choices look like buttons */
+    .register-page-root .banner__inputlist .s-input {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(15, 23, 42, 0.10);
+        background: rgba(15, 23, 42, 0.03);
+    }
+    .register-page-root .banner__inputlist .s-input input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        accent-color: #16a34a;
+    }
+    .register-page-root .banner__inputlist .s-input:hover {
+        border-color: rgba(34, 197, 94, 0.35);
+        background: rgba(34, 197, 94, 0.06);
+    }
+
+    /* Center reCAPTCHA widget */
+    .register-page-root .g-recaptcha {
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Flatpickr (desktop birthday picker): match the green, modern UI */
+    .register-page-root .flatpickr-calendar {
+        border-radius: 16px;
+        box-shadow: 0 24px 70px rgba(0,0,0,0.18);
+        border: 1px solid rgba(15,23,42,0.10);
+        overflow: hidden;
+    }
+    .register-page-root .flatpickr-months {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 55%, #15803d 100%);
+    }
+    .register-page-root .flatpickr-months .flatpickr-month,
+    .register-page-root .flatpickr-months .flatpickr-prev-month,
+    .register-page-root .flatpickr-months .flatpickr-next-month {
+        color: rgba(255,255,255,0.95);
+        fill: rgba(255,255,255,0.95);
+    }
+    .register-page-root .flatpickr-weekdays {
+        background: rgba(15,23,42,0.03);
+    }
+    .register-page-root .flatpickr-day.selected,
+    .register-page-root .flatpickr-day.startRange,
+    .register-page-root .flatpickr-day.endRange,
+    .register-page-root .flatpickr-day.selected.inRange {
+        background: #16a34a;
+        border-color: #16a34a;
+    }
+    .register-page-root .flatpickr-day.today {
+        border-color: rgba(34,197,94,0.60);
+    }
+
+    /* Keep buttons readable (theme sets these, but be explicit). */
+    .register-page-root .default-btn,
+    .register-page-root .default-btn span {
+        color: #fff !important;
+    }
+
+    /* Secondary buttons (like avatar picker) should be readable on the light card. */
+    .register-page-root .default-btn.reverse {
+        background: rgba(34, 197, 94, 0.10) !important;
+        border: 1px solid rgba(34, 197, 94, 0.35) !important;
+        box-shadow: none !important;
+        transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+    .register-page-root .default-btn.reverse,
+    .register-page-root .default-btn.reverse span {
+        color: rgba(15, 23, 42, 0.92) !important;
+    }
+    .register-page-root .default-btn.reverse:hover {
+        background: rgba(22, 163, 74, 0.20) !important;
+        border-color: rgba(22, 163, 74, 0.55) !important;
+        transform: translateY(-1px);
+    }
+    .register-page-root .default-btn.reverse:active {
+        transform: translateY(0);
+    }
+
+    /* Modern green CTA for the register submit button (page-scoped). */
+    .register-page-root #registerSubmitBtn.default-btn {
+        width: 100%;
+        border-radius: 14px;
+        padding: 14px 18px;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 55%, #15803d 100%) !important;
+        border: 1px solid rgba(21, 128, 61, 0.55) !important;
+        box-shadow: 0 16px 40px rgba(22, 163, 74, 0.25);
+    }
+    .register-page-root #registerSubmitBtn.default-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 20px 55px rgba(22, 163, 74, 0.33);
+        filter: saturate(1.06);
+    }
+    .register-page-root #registerSubmitBtn.default-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 12px 32px rgba(22, 163, 74, 0.22);
+    }
+    .register-page-root #registerSubmitBtn.default-btn:focus {
+        box-shadow:
+            0 16px 40px rgba(22, 163, 74, 0.25),
+            0 0 0 4px rgba(34, 197, 94, 0.22) !important;
+    }
+
+    @media (min-width: 992px) {
+        .register-page-root .log-reg-inner { padding: 30px 28px 26px !important; }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Preloader -->
-<div class="preloader">
-    <div class="preloader-inner">
-        <div class="preloader-icon">
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-</div>
-
-<!-- Scroll to Top -->
-<a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
-
-<section class="log-reg register-page-root">
-    <div class="top-menu-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-7"></div>
-                <div class="col-lg-4 col-5">
-                    <a href="{% url 'main:home' %}" class="backto-home"><i class="fas fa-chevron-left"></i> home</a>
-                </div>
-            </div>
-        </div>
-    </div>
+<section class="log-reg register-page-root" aria-label="Register">
     <div class="container">
-        <div class="row">
-            <div class="image"></div>
-            <div class="col-lg-7">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-7 col-xl-6">
                 <div class="log-reg-inner">
+                    <div class="register-brand-row">
+                        <a class="register-brand" href="{% url 'main:home' %}" aria-label="chaat.site">
+                            <img src="{% static 'images/logo/mark-2026-v4.svg' %}" alt="" aria-hidden="true" decoding="async">
+                            <span>chaat.site</span>
+                        </a>
+                        <a href="{% url 'main:home' %}" class="register-back">
+                            <i class="fas fa-chevron-left"></i> Retour à l'accueil
+                        </a>
+                    </div>
+
                     <div class="section-header">
-                        <h2 class="title">Créez votre compte</h2><br>
+                        <h1 class="title">Créez votre compte</h1>
+                        <p class="register-subtitle">Inscrivez-vous en moins d’une minute pour rejoindre le tchat.</p>
                     </div>
                     <div class="main-content">
                         <form id="register-form" method="POST" action="{% url 'register' %}" enctype="multipart/form-data">
@@ -68,7 +339,10 @@
                             </div>
                             <div class="form-group">
                                 <label>Date de naissance</label>
-                                <input type="date" class="my-form-control" id="birthday" name="birthday" required>
+                                <div class="register-date-wrap" style="position: relative;">
+                                    <input type="date" class="my-form-control" id="birthday" name="birthday" required data-modern-date="1" placeholder="JJ/MM/AAAA">
+                                    <span class="register-date-icon" aria-hidden="true">📅</span>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Je suis un/e*</label>
@@ -94,7 +368,7 @@
                                         id="registerAvatarPreview"
                                         src="{% static 'images/default-avatar.jpg' %}"
                                         alt="Aperçu avatar"
-                                        style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; border: 1px solid rgba(255,255,255,0.15);"
+                                        style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; border: 1px solid rgba(15,23,42,0.14);"
                                     >
 
                                     <div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 260px;">
@@ -123,7 +397,7 @@
                                 <br><div class="g-recaptcha" data-sitekey="6Lc3cl4aAAAAAPzQYUICPgVfCXC6mqlBqe4ueu0L"></div>
                             </div>
 
-                            <button type="submit" class="default-btn reverse"><span>Créez votre compte</span></button> 
+                            <button type="submit" class="default-btn" id="registerSubmitBtn"><span>Créer mon compte</span></button>
                             <div id="register-message"></div>
                         </form>
                     </div>
@@ -216,6 +490,50 @@
             showMessage("danger", "Erreur réseau. Réessayez dans quelques secondes.");
         });
     });    
+
+    (function initBirthdayDatePicker() {
+        function setup() {
+            var input = document.getElementById('birthday');
+            if (!input) return;
+
+            // Keep native date picker on touch devices.
+            try {
+                if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+                    return;
+                }
+            } catch (e) {}
+
+            if (!window.flatpickr) return;
+
+            try {
+                if (window.flatpickr && window.flatpickr.l10ns && window.flatpickr.l10ns.fr) {
+                    window.flatpickr.localize(window.flatpickr.l10ns.fr);
+                }
+            } catch (e) {}
+
+            // Switch to text so Flatpickr can fully control the UI on desktop.
+            try { input.setAttribute('type', 'text'); } catch (e) {}
+
+            window.flatpickr(input, {
+                disableMobile: true,
+                allowInput: true,
+                altInput: true,
+                altFormat: 'd/m/Y',
+                dateFormat: 'Y-m-d',
+                maxDate: 'today',
+                ariaDateFormat: 'd/m/Y'
+            });
+
+            // Ensure the visible field isn't an empty white box before interaction.
+            try { input.setAttribute('placeholder', 'JJ/MM/AAAA'); } catch (e) {}
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setup);
+        } else {
+            setup();
+        }
+    })();
 
     (function initRegisterAvatarPicker() {
                 const DEFAULT_AVATAR_SVG = `
