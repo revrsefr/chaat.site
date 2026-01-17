@@ -120,7 +120,7 @@
                         </picture>
                         <div class="banner__thumb--shape">
                             <div class="shapeimg">
-                                <img src="{% static 'images/banner/shape/home3/01.png' %}" alt="Décoration">
+                                <img src="{% static 'images/banner/shape/home3/01.png' %}" width="247" height="178" alt="Décoration" loading="lazy" decoding="async">
                             </div>
                         </div>
                         <div class="banner__thumb--title">
@@ -190,7 +190,7 @@
                                             {% empty %}
                                                 <div class="swiper-slide">
                                                     <div class="ragi__thumb">
-														<img src="{% static 'images/ragi/01.jpg' %}" alt="Membre">
+                                                        <img src="{% static 'images/ragi/01.jpg' %}" width="100" height="100" alt="Membre" loading="lazy" decoding="async">
                                                     </div>
                                                 </div>
                                             {% endfor %}
@@ -501,17 +501,17 @@
             <div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
                 <div class="d-xl-flex align-items-start work__area">
                     <div class="nav flex-xl-column nav-pills me-xl-4 work__tablist" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-						<button class="nav-link" id="work__tab1-tab" data-bs-toggle="pill" data-bs-target="#work__tab1" type="button" role="tab" aria-controls="work__tab1" aria-selected="true"><img src="{% static 'images/work/01.png' %}" alt="Illustration" class="me-3"><span>Choisis ton pseudo</span></button>
-						<button class="nav-link active" id="work__tab2-tab" data-bs-toggle="pill" data-bs-target="#work__tab2" type="button" role="tab" aria-controls="work__tab2" aria-selected="false"><img src="{% static 'images/work/02.png' %}" alt="Illustration" class="me-3"><span>Des gens, pas des bots</span></button>
-						<button class="nav-link" id="work__tab3-tab" data-bs-toggle="pill" data-bs-target="#work__tab3" type="button" role="tab" aria-controls="work__tab3" aria-selected="false"><img src="{% static 'images/work/03.png' %}" alt="Illustration" class="me-3"><span>Trouve ton salon</span></button>
-						<button class="nav-link" id="work__tab4-tab" data-bs-toggle="pill" data-bs-target="#work__tab4" type="button" role="tab" aria-controls="work__tab4" aria-selected="false"><img src="{% static 'images/work/04.png' %}" alt="Illustration" class="me-3"><span>Crée des liens</span></button>
+                        <button class="nav-link" id="work__tab1-tab" data-bs-toggle="pill" data-bs-target="#work__tab1" type="button" role="tab" aria-controls="work__tab1" aria-selected="true"><img src="{% static 'images/work/01.png' %}" width="40" height="40" alt="Illustration" class="me-3" decoding="async"><span>Choisis ton pseudo</span></button>
+                        <button class="nav-link active" id="work__tab2-tab" data-bs-toggle="pill" data-bs-target="#work__tab2" type="button" role="tab" aria-controls="work__tab2" aria-selected="false"><img src="{% static 'images/work/02.png' %}" width="40" height="40" alt="Illustration" class="me-3" decoding="async"><span>Des gens, pas des bots</span></button>
+                        <button class="nav-link" id="work__tab3-tab" data-bs-toggle="pill" data-bs-target="#work__tab3" type="button" role="tab" aria-controls="work__tab3" aria-selected="false"><img src="{% static 'images/work/03.png' %}" width="40" height="40" alt="Illustration" class="me-3" decoding="async"><span>Trouve ton salon</span></button>
+                        <button class="nav-link" id="work__tab4-tab" data-bs-toggle="pill" data-bs-target="#work__tab4" type="button" role="tab" aria-controls="work__tab4" aria-selected="false"><img src="{% static 'images/work/04.png' %}" width="36" height="40" alt="Illustration" class="me-3" decoding="async"><span>Crée des liens</span></button>
                     </div>
                     <div class="tab-content work__tabcontent" id="v-pills-tabContent">
                         <div class="tab-pane fade" id="work__tab1" role="tabpanel" aria-labelledby="work__tab1-tab">
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/05.png' %}" alt="illustration">
+                                        <img src="{% static 'images/work/05.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Choisis ton pseudo" %}</h3>
@@ -526,7 +526,7 @@
                                     <div class="work__thumb">
                                         <picture>
                                             <source type="image/webp" srcset="{% static 'images/work/06.webp' %}">
-                                            <img src="{% static 'images/work/06.png' %}" alt="illustration" loading="lazy" decoding="async">
+                                            <img src="{% static 'images/work/06.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
                                         </picture>
                                     </div>
                                     <div class="work__content">
@@ -540,7 +540,7 @@
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/07.png' %}" alt="illustration">
+                                        <img src="{% static 'images/work/07.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Trouve ton salon" %}</h3>
@@ -553,7 +553,7 @@
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/08.png' %}" alt="illustration">
+                                        <img src="{% static 'images/work/08.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Crée des liens" %}</h3>
@@ -642,7 +642,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Confiance & sécurité" %}</h3>
@@ -656,7 +656,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Des salons pour tous" %}</h3>
@@ -670,7 +670,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Du monde à toute heure" %}</h3>
@@ -684,7 +684,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" alt="illustration">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Gratuit, simple, sans friction" %}</h3>
