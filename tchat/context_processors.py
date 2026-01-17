@@ -116,6 +116,34 @@ def _safe_reverse(viewname: str, *args, **kwargs) -> str:
         return "#"
 
 
+def _sanitize_footer_links(items: object) -> list:
+    """Best-effort sanitize a list of link dicts.
+
+    This protects against dangerous schemes (e.g. javascript:) in any configured
+    footer links. It's defensive: it never raises.
+    """
+
+    if not isinstance(items, (list, tuple)):
+        return []
+
+    try:
+        from main.templatetags.safe_url import safe_url as _safe_url
+    except Exception:
+        _safe_url = None
+
+    sanitized: list = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        url_value = item.get("url")
+        if _safe_url is not None:
+            item = item.copy()
+            item["url"] = _safe_url(url_value)
+        sanitized.append(item)
+
+    return sanitized
+
+
 def site_footer(request):
     """Expose footer configuration + latest users to all templates.
 
@@ -137,21 +165,26 @@ def site_footer(request):
             "help_text",
             "Nos opérateurs seront ravis de vous aider.",
         ),
-        "legal_links": configured.get(
+        "legal_links": _sanitize_footer_links(
+            configured.get(
             "legal_links",
             [
                 {"label": "Conditions générales", "url": _safe_reverse("main:terms")},
                 {"label": "Mentions légales", "url": _safe_reverse("main:legal")},
                 {"label": "À propos", "url": _safe_reverse("main:about")},
             ],
+            )
         ),
-        "information_links": configured.get(
+        "information_links": _sanitize_footer_links(
+            configured.get(
             "information_links",
             [
                 {"label": "Network", "url": _safe_reverse("irc_dashboard")},
             ],
+            )
         ),
-        "useful_links": configured.get(
+        "useful_links": _sanitize_footer_links(
+            configured.get(
             "useful_links",
             [
                 {"label": "Membres", "url": _safe_reverse("community_membres")},
@@ -159,11 +192,9 @@ def site_footer(request):
                 {"label": "Inscription", "url": _safe_reverse("register")},
                 {"label": "Connexion", "url": _safe_reverse("login")},
             ],
+            )
         ),
-        "social_links": configured.get(
-            "social_links",
-            [],
-        ),
+        "social_links": _sanitize_footer_links(configured.get("social_links", [])),
         "year": datetime.now().year,
         "recent_articles": [],
         "latest_users": [],

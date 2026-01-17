@@ -76,22 +76,6 @@
     <link rel="preload" as="style" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}">
     <link rel="stylesheet" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}">
 
-    <!-- Trusted Types (CSP3): define a default policy for legacy/third-party scripts -->
-    <script nonce="{{ request.csp_nonce }}">
-        (function () {
-            if (!window.trustedTypes || !window.trustedTypes.createPolicy) return;
-            try {
-                window.trustedTypes.createPolicy('default', {
-                    createHTML: function (s) { return String(s); },
-                    createScriptURL: function (s) { return String(s); },
-                    createScript: function (s) { return String(s); },
-                });
-            } catch (e) {
-                // Ignore if policy already exists.
-            }
-        })();
-    </script>
-
     <!-- Google Consent Mode v2 (for GTM) -->
     <script nonce="{{ request.csp_nonce }}" data-cookieconsent="ignore">
         window.dataLayer = window.dataLayer || [];

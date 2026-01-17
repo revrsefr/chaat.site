@@ -3,6 +3,8 @@ from .views import (
     register_view, login_view, logout_view, forgot_password_view,
     change_password_view, change_email_view, profile_view,  account_settings_view,
     delete_account_view,
+    login_validate_view,
+    register_validate_view,
     verify_email_view,
     generate_irc_app_password_view,
     revoke_irc_app_password_view,
@@ -13,7 +15,9 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path("register/", register_view, name="register"),
+    path("register/validate/", register_validate_view, name="register_validate"),
     path("login/", login_view, name="login"),
+    path("login/validate/", login_validate_view, name="login_validate"),
     path("logout/", logout_view, name="logout"),
     path("verify-email/", verify_email_view, name="verify_email"),
     path("forgot-password/", forgot_password_view, name="forgot_password"),

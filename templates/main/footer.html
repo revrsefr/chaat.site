@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load safe_url %}
 <footer class="footer footer--style3 footer--modern" aria-label="Footer">
     <div class="footer__top bg_img wow fadeInUp" data-wow-duration="1.5s" style="background-image: url('{% static footer.background_image %}');">
         <div class="footer__toparea padding-top padding-bottom">
@@ -44,7 +45,7 @@
                                     <ul>
                                         {% for item in footer.information_links %}
                                             <li>
-                                                <a class="text-nowrap" href="{{ item.url }}">
+                                                <a class="text-nowrap" href="{{ item.url|safe_url }}">
                                                     {% with label=item.label|lower %}
                                                         {% if label == 'network' %}
                                                             <i class="fa-solid fa-network-wired"></i>{{ item.label }}
@@ -88,7 +89,7 @@
                                     <ul>
                                         {% for item in footer.useful_links %}
                                             <li>
-                                                <a class="text-nowrap" href="{{ item.url }}">
+                                                <a class="text-nowrap" href="{{ item.url|safe_url }}">
                                                     {% with label=item.label|lower %}
                                                         {% if label == 'membres' or label == 'members' %}
                                                             <i class="fa-solid fa-users"></i>{{ item.label }}
@@ -123,7 +124,7 @@
                                     <ul>
                                         {% for item in footer.recent_articles %}
                                             <li>
-                                                <a href="{{ item.url }}">
+                                                <a href="{{ item.url|safe_url }}">
                                                     <i class="fa-solid fa-newspaper"></i>{{ item.title }}
                                                 </a>
                                             </li>

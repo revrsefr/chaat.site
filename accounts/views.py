@@ -25,6 +25,9 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.http import url_has_allowed_host_and_scheme
 from typing import Optional
 from datetime import timedelta
+from django.core.validators import EmailValidator
+from django.utils.dateparse import parse_date
+from django.core.cache import cache
 
 from .models import IrcAppPassword
 from .utils import issue_email_verification_code, verify_email_code
@@ -135,6 +138,128 @@ def login_view(request):
         messages.error(request, error_message)
 
     return render(request, "accounts/login.html")
+
+
+def login_validate_view(request):
+    """Preflight validation for the login form (AJAX).
+
+    This is intentionally *format-only* (no account existence checks) to avoid
+    enabling username/email enumeration.
+    """
+
+    if request.method != "POST":
+        return JsonResponse({"ok": False, "error": {"code": "method_not_allowed"}}, status=405)
+
+    username = (request.POST.get("username") or "").strip()
+
+    field_errors = {}
+    if not username:
+        field_errors["username"] = "Champ requis."
+    else:
+        if len(username) < 3:
+            field_errors["username"] = "3 caractères minimum."
+        elif " " in username:
+            field_errors["username"] = "Évitez les espaces."
+        elif "@" in username and "." not in username.split("@", 1)[-1]:
+            field_errors["username"] = "Email invalide."
+
+    return JsonResponse({"ok": True, "field_errors": field_errors})
+
+
+def register_validate_view(request):
+    """Preflight validation for the register form (AJAX).
+
+    This is intentionally *format-only* (no account existence checks) to avoid
+    enabling username/email enumeration.
+    """
+
+    if request.method != "POST":
+        return JsonResponse({"ok": False, "error": {"code": "method_not_allowed"}}, status=405)
+
+    # Basic abuse protection: per-IP request limit.
+    try:
+        per_minute = int(getattr(settings, "REGISTER_PREFLIGHT_VALIDATE_PER_MINUTE", 30) or 0)
+    except Exception:
+        per_minute = 30
+    if per_minute > 0:
+        xff = (request.META.get("HTTP_X_FORWARDED_FOR") or "").split(",")[0].strip()
+        ip = xff or (request.META.get("REMOTE_ADDR") or "") or "unknown"
+        rl_key = f"register_preflight_validate:{ip}"
+        try:
+            count = cache.incr(rl_key)
+        except ValueError:
+            cache.add(rl_key, 1, timeout=60)
+            count = 1
+        except Exception:
+            count = 1
+        if count > per_minute:
+            return JsonResponse({"ok": False, "error": {"code": "rate_limited"}}, status=429)
+
+    username = (request.POST.get("username") or "").strip()
+    email = (request.POST.get("email") or "").strip().lower()
+    password1 = request.POST.get("password1") or ""
+    password2 = request.POST.get("password2") or ""
+    birthday_raw = (request.POST.get("birthday") or "").strip()
+    gender = (request.POST.get("gender") or "").strip()
+    city = (request.POST.get("city") or "").strip()
+
+    field_errors = {}
+
+    if not username:
+        field_errors["username"] = "Champ requis."
+    else:
+        try:
+            CustomUser._meta.get_field("username").run_validators(username)
+        except ValidationError:
+            field_errors["username"] = "Nom d'utilisateur invalide."
+
+    if not email:
+        field_errors["email"] = "Champ requis."
+    else:
+        try:
+            EmailValidator()(email)
+        except ValidationError:
+            field_errors["email"] = "Email invalide."
+
+    if not password1:
+        field_errors["password1"] = "Champ requis."
+    else:
+        try:
+            validate_password(password1)
+        except ValidationError as ve:
+            # Avoid leaking too much detail; keep it user-friendly.
+            field_errors["password1"] = ve.messages[0] if ve.messages else "Mot de passe trop faible."
+
+    if not password2:
+        field_errors["password2"] = "Champ requis."
+    elif password1 and password1 != password2:
+        field_errors["password2"] = "Les mots de passe ne correspondent pas."
+
+    if birthday_raw:
+        birthday = parse_date(birthday_raw)
+        if not birthday:
+            field_errors["birthday"] = "Date de naissance invalide."
+    else:
+        field_errors["birthday"] = "Champ requis."
+
+    if gender not in ("M", "F"):
+        field_errors["gender"] = "Veuillez sélectionner un genre."
+
+    if not city:
+        field_errors["city"] = "Champ requis."
+
+    # Optional “pro” behavior: check whether username/email already exist.
+    # WARNING: this enables enumeration; keep disabled unless you explicitly want it.
+    if getattr(settings, "REGISTER_PREFLIGHT_CHECK_AVAILABILITY", False):
+        if username and "username" not in field_errors:
+            if CustomUser.objects.filter(username__iexact=username).exists():
+                field_errors["username"] = "Ce pseudo est déjà pris."
+
+        if email and "email" not in field_errors:
+            if CustomUser.objects.filter(email__iexact=email).exists():
+                field_errors["email"] = "Cet email est déjà utilisé."
+
+    return JsonResponse({"ok": True, "field_errors": field_errors})
 
 # ✅ Change Password (Uses `api_request`)
 @login_required

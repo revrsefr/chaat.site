@@ -208,6 +208,7 @@
                                     <p>Choisis un pseudo et discute tout de suite — sans inscription, sans appli, sans prise de tête.</p>
                                 </div>
                                 <form action="{% url 'webchat' %}" method="GET" class="home-webchat-form" target="_blank" id="form-desktop">
+                                    {% if user.is_authenticated %}{% csrf_token %}{% endif %}
                                     <div class="row g-3">
                                         <div class="col-lg-6 col-12">
 										<label class="form-label" for="webchat-nick">Pseudo</label>
@@ -223,7 +224,7 @@
                                                     pattern=".{3,}"
                                                     title="Saisis un pseudo (3 caractères minimum)."
                                                     required
-                                                    autocomplete="nickname"
+                                                    autocomplete="username"
                                                 >
                                             </div>
                                             <div class="home-webchat-hint">3 caractères minimum.</div>

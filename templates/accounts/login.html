@@ -53,6 +53,7 @@
 
                         <div id="loginConfig"
                              data-logout-url="{% url 'logout' %}"
+                                data-validate-url="{% url 'login_validate' %}"
                              data-default-avatar-url="{% static 'images/default-avatar.jpg' %}"></div>
                         <script nonce="{{ request.csp_nonce }}" id="loginI18n" type="application/json">{
                             "defaultLabel": "{{ i18n_login_default|escapejs }}",
