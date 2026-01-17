@@ -3,8 +3,8 @@
 {% load i18n %}
 {% block title %}Accueil - {{ site_brand.title_suffix }}{% endblock %}
 {% block head %}
-    <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=16" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=16"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=16">
+    <link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=16">
 
         <!-- LCP: preload the SAME resource the <picture> will select (prevents LCP load delay) -->
         <link rel="preload" as="image"
@@ -56,8 +56,8 @@
         }
     </style>
 
-    <script defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
-    <script defer src="{% static 'js/home-webchat-irc-token.js' %}?v=3"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/home-webchat-irc-token.js' %}?v=3"></script>
 {% endblock %}
 {% block content %}
     <!-- ================> Banner section start here <================== -->
@@ -134,9 +134,9 @@
     <!-- ================> Banner section end here <================== -->
 
     {% block page_vendor_scripts %}
-        <script defer src="{% static 'js/swiper.min.js' %}"></script>
-        <script defer src="{% static 'js/counterup.js' %}"></script>
-        <script>
+        <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/swiper.min.js' %}"></script>
+        <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/counterup.js' %}"></script>
+        <script nonce="{{ request.csp_nonce }}">
             document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('[data-background]').forEach((el) => {
                     const bg = el.getAttribute('data-background');
@@ -182,7 +182,7 @@
                                                                 alt="{{ m.username }}"
                                                                 loading="lazy"
                                                                 decoding="async"
-                                                                onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
+                                                                data-fallback-src="{% static 'images/default-avatar.svg' %}"
                                                             >
                                                         </a>
                                                     </div>
@@ -458,7 +458,7 @@
                                         alt="{{ m.username }}"
                                         loading="lazy"
                                         decoding="async"
-                                        onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
+                                        data-fallback-src="{% static 'images/default-avatar.svg' %}"
                                     >
                                 </a>
                             </div>
@@ -612,7 +612,7 @@
                                             alt="{{ post.author.username }}"
                                             loading="lazy"
                                             decoding="async"
-                                            onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
+                                            data-fallback-src="{% static 'images/default-avatar.svg' %}"
                                         >
                                     </div>
                                     <div class="story__content--content">

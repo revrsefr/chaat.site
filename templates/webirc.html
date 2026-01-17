@@ -9,7 +9,7 @@
     <meta charset='UTF-8' name='viewport' content='width=device-width, height=device-height, initial-scale=1.0, user-scalable=0'>
     <title>Web-IRC</title>
     <link rel="icon" type="image/x-icon" href="{% static 'webirc/favicon.ico' %}">
-    <script>
+    <script nonce="{{ request.csp_nonce }}">
       // Patch for all image/icon/audio paths in JS and HTML to use Django static prefix
       window.WEBIRC_STATIC_PREFIX = "{% static 'webirc/' %}";
       // Patch <img src> and similar
@@ -48,12 +48,12 @@
       });
     </script>
     <link rel="stylesheet" href="{% static 'webirc/style.css' %}">
-    <script src="{% static 'webirc/DragDropTouch.js' %}"></script>
-    <script src="{% static 'webirc/Qtv5.js' %}"></script>
-    <script src="{% static 'webirc/ircclient.js' %}"></script>
-    <script src="{% static 'webirc/WebIRC-dialogs.js' %}"></script>
-    <script src="{% static 'webirc/WebIRC-subwindows.js' %}"></script>
-    <script>
+    <script nonce="{{ request.csp_nonce }}" src="{% static 'webirc/DragDropTouch.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" src="{% static 'webirc/Qtv5.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" src="{% static 'webirc/ircclient.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" src="{% static 'webirc/WebIRC-dialogs.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" src="{% static 'webirc/WebIRC-subwindows.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}">
 const fontAvailable = new Set();
 const fontCheck = new Set([
   'Arial', 

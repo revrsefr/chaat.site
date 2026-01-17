@@ -9,7 +9,7 @@
 
 {% block extrahead %}
     {{ block.super }}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script nonce="{{ request.csp_nonce }}" src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} login{% endblock %}
@@ -74,5 +74,5 @@
         </div>
     </form>
 </div>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script nonce="{{ request.csp_nonce }}" src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}

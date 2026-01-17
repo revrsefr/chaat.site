@@ -212,5 +212,5 @@
 
 {% block scripts %}
 {{ block.super }}
-<script src="{% static 'js/irc-dashboard.js' %}" defer></script>
+<script nonce="{{ request.csp_nonce }}" src="{% static 'js/irc-dashboard.js' %}" defer></script>
 {% endblock %}

@@ -103,7 +103,7 @@
 													{% if user.is_authenticated and user.pk == post.author_id %}
 														<form action="{% url 'blog:delete_comment' slug=post.slug comment_id=comment.id %}" method="POST" style="display:inline; margin-left: 10px;">
 															{% csrf_token %}
-															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this comment?');">Delete</button>
+															<button type="submit" class="btn btn-sm btn-danger" data-confirm="Delete this comment?">Delete</button>
 														</form>
 													{% endif %}
 												</div>
@@ -234,5 +234,5 @@
 {% endblock %}
 
 {% block page_scripts %}
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script nonce="{{ request.csp_nonce }}" src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock %}

@@ -5,167 +5,7 @@
 {% block title %}{% trans "Confirmer l'email" %} - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block head %}
-<style>
-    .verify-email-page-root {
-        height: auto !important;
-        min-height: 100vh;
-        padding: 48px 0 64px;
-        background:
-            radial-gradient(1100px 520px at 12% 18%, rgba(242, 69, 112, 0.18), transparent 55%),
-            radial-gradient(900px 480px at 92% 12%, rgba(33, 51, 102, 0.28), transparent 55%),
-            linear-gradient(180deg, #0b1220 0%, #0e1630 100%);
-    }
-
-    /* Remove the big side image everywhere (desktop + mobile). */
-    .verify-email-page-root .image { display: none !important; }
-
-    .verify-email-page-root .log-reg-inner {
-        max-height: none !important;
-        height: auto !important;
-        overflow: visible !important;
-        padding: 26px 22px 22px !important;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.94);
-        box-shadow: 0 20px 70px rgba(0, 0, 0, 0.40);
-        backdrop-filter: blur(10px);
-    }
-
-    /* Undo global theme capitalization for a more professional look. */
-    .verify-email-page-root,
-    .verify-email-page-root a,
-    .verify-email-page-root label,
-    .verify-email-page-root .default-btn,
-    .verify-email-page-root .default-btn span {
-        text-transform: none !important;
-    }
-
-    /* Theme assumes dark login pages (white text). This card is light. */
-    .verify-email-page-root .log-reg-inner,
-    .verify-email-page-root .log-reg-inner * {
-        color: #0b1220;
-    }
-
-    .verify-email-brand-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 12px;
-    }
-    .verify-email-brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
-        color: #0b1220;
-        font-weight: 900;
-        letter-spacing: -0.02em;
-    }
-    .verify-email-brand img { width: 34px; height: 34px; }
-    .verify-email-back {
-        color: rgba(15, 23, 42, 0.72);
-        font-weight: 700;
-        text-decoration: none;
-    }
-    .verify-email-back:hover { text-decoration: underline; color: rgba(15, 23, 42, 0.86); }
-
-    .verify-email-page-root .section-header.inloginp { padding-top: 0 !important; margin-bottom: 14px; }
-    .verify-email-page-root .section-header .title {
-        color: #0b1220 !important;
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        margin-bottom: 6px;
-    }
-    .verify-email-subtitle {
-        margin: 0;
-        color: rgba(15, 23, 42, 0.72) !important;
-        font-size: 0.98rem;
-        line-height: 1.45;
-    }
-
-    .verify-email-page-root .form-group { margin-bottom: 14px; }
-    .verify-email-page-root .form-group label {
-        color: rgba(15, 23, 42, 0.92) !important;
-        font-size: 0.95rem !important;
-        font-weight: 800 !important;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 8px;
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(15, 23, 42, 0.04);
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        letter-spacing: 0.01em;
-        line-height: 1;
-    }
-    .verify-email-page-root .my-form-control {
-        border: 1px solid rgba(15, 23, 42, 0.14) !important;
-        border-radius: 14px;
-        height: 52px;
-        padding: 0 16px !important;
-        background: #fff !important;
-        color: #0b1220 !important;
-        box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
-    }
-    .verify-email-page-root .my-form-control:focus {
-        border-color: rgba(34, 197, 94, 0.55) !important;
-        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18) !important;
-        outline: none;
-    }
-
-    .verify-email-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 8px;
-    }
-
-    /* CTA buttons */
-    .verify-email-page-root .default-btn,
-    .verify-email-page-root .default-btn span {
-        color: #fff !important;
-    }
-    .verify-email-page-root #verifyEmailSubmit.default-btn {
-        flex: 1 1 200px;
-        border-radius: 14px;
-        padding: 14px 18px;
-        background: linear-gradient(135deg, #22c55e 0%, #16a34a 55%, #15803d 100%) !important;
-        border: 1px solid rgba(21, 128, 61, 0.55) !important;
-        box-shadow: 0 16px 40px rgba(22, 163, 74, 0.25);
-    }
-    .verify-email-page-root #verifyEmailSubmit.default-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 20px 55px rgba(22, 163, 74, 0.33);
-        filter: saturate(1.06);
-    }
-    .verify-email-page-root #verifyEmailSubmit.default-btn:active {
-        transform: translateY(0);
-        box-shadow: 0 12px 32px rgba(22, 163, 74, 0.22);
-    }
-    .verify-email-page-root #resend-code.default-btn {
-        flex: 1 1 200px;
-        border-radius: 14px;
-        padding: 14px 18px;
-        background: rgba(34, 197, 94, 0.10) !important;
-        border: 1px solid rgba(34, 197, 94, 0.35) !important;
-        box-shadow: none !important;
-    }
-    .verify-email-page-root #resend-code.default-btn,
-    .verify-email-page-root #resend-code.default-btn span {
-        color: rgba(15, 23, 42, 0.92) !important;
-    }
-    .verify-email-page-root #resend-code.default-btn:hover {
-        background: rgba(22, 163, 74, 0.20) !important;
-        border-color: rgba(22, 163, 74, 0.55) !important;
-        transform: translateY(-1px);
-    }
-    .verify-email-page-root #resend-code.default-btn:active { transform: translateY(0); }
-
-    @media (min-width: 992px) {
-        .verify-email-page-root .log-reg-inner { padding: 30px 28px 26px !important; }
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/verify-email-modern.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -185,7 +25,7 @@
                     </div>
 
                     <div class="section-header inloginp">
-                        <h1 class="title">{% trans "Confirmez votre email" %}</h1>
+                        <h3 class="title">{% trans "Confirmez votre email" %}</h3>
                         <p class="verify-email-subtitle">{% trans "Nous vous avons envoyé un code à 6 chiffres. Entrez-le ci-dessous pour activer votre compte." %}</p>
                     </div>
 
@@ -219,6 +59,11 @@
 
                             <div id="verify-email-message" style="margin-top: 12px;"></div>
                         </form>
+
+                        <div id="verifyEmailConfig"
+                             data-verify-url="{% url 'api_verify_email' %}"
+                             data-resend-url="{% url 'api_resend_verify_email' %}"
+                             data-login-url="{% url 'login' %}"></div>
                     </div>
                 </div>
             </div>
@@ -226,81 +71,5 @@
     </div>
 </section>
 
-<script>
-(function initVerifyEmail() {
-    const form = document.getElementById('verify-email-form');
-    const resendBtn = document.getElementById('resend-code');
-    const emailEl = document.getElementById('verify-email');
-    const codeEl = document.getElementById('verify-code');
-    const msgEl = document.getElementById('verify-email-message');
-
-    const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
-    const csrfToken = csrfInput ? csrfInput.value : null;
-
-    const show = (html) => { if (msgEl) msgEl.innerHTML = html; };
-
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            // Let the normal POST work as fallback for no-JS.
-            e.preventDefault();
-
-            show('<div class="alert alert-info">Vérification…</div>');
-            try {
-                const res = await fetch('{% url "api_verify_email" %}', {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-CSRFToken': csrfToken || '',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: (emailEl?.value || '').trim(),
-                        code: (codeEl?.value || '').trim(),
-                    }),
-                });
-                const data = await res.json().catch(() => ({}));
-                if (res.ok) {
-                    show('<div class="alert alert-success">' + (data.message || 'Email confirmé.') + '</div>');
-                    setTimeout(() => { window.location.href = '{% url "login" %}'; }, 1200);
-                } else {
-                    show('<div class="alert alert-danger">' + (data.error || 'Impossible de confirmer.') + '</div>');
-                }
-            } catch (err) {
-                console.error(err);
-                show('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
-            }
-        });
-    }
-
-    if (resendBtn) {
-        resendBtn.addEventListener('click', async () => {
-            show('<div class="alert alert-info">Envoi…</div>');
-            try {
-                const res = await fetch('{% url "api_resend_verify_email" %}', {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-CSRFToken': csrfToken || '',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email: (emailEl?.value || '').trim() }),
-                });
-                const data = await res.json().catch(() => ({}));
-                if (res.ok) {
-                    show('<div class="alert alert-success">' + (data.message || 'Code envoyé.') + '</div>');
-                } else {
-                    show('<div class="alert alert-danger">' + (data.error || 'Impossible d\'envoyer le code.') + '</div>');
-                }
-            } catch (err) {
-                console.error(err);
-                show('<div class="alert alert-danger">Erreur réseau. Réessayez.</div>');
-            }
-        });
-    }
-})();
-</script>
+<script nonce="{{ request.csp_nonce }}" src="{% static 'js/verify-email-modern.js' %}" defer></script>
 {% endblock %}

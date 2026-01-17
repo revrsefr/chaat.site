@@ -73,7 +73,7 @@
                 <div class="member__item">
                     <div class="member__inner">
                         <div class="member__thumb">
-                            <img src="{% if member.avatar_url %}{{ member.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ member.username }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.srcset='';this.src='{% static "images/default-avatar.svg" %}';">
+                            <img src="{% if member.avatar_url %}{{ member.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ member.username }}" loading="lazy" decoding="async" data-fallback-src="{% static 'images/default-avatar.svg' %}">
                             <span class="member__activity 
                                 {% if member.last_login and member.last_login > active_threshold %} online 
                                 {% else %} member__activity--ofline 
@@ -194,7 +194,7 @@
 
 {% block scripts %}
 {{ block.super }}
-<script>
+<script nonce="{{ request.csp_nonce }}">
     (function () {
         const select = document.getElementById('order-by');
         if (!select) return;

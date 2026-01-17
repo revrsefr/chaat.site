@@ -52,12 +52,12 @@
     <link rel="preload" as="style" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 
-    <link rel="preload" as="style" href="{% static 'css/all.min.css' %}" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/all.min.css' %}"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
 
     <!-- Non-critical CSS (already deferred) -->
-    <link rel="preload" as="style" href="{% static 'css/animate.css' %}" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/animate.css' %}"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
 
     <link rel="preload" as="style" href="{% static 'css/style.css' %}?v={{ static_version }}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v={{ static_version }}">
@@ -65,19 +65,35 @@
     <link rel="preload" as="style" href="{% static 'css/header-modern.css' %}?v={{ static_version }}">
     <link rel="stylesheet" href="{% static 'css/header-modern.css' %}?v={{ static_version }}">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></noscript>
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <link rel="preload" as="style" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}">
+    <link rel="stylesheet" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}">
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
     <!-- Cookie consent UI styles (professional, informative, accessible) -->
-    <link rel="preload" as="style" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}"></noscript>
+    <link rel="preload" as="style" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}">
+    <link rel="stylesheet" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}">
+
+    <!-- Trusted Types (CSP3): define a default policy for legacy/third-party scripts -->
+    <script nonce="{{ request.csp_nonce }}">
+        (function () {
+            if (!window.trustedTypes || !window.trustedTypes.createPolicy) return;
+            try {
+                window.trustedTypes.createPolicy('default', {
+                    createHTML: function (s) { return String(s); },
+                    createScriptURL: function (s) { return String(s); },
+                    createScript: function (s) { return String(s); },
+                });
+            } catch (e) {
+                // Ignore if policy already exists.
+            }
+        })();
+    </script>
 
     <!-- Google Consent Mode v2 (for GTM) -->
-    <script data-cookieconsent="ignore">
+    <script nonce="{{ request.csp_nonce }}" data-cookieconsent="ignore">
         window.dataLayer = window.dataLayer || [];
         function gtag() {
             dataLayer.push(arguments);
@@ -122,6 +138,7 @@
                 var script = document.createElement('script');
                 script.async = true;
                 script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-5J4F54MR';
+                script.nonce = "{{ request.csp_nonce }}";
                 var first = document.getElementsByTagName('script')[0];
                 first.parentNode.insertBefore(script, first);
             };
@@ -134,10 +151,8 @@
     <!-- Google Fonts (defer CSS to reduce render blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
-    </noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
     {% block head %}{% endblock %}
 </head>
 <body>   
@@ -328,24 +343,26 @@
 
     {% block scripts %}
     
-    <script defer src="{% static 'js/vendor/jquery-3.6.0.min.js' %}"></script>
-    <script defer src="{% static 'js/vendor/modernizr-3.11.2.min.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/vendor/jquery-3.6.0.min.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/vendor/modernizr-3.11.2.min.js' %}"></script>
 
     {# Page-specific vendor libs that must load AFTER jQuery and BEFORE main.js #}
     {% block page_vendor_scripts %}{% endblock %}
 
-    <script defer src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
-    <script defer src="{% static 'js/plugins.js' %}"></script>
-    <script defer src="{% static 'js/main.js' %}?v={{ static_version }}"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/plugins.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/img-fallback.js' %}?v={{ static_version }}"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/confirm.js' %}?v={{ static_version }}"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/main.js' %}?v={{ static_version }}"></script>
 
     {# Page-specific scripts that can load after main.js #}
     {% block page_scripts %}{% endblock %}
 
     <!-- Cookie consent logic -->
-    <script defer src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
-    <script defer src="{% static 'js/cookie-consent.js' %}?v={{ static_version }}&cb=20260116"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
+    <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/cookie-consent.js' %}?v={{ static_version }}&cb=20260116"></script>
     
-    <script>
+    <script nonce="{{ request.csp_nonce }}">
         (function() {
             function fetchUserCount() {
                 var currentEl = document.querySelector(".counter");

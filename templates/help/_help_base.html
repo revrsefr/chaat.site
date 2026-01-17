@@ -71,7 +71,7 @@
 
 {% endblock %}
 
-<script>
+<script nonce="{{ request.csp_nonce }}">
   // SPA-like loader for help pages: intercept sidebar clicks, fetch page HTML,
   // extract `#help-content` and title, then replace the current content.
   (function() {

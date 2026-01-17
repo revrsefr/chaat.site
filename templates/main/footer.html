@@ -157,7 +157,7 @@
                                                         alt="{{ member.username }}"
                                                         loading="lazy"
                                                         decoding="async"
-                                                        onerror="this.onerror=null;this.srcset='';this.src=`{% static 'images/default-avatar.svg' %}`;"
+                                                        data-fallback-src="{% static 'images/default-avatar.svg' %}"
                                                     >
                                                     <div class="footer__user">
                                                         <span class="footer__username">{{ member.username }}</span>

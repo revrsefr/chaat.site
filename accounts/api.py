@@ -314,7 +314,7 @@ def login_api(request):
 login_api.throttle_scope = "login"
 
 
-@api_view(["POST"])
+@api_view(["POST", "GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
 @throttle_classes([ScopedRateThrottle])
@@ -332,6 +332,11 @@ def login_token(request):
     - If a shared secret is configured (settings.IRC_API_TOKEN), the client can send it via X-API-Key.
     - Always returns HTTP 200 so Anope can parse the JSON body (its module treats non-200 as a transport error).
     """
+
+    # Avoid noisy "Method Not Allowed" warnings from scanners.
+    # Anope only uses POST; for any other method, behave like the endpoint doesn't exist.
+    if request.method != "POST":
+        return Response({"detail": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     # ScopedRateThrottle reads view.throttle_scope (not request.throttle_scope).
 

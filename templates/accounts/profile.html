@@ -5,60 +5,28 @@
 {% block title %}Profil - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block head %}
-<style>
-    /* Minimal + theme-compatible: just remove the inner-scroll behaviour. */
-    .profile-page .log-reg-inner { max-height: none !important; height: auto !important; overflow: visible !important; }
-    .profile-page .main-content.inloginp { overflow: visible !important; }
-
-    /* This theme's auth layout uses fixed 100vh containers.
-       On the profile page we want natural document flow so it never overlaps the footer. */
-    .profile-page-root { height: auto !important; min-height: 100vh; }
-    .profile-page-root .log-reg-inner { height: auto !important; overflow: visible !important; }
-    .profile-page-root .image { bottom: 0 !important; height: auto !important; }
-
-    /* Keep panels lightweight; Bootstrap's d-none handles the rest. */
-    .profile-panel { margin-top: 18px; }
-
-    /* Avatar preview: keep it consistent and clickable without inventing a new theme. */
-    .profile-avatar {
-        width: 140px;
-        height: 140px;
-        object-fit: cover;
-        cursor: pointer;
-    }
-    .profile-inline-code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        font-size: 12px;
-        word-break: break-all;
-        user-select: all;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/profile-modern.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="log-reg profile-page-root">
-    <div class="top-menu-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-7">
-                    <div class="logo"></div>
-                </div>
-                <div class="col-lg-4 col-5">
-                    <a href="{% url 'main:home' %}" class="backto-home">
-                        <i class="fas fa-chevron-left"></i> {% trans "home" %}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container profile-page">
-        <div class="row">
-            <div class="image image-log"></div>
-            <div class="col-lg-7">
+<section class="log-reg profile-page-root profile-modern-root" aria-label="Profile">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-9">
                 <div class="log-reg-inner">
+                    <div class="profile-brand-row">
+                        <a class="profile-brand" href="{% url 'main:home' %}" aria-label="chaat.site">
+                            <img src="{% static 'images/logo/mark-2026-v4.svg' %}" alt="" aria-hidden="true" decoding="async">
+                            <span>chaat.site</span>
+                        </a>
+                        <a href="{% url 'main:home' %}" class="profile-back">
+                            <i class="fas fa-chevron-left"></i> {% trans "Retour à l'accueil" %}
+                        </a>
+                    </div>
+
                     <div class="section-header inloginp">
-                        <h2 class="title">{% trans "Profil" %}</h2>
+                        <h1 class="title">{% trans "Profil" %}</h1>
+                        <p class="profile-subtitle">{% trans "Gérez vos informations, votre sécurité et votre token IRC." %}</p>
                     </div>
 
                     <div class="main-content inloginp">
@@ -73,84 +41,103 @@
                                                 {% endif %}
                         <!-- ✅ Only allow the profile owner to edit -->
                         {% if request.user == user_profile %}
-                        <!-- Theme-style tab buttons (reuse existing button styles) -->
-                        <div class="sidebar-links" role="tablist" aria-label="Profile tabs" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button class="default-btn reverse profile-tab-btn" type="button" role="tab" aria-selected="true" aria-controls="tab-profile" id="tabbtn-profile" data-tab-target="tab-profile">
-                                <span>{% trans "Profil" %}</span>
-                            </button>
-                            <button class="default-btn reverse profile-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-irc" id="tabbtn-irc" data-tab-target="tab-irc">
-                                <span>{% trans "Token IRC" %}</span>
-                            </button>
-                            <button class="default-btn reverse profile-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-account" id="tabbtn-account" data-tab-target="tab-account">
-                                <span>{% trans "Compte" %}</span>
-                            </button>
-                        </div>
+                                                <div class="profile-grid">
+                                                    <div class="profile-nav">
+                                                        <div class="profile-tabs" role="tablist" aria-label="Profile tabs">
+                                                            <button class="default-btn profile-tab-btn" type="button" role="tab" aria-selected="true" aria-controls="tab-profile" id="tabbtn-profile" data-tab-target="tab-profile">
+                                                                <span>{% trans "Profil" %}</span>
+                                                            </button>
+                                                            <button class="default-btn profile-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-irc" id="tabbtn-irc" data-tab-target="tab-irc">
+                                                                <span>{% trans "Token IRC" %}</span>
+                                                            </button>
+                                                            <button class="default-btn profile-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-account" id="tabbtn-account" data-tab-target="tab-account">
+                                                                <span>{% trans "Compte" %}</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
 
-                        <!-- Profile panel: avatar + editable fields in ONE form (backend supports: avatar, gender, city, description, age) -->
-                        <div id="tab-profile" class="profile-panel" role="tabpanel" aria-labelledby="tabbtn-profile">
-                            <form id="profileUpdateForm" action="{% url 'profile' username=user_profile.username %}" method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
+                                                    <div class="profile-panels">
+                                                        <!-- Profile panel: avatar + editable fields in ONE form (backend supports: avatar, gender, city, description, age) -->
+                                                        <div id="tab-profile" class="profile-panel" role="tabpanel" aria-labelledby="tabbtn-profile">
+                                                            <div class="profile-card">
+                                                                <h2 class="profile-card-title">{% trans "Informations du profil" %}</h2>
+                                                                <p class="profile-card-subtitle">{% trans "Mettez à jour votre profil public et vos informations personnelles." %}</p>
 
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="text-center">
-                                            {% if user_profile.avatar %}
-                                                {% with avatar_src=user_profile.avatar.url %}
-                                                    <img id="selectedAvatar" src="{{ avatar_src }}" class="rounded-circle profile-avatar" alt="Avatar" data-avatar-src="{{ avatar_src }}" onclick="openModal(this.dataset.avatarSrc)">
-                                                {% endwith %}
-                                            {% else %}
-                                                <img id="selectedAvatar" src="{% static 'images/default-avatar.jpg' %}" class="rounded-circle profile-avatar" alt="Avatar" data-avatar-src="{% static 'images/default-avatar.jpg' %}" onclick="openModal(this.dataset.avatarSrc)">
-                                            {% endif %}
+                                                                <form id="profileUpdateForm" action="{% url 'profile' username=user_profile.username %}" method="POST" enctype="multipart/form-data">
+                                                                    {% csrf_token %}
 
-                                            <div class="form-group" style="margin-top: 12px;">
-                                                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;">
-                                                    <label for="customFile2" class="default-btn reverse" style="margin: 0; padding: 10px 14px; font-size: 13px; cursor: pointer;">
-                                                        <span>{% trans "Choisir une photo" %}</span>
-                                                    </label>
-                                                    <span id="profileAvatarFileName" style="font-size: 12px; opacity: 0.85;">{% trans "Aucun fichier" %}</span>
-                                                </div>
-                                                <input type="file"
-                                                    class="my-form-control"
-                                                    id="customFile2"
-                                                    name="avatar"
-                                                    accept="image/*"
-                                                    style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;"
-                                                >
-                                                <div style="margin-top: 8px; font-size: 12px; opacity: 0.8;">
-                                                    {% trans "Sélectionnez une image puis sauvegardez." %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                                    <div class="profile-hero" aria-label="Profile summary">
+                                                                        <div class="profile-hero-left">
+                                                                            <div class="text-center">
+                                                                                {% if user_profile.avatar %}
+                                                                                    {% with avatar_src=user_profile.avatar.url %}
+                                                                                        <img id="selectedAvatar" src="{{ avatar_src }}" class="rounded-circle profile-avatar" alt="Avatar" data-avatar-src="{{ avatar_src }}">
+                                                                                    {% endwith %}
+                                                                                {% else %}
+                                                                                    <img id="selectedAvatar" src="{% static 'images/default-avatar.jpg' %}" class="rounded-circle profile-avatar" alt="Avatar" data-avatar-src="{% static 'images/default-avatar.jpg' %}">
+                                                                                {% endif %}
+                                                                            </div>
 
-                                    <div class="col-lg-8">
+                                                                            <div class="profile-hero-text">
+                                                                                <div class="profile-hero-title-row">
+                                                                                    <h3 class="profile-hero-name">{{ user_profile.username }}</h3>
+                                                                                    {% if user_profile.email_verified %}
+                                                                                        <span class="badge bg-success profile-badge">{% trans "Email vérifié" %}</span>
+                                                                                    {% else %}
+                                                                                        <span class="badge bg-danger profile-badge">{% trans "Email non vérifié" %}</span>
+                                                                                    {% endif %}
+                                                                                </div>
+                                                                                <p class="profile-hero-meta">{{ user_profile.email }}</p>
+
+                                                                                <div class="profile-avatar-picker">
+                                                                                    <div class="profile-avatar-picker-row profile-avatar-picker-row-start">
+                                                                                        <label for="customFile2" class="default-btn profile-secondary-btn profile-avatar-picker-label">
+                                                                                            <span>{% trans "Changer la photo" %}</span>
+                                                                                        </label>
+                                                                                        <span id="profileAvatarFileName" class="profile-avatar-picker-filename" data-none-text="{% trans 'Aucun fichier' %}">{% trans "Aucun fichier" %}</span>
+                                                                                    </div>
+                                                                                    <input type="file"
+                                                                                        id="customFile2"
+                                                                                        name="avatar"
+                                                                                        accept="image/*"
+                                                                                        class="my-form-control profile-file-hidden"
+                                                                                    >
+                                                                                    <div class="profile-avatar-picker-hint">
+                                                                                        {% trans "Sélectionnez une image puis sauvegardez." %}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="profile-hero-right">
+                                                                            <div class="profile-hero-actions">
+                                                                                <a href="{% url 'change_email' %}" class="default-btn profile-secondary-btn">
+                                                                                    <span>{% trans "Modifier l'email" %}</span>
+                                                                                </a>
+                                                                                <a href="{% url 'change_password' %}" class="default-btn profile-secondary-btn">
+                                                                                    <span>{% trans "Mot de passe" %}</span>
+                                                                                </a>
+                                                                                <a href="{% url 'account_settings' %}" class="default-btn profile-secondary-btn">
+                                                                                    <span>{% trans "Paramètres" %}</span>
+                                                                                </a>
+                                                                                {% if not user_profile.email_verified %}
+                                                                                    <a href="{% url 'verify_email' %}?email={{ user_profile.email|urlencode }}" class="default-btn profile-primary-btn">
+                                                                                        <span>{% trans "Vérifier" %}</span>
+                                                                                    </a>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="profile-divider" role="separator" aria-hidden="true"></div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>{% trans "Nom d'utilisateur" %}</label>
                                             <input type="text" class="my-form-control" value="{{ user_profile.username }}" disabled>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label>{% trans "Email" %}</label>
-                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
-                                                <input type="email" class="my-form-control" value="{{ user_profile.email }}" disabled style="flex: 1 1 260px;">
-                                                {% if user_profile.email_verified %}
-                                                    <span class="badge bg-success" style="white-space: nowrap; padding: 8px 10px; border-radius: 999px;">{% trans "Vérifié" %}</span>
-                                                {% else %}
-                                                    <span class="badge bg-danger" style="white-space: nowrap; padding: 8px 10px; border-radius: 999px;">{% trans "Non vérifié" %}</span>
-                                                {% endif %}
-                                            </div>
-                                            <div style="margin-top: 6px; font-size: 12px; opacity: 0.8;">
-                                                <a href="{% url 'change_email' %}" class="default-btn reverse" style="padding: 8px 12px; font-size: 12px;">
-                                                    <span>{% trans "Modifier l'email" %}</span>
-                                                </a>
-                                                {% if not user_profile.email_verified %}
-                                                    <a href="{% url 'verify_email' %}?email={{ user_profile.email|urlencode }}" class="default-btn" style="padding: 8px 12px; font-size: 12px; margin-left: 8px;">
-                                                        <span>{% trans "Vérifier maintenant" %}</span>
-                                                    </a>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-
+</div>
                                         <div class="form-group">
                                             <label>{% trans "Date de naissance" %}</label>
                                             <input type="date" name="age" class="my-form-control" value="{% if user_profile.age %}{{ user_profile.age|date:'Y-m-d' }}{% endif %}">
@@ -169,74 +156,90 @@
                                             <input type="text" name="city" class="my-form-control" value="{{ user_profile.city|default_if_none:'' }}">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label>{% trans "À propos de moi" %}</label>
-                                            <textarea name="description" class="my-form-control" rows="4">{{ user_profile.description|default_if_none:'' }}</textarea>
-                                        </div>
+                                                                        </div>
 
-                                        <div class="text-center">
-                                            <button type="submit" class="default-btn">
-                                                <span>{% trans "Sauvegarder les modifications" %}</span>
-                                            </button>
-                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <label>{% trans "À propos de moi" %}</label>
+                                                                                <textarea name="description" class="my-form-control" rows="6" placeholder="{% trans 'Quelques mots sur vous…' %}">{{ user_profile.description|default_if_none:'' }}</textarea>
+                                                                            </div>
 
-                                        <div id="profileSaveStatus" style="margin-top: 10px;"></div>
+                                                                            <button type="submit" class="default-btn profile-primary-btn" id="profileSaveBtn">
+                                                                                <span>{% trans "Sauvegarder les modifications" %}</span>
+                                                                            </button>
+
+                                                                            <div id="profileSaveStatus" class="profile-status-space"></div>
+                                                                        </div>
+                                                                    </div>
+                                        </form>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
 
-                        <!-- IRC token panel -->
-                        <div id="tab-irc" class="profile-panel d-none" role="tabpanel" aria-labelledby="tabbtn-irc">
-                            <div class="section-header inloginp" style="margin-top: 10px;">
-                                <h3 class="title">{% trans "Mot de passe IRC (token)" %}</h3>
-                            </div>
+                                <!-- IRC token panel -->
+                                <div id="tab-irc" class="profile-panel d-none" role="tabpanel" aria-labelledby="tabbtn-irc">
+                                    <div class="profile-card">
+                                        <h2 class="profile-card-title">{% trans "Mot de passe IRC (token)" %}</h2>
+                                        <p class="profile-card-subtitle">
+                                            {% trans "Utilisez ce token comme mot de passe pour NickServ (à la place du mot de passe du site)." %}
+                                            {% trans "Actifs" %}: <strong id="ircTokenActiveCount">{{ irc_app_password_count }}</strong>
+                                        </p>
 
-                            <p>
-                                {% trans "Utilisez ce token comme mot de passe pour NickServ (à la place du mot de passe du site)." %}
-                                {% trans "Actifs" %}: <strong id="ircTokenActiveCount">{{ irc_app_password_count }}</strong>
-                            </p>
+                                        <div id="ircTokenAlert" class="alert alert-warning" {% if not irc_app_password_plain %}style="display:none"{% endif %}>
+                                            <strong>{% trans "Votre nouveau token IRC (copiez-le maintenant) :" %}</strong>
+                                            <div class="profile-token-row">
+                                                                    <span id="ircToken" title="{% trans 'Cliquer pour copier' %}" class="profile-inline-code profile-token-code">{{ irc_app_password_plain }}</span>
+                                                <span id="ircTokenCopyStatus" class="profile-token-copy-status"></span>
+                                            </div>
+                                        </div>
 
-                            <div id="ircTokenAlert" class="alert alert-warning" {% if not irc_app_password_plain %}style="display:none"{% endif %}>
-                                <strong>{% trans "Votre nouveau token IRC (copiez-le maintenant) :" %}</strong>
-                                <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                    <span id="ircToken" title="{% trans 'Cliquer pour copier' %}" style="cursor: pointer;" class="profile-inline-code" onclick="copyIrcToken()">{{ irc_app_password_plain }}</span>
-                                    <span id="ircTokenCopyStatus" style="display:none; font-weight: 600;"></span>
+                                        <div id="ircTokenActionStatus" class="profile-status-space"></div>
+
+                                        <div class="profile-actions-row sidebar-links">
+                                            <form id="ircTokenGenerateForm" method="POST" action="{% url 'generate_irc_app_password' username=user_profile.username %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="default-btn profile-secondary-btn">{% trans "Générer un token IRC" %}</button>
+                                            </form>
+                                            <form id="ircTokenRevokeForm" method="POST" action="{% url 'revoke_irc_app_password' username=user_profile.username %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="default-btn profile-secondary-btn text-danger">{% trans "Révoquer le token IRC" %}</button>
+                                            </form>
+                                        </div>
+
+                                        <p class="profile-example">
+                                            {% trans "Exemple" %}: <span class="profile-inline-code">/msg NickServ IDENTIFY {{ user_profile.username }} &lt;token&gt;</span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div id="ircTokenActionStatus" style="margin-top: 10px;"></div>
+                                <!-- Account panel -->
+                                <div id="tab-account" class="profile-panel d-none" role="tabpanel" aria-labelledby="tabbtn-account">
+                                    <div class="profile-card">
+                                        <h2 class="profile-card-title">{% trans "Compte" %}</h2>
+                                        <p class="profile-card-subtitle">{% trans "Sécurité, paramètres et gestion du compte." %}</p>
 
-                            <div class="sidebar-links" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <form id="ircTokenGenerateForm" method="POST" action="{% url 'generate_irc_app_password' username=user_profile.username %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="default-btn reverse">{% trans "Générer un token IRC" %}</button>
-                                </form>
-                                <form id="ircTokenRevokeForm" method="POST" action="{% url 'revoke_irc_app_password' username=user_profile.username %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="default-btn reverse text-danger">{% trans "Révoquer le token IRC" %}</button>
-                                </form>
-                            </div>
-
-                            <p style="margin-top: 10px;">
-                                {% trans "Exemple" %}: <span class="profile-inline-code">/msg NickServ IDENTIFY {{ user_profile.username }} &lt;token&gt;</span>
-                            </p>
-                        </div>
-
-                        <!-- Account panel -->
-                        <div id="tab-account" class="profile-panel d-none" role="tabpanel" aria-labelledby="tabbtn-account">
-                            <div class="sidebar-links" style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
-                                <a href="{% url 'account_settings' %}" class="default-btn reverse">{% trans "Paramètres du compte" %}</a>
-                                <a href="{% url 'change_password' %}" class="default-btn reverse">{% trans "Modifier le mot de passe" %}</a>
-                                <a href="{% url 'forgot_password' %}?email={{ user_profile.email|urlencode }}" class="default-btn reverse">{% trans "Réinitialiser le mot de passe par email" %}</a>
-                                <a href="{% url 'delete_account' %}" class="default-btn reverse text-danger">{% trans "Supprimer mon compte" %}</a>
+                                        <div class="sidebar-links profile-account-links">
+                                            <a href="{% url 'account_settings' %}" class="default-btn profile-secondary-btn">{% trans "Paramètres du compte" %}</a>
+                                            <a href="{% url 'change_password' %}" class="default-btn profile-secondary-btn">{% trans "Modifier le mot de passe" %}</a>
+                                            <a href="{% url 'forgot_password' %}?email={{ user_profile.email|urlencode }}" class="default-btn profile-secondary-btn">{% trans "Réinitialiser le mot de passe par email" %}</a>
+                                            <a href="{% url 'delete_account' %}" class="default-btn profile-secondary-btn text-danger">{% trans "Supprimer mon compte" %}</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         {% else %}
-                        <div class="alert alert-danger text-center mt-5">
-                            <p>{% trans "Vous n'avez pas la permission d'accéder à ce profil." %}</p>
-                            <a href="{% url 'home' %}" class="btn btn-primary">{% trans "Retour à l'accueil" %}</a>
+                        <div class="profile-empty-state" role="alert" aria-live="polite">
+                            <div class="profile-empty-title">{% trans "Accès refusé" %}</div>
+                            <p class="profile-empty-text">{% trans "Vous n'avez pas la permission d'accéder à ce profil." %}</p>
+                            <div class="profile-empty-actions">
+                                <a href="{% url 'main:home' %}" class="default-btn profile-secondary-btn">
+                                    <span>{% trans "Retour à l'accueil" %}</span>
+                                </a>
+                                <a href="{% url 'login' %}" class="default-btn profile-primary-btn">
+                                    <span>{% trans "Se connecter" %}</span>
+                                </a>
+                            </div>
                         </div>
                         {% endif %}
                     </div>
@@ -246,353 +249,6 @@
     </div>
 </section>
 
-<!-- ✅ JavaScript for Avatar Preview & Click-to-Zoom -->
-<script>
-    (function initProfileTabs() {
-        const buttons = Array.from(document.querySelectorAll('.profile-tab-btn'));
-        const panels = ['tab-profile', 'tab-irc', 'tab-account']
-            .map((id) => document.getElementById(id))
-            .filter(Boolean);
-        if (!buttons.length || !panels.length) return;
-
-        const activate = (id) => {
-            for (const btn of buttons) {
-                const isActive = btn.dataset.tabTarget === id;
-                btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-            }
-            for (const panel of panels) {
-                panel.classList.toggle('d-none', panel.id !== id);
-            }
-        };
-
-        for (const btn of buttons) {
-            btn.addEventListener('click', () => activate(btn.dataset.tabTarget));
-        }
-    })();
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-    }
-
-    async function postJsonForm(formEl) {
-        const csrf = getCookie('csrftoken');
-        const res = await fetch(formEl.action, {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
-                ...(csrf ? { 'X-CSRFToken': csrf } : {}),
-            },
-            credentials: 'same-origin',
-            body: new FormData(formEl),
-        });
-        const ct = res.headers.get('content-type') || '';
-        if (ct.includes('application/json')) {
-            const data = await res.json();
-            return { ok: res.ok, status: res.status, data };
-        }
-        // Fallback: if server returned HTML for some reason, reload the page.
-        window.location.reload();
-        return null;
-    }
-
-    function renderAlert(targetEl, type, message, lines) {
-        if (!targetEl) return;
-
-        const container = document.createElement('div');
-        container.className = `alert alert-${type}`;
-        container.setAttribute('role', 'alert');
-
-        if (message) {
-            const msg = document.createElement('div');
-            msg.textContent = String(message);
-            container.appendChild(msg);
-        }
-
-        if (Array.isArray(lines) && lines.length) {
-            const list = document.createElement('ul');
-            list.className = 'mb-0';
-            for (const line of lines) {
-                const li = document.createElement('li');
-                li.textContent = String(line);
-                list.appendChild(li);
-            }
-            container.appendChild(list);
-        }
-
-        targetEl.replaceChildren(container);
-    }
-
-    (function initProfileSaveAjax() {
-        const profileForm = document.getElementById('profileUpdateForm');
-        const statusEl = document.getElementById('profileSaveStatus');
-        const avatarImg = document.getElementById('selectedAvatar');
-
-        const setStatus = (type, message, lines) => renderAlert(statusEl, type, message, lines);
-
-        if (!profileForm) return;
-
-        profileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setStatus('info', 'Sauvegarde…');
-            try {
-                const payload = await postJsonForm(profileForm);
-                if (!payload) return;
-                if (payload.ok && payload.data && payload.data.ok) {
-                    const avatarUrl = payload.data.profile && payload.data.profile.avatar_url;
-                    if (avatarImg && avatarUrl) {
-                        avatarImg.src = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 'v=' + Date.now();
-                        avatarImg.onclick = () => openModal(avatarUrl);
-                    }
-                    setStatus('success', payload.data.message || 'Profil mis à jour.');
-                } else {
-                    const errors = (payload.data && payload.data.errors) ? payload.data.errors : null;
-                    if (errors) {
-                        const lines = [];
-                        for (const [field, items] of Object.entries(errors)) {
-                            for (const it of items) {
-                                lines.push((field === '__all__' ? '' : field + ': ') + (it.message || 'Erreur'));
-                            }
-                        }
-                        setStatus('danger', "", lines);
-                    } else {
-                        setStatus('danger', 'Impossible de sauvegarder le profil.');
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-                setStatus('danger', 'Erreur réseau. Réessayez.');
-            }
-        });
-    })();
-
-    (function initIrcTokenAjax() {
-        const genForm = document.getElementById('ircTokenGenerateForm');
-        const revForm = document.getElementById('ircTokenRevokeForm');
-        const tokenAlert = document.getElementById('ircTokenAlert');
-        const tokenEl = document.getElementById('ircToken');
-        const copyStatusEl = document.getElementById('ircTokenCopyStatus');
-        const activeEl = document.getElementById('ircTokenActiveCount');
-        const actionStatus = document.getElementById('ircTokenActionStatus');
-
-        const setActionStatus = (type, message, lines) => renderAlert(actionStatus, type, message, lines);
-
-        if (genForm) {
-            genForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                setActionStatus('info', 'Génération du token…');
-                try {
-                    const payload = await postJsonForm(genForm);
-                    if (!payload) return;
-                    const data = payload.data;
-                    if (data && data.token) {
-                        if (tokenEl) tokenEl.textContent = data.token;
-                        if (tokenAlert) tokenAlert.style.display = '';
-                        if (copyStatusEl) copyStatusEl.style.display = 'none';
-                        if (activeEl && typeof data.active !== 'undefined') activeEl.textContent = String(data.active);
-                        setActionStatus('success', 'Token généré. Copiez-le maintenant (affiché une seule fois).');
-                    } else {
-                        setActionStatus('danger', 'Impossible de générer le token.');
-                    }
-                } catch (err) {
-                    console.error(err);
-                    setActionStatus('danger', 'Erreur réseau. Réessayez.');
-                }
-            });
-        }
-
-        if (revForm) {
-            revForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                setActionStatus('info', 'Révocation…');
-                try {
-                    const payload = await postJsonForm(revForm);
-                    if (!payload) return;
-                    const data = payload.data;
-                    if (data && data.revoked) {
-                        if (tokenAlert) tokenAlert.style.display = 'none';
-                        if (tokenEl) tokenEl.textContent = '';
-                        if (copyStatusEl) copyStatusEl.style.display = 'none';
-                        if (activeEl && typeof data.active !== 'undefined') activeEl.textContent = String(data.active);
-                        setActionStatus('success', 'Token révoqué.');
-                    } else {
-                        setActionStatus('danger', 'Impossible de révoquer le token.');
-                    }
-                } catch (err) {
-                    console.error(err);
-                    setActionStatus('danger', 'Erreur réseau. Réessayez.');
-                }
-            });
-        }
-    })();
-
-    function copyIrcToken() {
-        const tokenEl = document.getElementById('ircToken');
-        const statusEl = document.getElementById('ircTokenCopyStatus');
-        if (!tokenEl) return;
-
-        const token = (tokenEl.textContent || '').trim();
-        if (!token) return;
-
-        const showStatus = (text, ok) => {
-            if (!statusEl) return;
-            statusEl.textContent = text;
-            statusEl.style.display = 'inline';
-            statusEl.style.color = ok ? '#1b5e20' : '#b71c1c';
-            window.clearTimeout(statusEl._t);
-            statusEl._t = window.setTimeout(() => {
-                statusEl.style.display = 'none';
-            }, 2000);
-        };
-
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(token)
-                .then(() => showStatus('Copié !', true))
-                .catch(() => showStatus('Impossible de copier.', false));
-            return;
-        }
-
-        // Fallback for older browsers / non-secure contexts
-        const ta = document.createElement('textarea');
-        ta.value = token;
-        ta.setAttribute('readonly', '');
-        ta.style.position = 'absolute';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        ta.setSelectionRange(0, ta.value.length);
-        try {
-            const ok = document.execCommand('copy');
-            showStatus(ok ? 'Copié !' : 'Impossible de copier.', ok);
-        } catch (e) {
-            showStatus('Impossible de copier.', false);
-        }
-        document.body.removeChild(ta);
-    }
-
-    function displaySelectedImage(event, imgId) {
-        var reader = new FileReader();
-        reader.onload = function(){
-            var output = document.getElementById(imgId);
-            output.src = reader.result;
-            output.dataset.avatarSrc = output.src;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-
-    (function initProfileAvatarPicker() {
-        const input = document.getElementById('customFile2');
-        const preview = document.getElementById('selectedAvatar');
-        const fileNameEl = document.getElementById('profileAvatarFileName');
-        if (!input) return;
-
-        const noneText = '{% trans "Aucun fichier" %}';
-        const setFileName = (name) => {
-            if (!fileNameEl) return;
-            fileNameEl.textContent = name || noneText;
-        };
-
-        input.addEventListener('change', () => {
-            const file = input.files && input.files[0];
-            if (!file) {
-                setFileName(noneText);
-                return;
-            }
-
-            setFileName(file.name);
-
-            if (preview && file.type && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    preview.src = String(reader.result || preview.src);
-                    preview.dataset.avatarSrc = preview.src;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    })();
-
-    function openModal(imageSrc) {
-        const existing = document.getElementById('imageModal');
-        if (existing) existing.remove();
-
-        const safeSrc = (() => {
-            const src = String(imageSrc || '');
-            if (src.startsWith('/') || src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:image/')) {
-                return src;
-            }
-            return '';
-        })();
-
-        const modal = document.createElement('div');
-        modal.id = 'imageModal';
-        const overlay = document.createElement('div');
-        overlay.id = 'imageModalOverlay';
-        overlay.style.position = 'fixed';
-        overlay.style.inset = '0';
-        overlay.style.background = 'rgba(0, 0, 0, 0.78)';
-        overlay.style.display = 'flex';
-        overlay.style.justifyContent = 'center';
-        overlay.style.alignItems = 'center';
-        overlay.style.zIndex = '9999';
-        overlay.style.padding = '18px';
-
-        const wrap = document.createElement('div');
-        wrap.style.position = 'relative';
-        wrap.style.maxWidth = 'min(900px, 92vw)';
-        wrap.style.maxHeight = '88vh';
-
-        const img = document.createElement('img');
-        img.src = safeSrc;
-        img.style.maxWidth = '100%';
-        img.style.maxHeight = '88vh';
-        img.style.borderRadius = '14px';
-        img.style.boxShadow = '0 18px 50px rgba(0,0,0,0.35)';
-        img.alt = '';
-
-        const closeBtn = document.createElement('button');
-        closeBtn.type = 'button';
-        closeBtn.setAttribute('aria-label', 'Close');
-        closeBtn.textContent = '×';
-        closeBtn.style.position = 'absolute';
-        closeBtn.style.top = '-12px';
-        closeBtn.style.right = '-12px';
-        closeBtn.style.width = '40px';
-        closeBtn.style.height = '40px';
-        closeBtn.style.borderRadius = '999px';
-        closeBtn.style.border = '0';
-        closeBtn.style.cursor = 'pointer';
-        closeBtn.style.background = '#fff';
-        closeBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.25)';
-        closeBtn.style.fontSize = '22px';
-        closeBtn.style.lineHeight = '40px';
-
-        closeBtn.addEventListener('click', closeModal);
-
-        wrap.appendChild(img);
-        wrap.appendChild(closeBtn);
-        overlay.appendChild(wrap);
-        modal.appendChild(overlay);
-        document.body.appendChild(modal);
-
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeModal();
-        });
-        document.addEventListener('keydown', function escClose(e) {
-            if (e.key === 'Escape') {
-                document.removeEventListener('keydown', escClose);
-                closeModal();
-            }
-        });
-    }
-
-    function closeModal() {
-        const el = document.getElementById('imageModal');
-        if (el) el.remove();
-    }
-</script>
+<script nonce="{{ request.csp_nonce }}" src="{% static 'js/profile-modern.js' %}" defer></script>
 
 {% endblock %}

@@ -17,7 +17,7 @@
                 <p class="recaptcha-ui__subtitle">Complétez le challenge, puis copiez/collez la commande dans IRC pour terminer.</p>
             </header>
 
-            <form id="recaptcha-form" action="{% url 'recaptcha:process_recaptcha' %}" method="POST" onsubmit="submitForm(event)">
+            <form id="recaptcha-form" action="{% url 'recaptcha:process_recaptcha' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="jwt" value="{{ jwt }}">
                 <input type="hidden" name="mode" value="jwt">
@@ -39,7 +39,7 @@
                 <p>Utilisez cette commande dans IRC pour finaliser votre vérification&nbsp;:</p>
                 <pre><code id="verification-token"></code></pre>
                 <div class="recaptcha-ui__actions" style="margin-top: 1rem;">
-                    <button type="button" class="recaptcha-ui__button recaptcha-ui__button--primary" onclick="copyToClipboard()">Copier</button>
+                    <button id="copy-to-clipboard" type="button" class="recaptcha-ui__button recaptcha-ui__button--primary">Copier</button>
                 </div>
             </div>
 
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <script>
+    <script nonce="{{ request.csp_nonce }}">
         // Utility function to get CSRF token from cookies
         function getCookie(name) {
             let cookieValue = null;
@@ -106,7 +106,12 @@
     
         function displayMessage(message, alertType) {
             const messageContainer = document.getElementById('message-container');
-            messageContainer.innerHTML = `<div class="alert ${alertType}" role="alert">${message}</div>`;
+            messageContainer.textContent = '';
+            const box = document.createElement('div');
+            box.className = `alert ${alertType}`;
+            box.setAttribute('role', 'alert');
+            box.textContent = String(message || '');
+            messageContainer.appendChild(box);
         }
 
         function copyToClipboard() {
@@ -117,6 +122,14 @@
                 displayMessage('Impossible de copier automatiquement. Copiez manuellement.', 'alert-danger');
             });
         }
+
+        (function bindHandlers() {
+            const form = document.getElementById('recaptcha-form');
+            if (form) form.addEventListener('submit', submitForm);
+
+            const copyBtn = document.getElementById('copy-to-clipboard');
+            if (copyBtn) copyBtn.addEventListener('click', copyToClipboard);
+        })();
     </script>
 
 </main>

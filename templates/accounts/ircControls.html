@@ -60,7 +60,7 @@
     </div>
 
     <!-- AJAX Script -->
-    <script>
+    <script nonce="{{ request.csp_nonce }}">
         document.getElementById("fetch-nickserv-info").addEventListener("click", function() {
             let nickname = document.getElementById("nick-input").value.trim();
             let infoBox = document.getElementById("nickserv-info");
