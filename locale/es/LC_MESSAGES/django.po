@@ -1,0 +1,586 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 15:44+0000\n"
+"PO-Revision-Date: 2026-01-25 15:44+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/accounts/forgot_password.html:5
+msgid "Mot de passe oublié"
+msgstr "Contraseña olvidada"
+
+#: templates/accounts/forgot_password.html:23 templates/accounts/login.html:5
+msgid "Connexion"
+msgstr "Iniciar sesión"
+
+#: templates/accounts/forgot_password.html:28 templates/accounts/login.html:113
+msgid "Mot de passe oublié?"
+msgstr "¿Contraseña olvidada?"
+
+#: templates/accounts/forgot_password.html:29
+msgid ""
+"Entrez le pseudo et l'adresse e-mail que vous avez utilisée lors de votre "
+"inscription et nous vous enverrons des instructions pour réinitialiser votre "
+"mot de passe."
+msgstr ""
+"Introduce el apodo y la dirección de correo electrónico que utilizaste al "
+"registrarte y te enviaremos instrucciones para restablecer tu contraseña."
+
+#: templates/accounts/forgot_password.html:37
+msgid "Adresse email"
+msgstr "Dirección de correo electrónico"
+
+#: templates/accounts/forgot_password.html:42
+msgid "Envoyer le lien de réinitialisation"
+msgstr "Enviar enlace de restablecimiento"
+
+#: templates/accounts/login.html:24 templates/accounts/profile.html:23
+#: templates/accounts/profile.html:237 templates/accounts/verify_email.html:23
+msgid "Retour à l'accueil"
+msgstr "Volver al inicio"
+
+#: templates/accounts/login.html:29 templates/accounts/login.html:34
+#: templates/accounts/login.html:121 templates/main/header.html:166
+msgid "S'identifier"
+msgstr "Iniciar sesión"
+
+#: templates/accounts/login.html:30
+msgid "Connectez-vous pour accéder à votre profil."
+msgstr "Inicia sesión para acceder a tu perfil."
+
+#: templates/accounts/login.html:35
+msgid "Connexion..."
+msgstr "Iniciando sesión..."
+
+#: templates/accounts/login.html:36
+msgid "Succès"
+msgstr "Éxito"
+
+#: templates/accounts/login.html:37 templates/accounts/login.html:83
+msgid "Erreur"
+msgstr "Error"
+
+#: templates/accounts/login.html:38
+msgid "Réponse invalide du serveur."
+msgstr "Respuesta inválida del servidor."
+
+#: templates/accounts/login.html:39
+msgid "Redirection..."
+msgstr "Redirigiendo..."
+
+#: templates/accounts/login.html:40
+msgid "Connexion réussie"
+msgstr "Inicio de sesión correcto"
+
+#: templates/accounts/login.html:41
+msgid "Impossible de se connecter"
+msgstr "No se puede iniciar sesión"
+
+#: templates/accounts/login.html:42
+msgid "Identifiants invalides."
+msgstr "Credenciales inválidas."
+
+#: templates/accounts/login.html:43
+msgid "Erreur réseau"
+msgstr "Error de red"
+
+#: templates/accounts/login.html:44
+msgid "Impossible de contacter le serveur. Réessayez."
+msgstr "No se pudo contactar con el servidor. Inténtalo de nuevo."
+
+#: templates/accounts/login.html:45
+msgid "Ouvrir mon profil"
+msgstr "Abrir mi perfil"
+
+#: templates/accounts/login.html:46
+msgid "Se déconnecter"
+msgstr "Cerrar sesión"
+
+#: templates/accounts/login.html:47 templates/accounts/profile.html:85
+msgid "Email vérifié"
+msgstr "Correo verificado"
+
+#: templates/accounts/login.html:48 templates/accounts/profile.html:87
+msgid "Email non vérifié"
+msgstr "Correo no verificado"
+
+#: templates/accounts/login.html:49 templates/accounts/profile.html:155
+msgid "Ville"
+msgstr "Ciudad"
+
+#: templates/accounts/login.html:50 templates/accounts/profile.html:147
+msgid "Sexe"
+msgstr "Sexo"
+
+#: templates/accounts/login.html:51 templates/accounts/profile.html:150
+msgid "Homme"
+msgstr "Hombre"
+
+#: templates/accounts/login.html:52 templates/accounts/profile.html:149
+msgid "Femme"
+msgstr "Mujer"
+
+#: templates/accounts/login.html:96
+msgid "Votre email ou Nom d'utilisateur"
+msgstr "Tu correo o nombre de usuario"
+
+#: templates/accounts/login.html:97
+msgid "Entrer votre email ou nom"
+msgstr "Introduce tu correo o nombre"
+
+#: templates/accounts/login.html:102 templates/accounts/profile.html:118
+msgid "Mot de passe"
+msgstr "Contraseña"
+
+#: templates/accounts/login.html:104
+msgid "Entrer votre mot de passe"
+msgstr "Introduce tu contraseña"
+
+#: templates/accounts/login.html:114
+msgid "Récupérer mon mot de passe"
+msgstr "Recuperar mi contraseña"
+
+#: templates/accounts/login.html:116 templates/main/header.html:167
+msgid "Créer un compte"
+msgstr "Crear una cuenta"
+
+#: templates/accounts/login.html:126
+msgid "Astuce : vous pouvez utiliser votre email ou votre pseudo."
+msgstr "Consejo: puedes usar tu correo o tu apodo."
+
+#: templates/accounts/profile.html:28 templates/accounts/profile.html:48
+msgid "Profil"
+msgstr "Perfil"
+
+#: templates/accounts/profile.html:29
+msgid "Gérez vos informations, votre sécurité et votre token IRC."
+msgstr "Gestiona tu información, tu seguridad y tu token IRC."
+
+#: templates/accounts/profile.html:51
+msgid "Token IRC"
+msgstr "Token IRC"
+
+#: templates/accounts/profile.html:54 templates/accounts/profile.html:217
+msgid "Compte"
+msgstr "Cuenta"
+
+#: templates/accounts/profile.html:63
+msgid "Informations du profil"
+msgstr "Información del perfil"
+
+#: templates/accounts/profile.html:64
+msgid "Mettez à jour votre profil public et vos informations personnelles."
+msgstr "Actualiza tu perfil público y tu información personal."
+
+#: templates/accounts/profile.html:95
+msgid "Changer la photo"
+msgstr "Cambiar la foto"
+
+#: templates/accounts/profile.html:97
+msgid "Aucun fichier"
+msgstr "Ningún archivo"
+
+#: templates/accounts/profile.html:106
+msgid "Sélectionnez une image puis sauvegardez."
+msgstr "Selecciona una imagen y luego guarda."
+
+#: templates/accounts/profile.html:115
+msgid "Modifier l'email"
+msgstr "Modificar el correo"
+
+#: templates/accounts/profile.html:121
+msgid "Paramètres"
+msgstr "Ajustes"
+
+#: templates/accounts/profile.html:125
+msgid "Vérifier"
+msgstr "Verificar"
+
+#: templates/accounts/profile.html:137
+msgid "Nom d'utilisateur"
+msgstr "Nombre de usuario"
+
+#: templates/accounts/profile.html:142
+msgid "Date de naissance"
+msgstr "Fecha de nacimiento"
+
+#: templates/accounts/profile.html:163
+msgid "À propos de moi"
+msgstr "Sobre mí"
+
+#: templates/accounts/profile.html:164
+msgid "Quelques mots sur vous…"
+msgstr "Unas palabras sobre ti…"
+
+#: templates/accounts/profile.html:168
+msgid "Sauvegarder les modifications"
+msgstr "Guardar cambios"
+
+#: templates/accounts/profile.html:181
+msgid "Mot de passe IRC (token)"
+msgstr "Contraseña IRC (token)"
+
+#: templates/accounts/profile.html:183
+msgid ""
+"Utilisez ce token comme mot de passe pour NickServ (à la place du mot de "
+"passe du site)."
+msgstr ""
+"Usa este token como contraseña para NickServ (en lugar de la contraseña del "
+"sitio)."
+
+#: templates/accounts/profile.html:184
+msgid "Actifs"
+msgstr "Activos"
+
+#: templates/accounts/profile.html:188
+msgid "Votre nouveau token IRC (copiez-le maintenant) :"
+msgstr "Tu nuevo token IRC (cópialo ahora):"
+
+#: templates/accounts/profile.html:190
+msgid "Cliquer pour copier"
+msgstr "Haz clic para copiar"
+
+#: templates/accounts/profile.html:200
+msgid "Générer un token IRC"
+msgstr "Generar un token IRC"
+
+#: templates/accounts/profile.html:204
+msgid "Révoquer le token IRC"
+msgstr "Revocar el token IRC"
+
+#: templates/accounts/profile.html:209
+msgid "Exemple"
+msgstr "Ejemplo"
+
+#: templates/accounts/profile.html:218
+msgid "Sécurité, paramètres et gestion du compte."
+msgstr "Seguridad, ajustes y gestión de la cuenta."
+
+#: templates/accounts/profile.html:221 templates/main/header.html:141
+msgid "Paramètres du compte"
+msgstr "Ajustes de la cuenta"
+
+#: templates/accounts/profile.html:222 templates/main/header.html:147
+msgid "Modifier le mot de passe"
+msgstr "Cambiar la contraseña"
+
+#: templates/accounts/profile.html:223
+msgid "Réinitialiser le mot de passe par email"
+msgstr "Restablecer la contraseña por correo"
+
+#: templates/accounts/profile.html:224
+msgid "Supprimer mon compte"
+msgstr "Eliminar mi cuenta"
+
+#: templates/accounts/profile.html:233
+msgid "Accès refusé"
+msgstr "Acceso denegado"
+
+#: templates/accounts/profile.html:234
+msgid "Vous n'avez pas la permission d'accéder à ce profil."
+msgstr "No tienes permiso para acceder a este perfil."
+
+#: templates/accounts/profile.html:240
+msgid "Se connecter"
+msgstr "Iniciar sesión"
+
+#: templates/accounts/verify_email.html:5
+msgid "Confirmer l'email"
+msgstr "Confirmar el correo"
+
+#: templates/accounts/verify_email.html:28
+msgid "Confirmez votre email"
+msgstr "Confirma tu correo"
+
+#: templates/accounts/verify_email.html:29
+msgid ""
+"Nous vous avons envoyé un code à 6 chiffres. Entrez-le ci-dessous pour "
+"activer votre compte."
+msgstr ""
+"Te hemos enviado un código de 6 dígitos. Introdúcelo abajo para activar tu "
+"cuenta."
+
+#: templates/accounts/verify_email.html:47
+msgid "Email"
+msgstr "Correo"
+
+#: templates/accounts/verify_email.html:51
+msgid "Code"
+msgstr "Código"
+
+#: templates/accounts/verify_email.html:56
+msgid "Confirmer"
+msgstr "Confirmar"
+
+#: templates/accounts/verify_email.html:57
+msgid "Renvoyer le code"
+msgstr "Reenviar el código"
+
+#: templates/admin/login.html:26
+msgid ""
+"\n"
+"        Please correct the error below.\n"
+"    "
+msgid_plural ""
+"\n"
+"        Please correct the errors below.\n"
+"    "
+msgstr[0] "\n        Por favor, corrige el error de abajo.\n    "
+msgstr[1] "\n        Por favor, corrige los errores de abajo.\n    "
+
+#: templates/admin/login.html:43
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this "
+"page. Would you like to login to a different account?"
+msgstr "Estás autenticado como %(username)s, pero no tienes autorización para acceder a esta página. ¿Quieres iniciar sesión con otra cuenta?"
+
+#: templates/admin/login.html:65
+msgid "Forgotten your password or username?"
+msgstr "¿Has olvidado tu contraseña o nombre de usuario?"
+
+#: templates/admin/login.html:73
+msgid "Log in"
+msgstr "Iniciar sesión"
+
+#: templates/main/footer.html:13 templates/main/footer.html:24
+#: templates/main/pages/about.html:4 templates/main/pages/about.html:83
+msgid "À propos"
+msgstr "Acerca de"
+
+#: templates/main/footer.html:19 templates/main/pages/terms.html:4
+#: templates/main/pages/terms.html:138
+msgid "Conditions générales"
+msgstr "Términos y condiciones"
+
+#: templates/main/footer.html:29 templates/main/pages/legal.html:4
+#: templates/main/pages/legal.html:117
+msgid "Mentions légales"
+msgstr "Aviso legal"
+
+#: templates/main/footer.html:42
+msgid "Informations"
+msgstr "Información"
+
+#: templates/main/footer.html:68 templates/main/footer.html:69
+msgid "GitHub"
+msgstr "GitHub"
+
+#: templates/main/footer.html:74 templates/main/footer.html:109
+msgid "Bientôt disponible"
+msgstr "Disponible pronto"
+
+#: templates/main/footer.html:86
+msgid "Liens utiles"
+msgstr "Enlaces útiles"
+
+#: templates/main/footer.html:121
+msgid "Articles récents"
+msgstr "Artículos recientes"
+
+#: templates/main/footer.html:132
+msgid "Aucun article récent"
+msgstr "No hay artículos recientes"
+
+#: templates/main/footer.html:144
+msgid "Derniers inscrits"
+msgstr "Últimos registrados"
+
+#: templates/main/footer.html:172
+msgid "Aucun membre récent"
+msgstr "No hay miembros recientes"
+
+#: templates/main/footer.html:184
+msgid "Tous droits réservés"
+msgstr "Todos los derechos reservados"
+
+#: templates/main/header.html:52 templates/main/header.html:54
+msgid "Network"
+msgstr "Red"
+
+#: templates/main/header.html:55 templates/main/header.html:72
+msgid "Blog Style Two"
+msgstr "Blog estilo dos"
+
+#: templates/main/header.html:56 templates/main/header.html:73
+msgid "Blog Details"
+msgstr "Detalles del blog"
+
+#: templates/main/header.html:60
+msgid "Communauté"
+msgstr "Comunidad"
+
+#: templates/main/header.html:62
+msgid "Community"
+msgstr "Comunidad"
+
+#: templates/main/header.html:63
+msgid "All Group"
+msgstr "Todos los grupos"
+
+#: templates/main/header.html:64
+msgid "Membres"
+msgstr "Miembros"
+
+#: templates/main/header.html:65
+msgid "Activity"
+msgstr "Actividad"
+
+#: templates/main/header.html:69 templates/main/header.html:71
+msgid "Blog"
+msgstr "Blog"
+
+#: templates/main/header.html:86
+msgid "Changer de langue"
+msgstr "Cambiar idioma"
+
+#: templates/main/header.html:116 templates/main/header.html:163
+msgid "Accéder au tchat"
+msgstr "Acceder al chat"
+
+#: templates/main/header.html:128
+#, python-format
+msgid "Compte : %(username)s"
+msgstr "Cuenta: %(username)s"
+
+#: templates/main/header.html:135
+msgid "Mon profil"
+msgstr "Mi perfil"
+
+#: templates/main/header.html:154
+msgid "Déconnexion"
+msgstr "Cerrar sesión"
+
+#: templates/main/home.html:100
+msgid ""
+"Discute gratuitement, en temps réel, avec des personnes près de chez toi — "
+"ou à l’autre bout du monde."
+msgstr ""
+"Chatea gratis, en tiempo real, con personas cerca de ti — o al otro lado del "
+"mundo."
+
+#: templates/main/home.html:127
+msgid "#!Accueil #!Musique #!Jeux"
+msgstr "#!Inicio #!Música #!Juegos"
+
+#: templates/main/home.html:443
+msgid "La communauté"
+msgstr "La comunidad"
+
+#: templates/main/home.html:479
+msgid "Aucun profil à afficher pour le moment."
+msgstr "No hay perfiles para mostrar por el momento."
+
+#: templates/main/home.html:483
+msgid "Voir la communauté"
+msgstr "Ver la comunidad"
+
+#: templates/main/home.html:497
+#, python-format
+msgid "Pourquoi choisir %(site_name)s ?"
+msgstr "¿Por qué elegir %(site_name)s?"
+
+#: templates/main/home.html:518
+msgid "Choisis ton pseudo"
+msgstr "Elige tu apodo"
+
+#: templates/main/home.html:534
+msgid "Des gens, pas des bots"
+msgstr "Personas, no bots"
+
+#: templates/main/home.html:547
+msgid "Trouve ton salon"
+msgstr "Encuentra tu sala"
+
+#: templates/main/home.html:548
+msgid ""
+"Du général aux passions : musique, tech, jeux, entraide… Rejoins un salon, "
+"ou crée le tien en 10 secondes."
+msgstr ""
+"De lo general a las pasiones: música, tecnología, juegos, ayuda… Únete a una "
+"sala o crea la tuya en 10 segundos."
+
+#: templates/main/home.html:560
+msgid "Crée des liens"
+msgstr "Crea vínculos"
+
+#: templates/main/home.html:577
+msgid "Le blog"
+msgstr "El blog"
+
+#: templates/main/home.html:629
+msgid "Aucun article de blog disponible pour le moment."
+msgstr "No hay artículos de blog disponibles por el momento."
+
+#: templates/main/home.html:649
+msgid "Confiance & sécurité"
+msgstr "Confianza y seguridad"
+
+#: templates/main/home.html:650
+msgid ""
+"Les échanges sont chiffrés (TLS/SSL) pour protéger tes données en transit. "
+"On préfère la simplicité, pas la surveillance."
+msgstr ""
+"Los intercambios están cifrados (TLS/SSL) para proteger tus datos en tránsito. "
+"Preferimos la simplicidad, no la vigilancia."
+
+#: templates/main/home.html:663
+msgid "Des salons pour tous"
+msgstr "Salas para todos"
+
+#: templates/main/home.html:664
+msgid ""
+"Des salons variés, des sujets du quotidien aux passions. Tu peux aussi créer "
+"ton propre salon et lancer la discussion."
+msgstr ""
+"Salas variadas, desde temas cotidianos hasta pasiones. También puedes crear "
+"tu propia sala e iniciar la conversación."
+
+#: templates/main/home.html:677
+msgid "Du monde à toute heure"
+msgstr "Gente a cualquier hora"
+
+#: templates/main/home.html:678
+msgid ""
+"Le tchat ne dort jamais : viens dire bonjour le matin, à la pause, ou tard "
+"le soir. Il y a toujours quelqu’un pour échanger."
+msgstr ""
+"El chat nunca duerme: ven a saludar por la mañana, en el descanso o tarde "
+"por la noche. Siempre hay alguien con quien hablar."
+
+#: templates/main/home.html:691
+msgid "Gratuit, simple, sans friction"
+msgstr "Gratis, simple, sin fricción"
+
+#: templates/main/home.html:692
+msgid ""
+"Un espace pour discuter tranquillement 24/7. Rapide, simple, sans "
+"inscription obligatoire : tu entres, tu parles, tu restes si tu veux."
+msgstr ""
+"Un espacio para charlar tranquilamente 24/7. Rápido, simple, sin registro "
+"obligatorio: entras, hablas y te quedas si quieres."
+
+#: templates/main/pages/about.html:94
+#, python-format
+msgid ""
+"Bienvenue sur %(site_name)s. Notre objectif est de proposer un espace de "
+"discussion simple, rapide et convivial."
+msgstr ""
+"Bienvenido a %(site_name)s. Nuestro objetivo es ofrecer un espacio de "
+"conversación simple, rápido y agradable."
+
+#: templates/main/pages/about.html:99
+msgid "Besoin d'aide ? Rejoignez le salon"
+msgstr "¿Necesitas ayuda? Únete a la sala"

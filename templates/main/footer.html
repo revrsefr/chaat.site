@@ -10,23 +10,23 @@
                         <div class="footer__item footer--about h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-circle-info"></i> {% trans "À propos" %}</h2>
+                                    <h2 class="h4 footer__title m-0"><i class="fa-solid fa-circle-info"></i> <span class="footer__title-text">{% trans "À propos" %}</span></h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
                                         <li>
                                             <a class="text-nowrap" href="{% url 'main:terms' %}">
-                                                <i class="fa-solid fa-file-contract"></i>{% trans "Conditions générales" %}
+                                                <i class="fa-solid fa-file-contract"></i> {% trans "Conditions générales" %}
                                             </a>
                                         </li>
                                         <li>
                                             <a class="text-nowrap" href="{% url 'main:about' %}">
-                                                <i class="fa-solid fa-circle-info"></i>{% trans "À propos" %}
+                                                <i class="fa-solid fa-circle-info"></i> {% trans "À propos" %}
                                             </a>
                                         </li>
                                         <li>
                                             <a class="text-nowrap" href="{% url 'main:legal' %}">
-                                                <i class="fa-solid fa-scale-balanced"></i>{% trans "Mentions légales" %}
+                                                <i class="fa-solid fa-scale-balanced"></i> {% trans "Mentions légales" %}
                                             </a>
                                         </li>
                                     </ul>
@@ -39,7 +39,7 @@
                         <div class="footer__item footer--support h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-circle-info"></i> {% trans "Informations" %}</h2>
+                                    <h2 class="h4 footer__title m-0"><i class="fa-solid fa-circle-info"></i> <span class="footer__title-text">{% trans "Informations" %}</span></h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
@@ -48,17 +48,17 @@
                                                 <a class="text-nowrap" href="{{ item.url|safe_url }}">
                                                     {% with label=item.label|lower %}
                                                         {% if label == 'network' %}
-                                                            <i class="fa-solid fa-network-wired"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-network-wired"></i> {{ item.label }}
                                                         {% elif label == 'membres' or label == 'members' %}
-                                                            <i class="fa-solid fa-users"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-users"></i> {{ item.label }}
                                                         {% elif label == 'blog' %}
-                                                            <i class="fa-solid fa-newspaper"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-newspaper"></i> {{ item.label }}
                                                         {% elif label == 'inscription' or label == 'register' or label == 'signup' %}
-                                                            <i class="fa-solid fa-user-plus"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-user-plus"></i> {{ item.label }}
                                                         {% elif label == 'connexion' or label == 'login' %}
-                                                            <i class="fa-solid fa-right-to-bracket"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-right-to-bracket"></i> {{ item.label }}
                                                         {% else %}
-                                                            <i class="fa-solid fa-angle-right"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-angle-right"></i> {{ item.label }}
                                                         {% endif %}
                                                     {% endwith %}
                                                 </a>
@@ -66,7 +66,7 @@
                                             {% if item.label|lower == 'network' %}
                                                 <li>
                                                     <a class="text-nowrap" href="https://github.com/revrsefr" target="_blank" rel="noopener noreferrer" aria-label="{% trans "GitHub" %}">
-                                                        <i class="fa-brands fa-github"></i>{% trans "GitHub" %}
+                                                        <i class="fa-brands fa-github"></i> {% trans "GitHub" %}
                                                     </a>
                                                 </li>
                                             {% endif %}
@@ -83,7 +83,7 @@
                         <div class="footer__item footer--support h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-link"></i> {% trans "Liens utiles" %}</h2>
+                                    <h2 class="h4 footer__title m-0"><i class="fa-solid fa-link"></i> <span class="footer__title-text">{% trans "Liens utiles" %}</span></h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
@@ -92,15 +92,15 @@
                                                 <a class="text-nowrap" href="{{ item.url|safe_url }}">
                                                     {% with label=item.label|lower %}
                                                         {% if label == 'membres' or label == 'members' %}
-                                                            <i class="fa-solid fa-users"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-users"></i> {{ item.label }}
                                                         {% elif label == 'blog' %}
-                                                            <i class="fa-solid fa-newspaper"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-newspaper"></i> {{ item.label }}
                                                         {% elif label == 'inscription' or label == 'register' or label == 'signup' %}
-                                                            <i class="fa-solid fa-user-plus"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-user-plus"></i> {{ item.label }}
                                                         {% elif label == 'connexion' or label == 'login' %}
-                                                            <i class="fa-solid fa-right-to-bracket"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-right-to-bracket"></i> {{ item.label }}
                                                         {% else %}
-                                                            <i class="fa-solid fa-angle-right"></i>{{ item.label }}
+                                                            <i class="fa-solid fa-angle-right"></i> {{ item.label }}
                                                         {% endif %}
                                                     {% endwith %}
                                                 </a>
@@ -118,14 +118,14 @@
                         <div class="footer__item footer--support h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-newspaper"></i> {% trans "Articles récents" %}</h2>
+                                    <h2 class="h4 footer__title m-0"><i class="fa-solid fa-newspaper"></i> <span class="footer__title-text">{% trans "Articles récents" %}</span></h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
                                         {% for item in footer.recent_articles %}
                                             <li>
                                                 <a href="{{ item.url|safe_url }}">
-                                                    <i class="fa-solid fa-newspaper"></i>{{ item.title }}
+                                                    <i class="fa-solid fa-newspaper"></i> {{ item.title }}
                                                 </a>
                                             </li>
                                         {% empty %}
@@ -141,7 +141,7 @@
                         <div class="footer__item footer--activity h-100">
                             <div class="footer__inner h-100 d-flex flex-column">
                                 <div class="footer__content--title">
-                                    <h2 class="h4 text-nowrap m-0"><i class="fa-solid fa-users"></i> {% trans "Derniers inscrits" %}</h2>
+                                    <h2 class="h4 footer__title m-0"><i class="fa-solid fa-users"></i> <span class="footer__title-text">{% trans "Derniers inscrits" %}</span></h2>
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul class="footer__latest-list">

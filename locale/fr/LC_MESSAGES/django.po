@@ -1,0 +1,567 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 15:44+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/accounts/forgot_password.html:5
+msgid "Mot de passe oublié"
+msgstr ""
+
+#: templates/accounts/forgot_password.html:23 templates/accounts/login.html:5
+msgid "Connexion"
+msgstr ""
+
+#: templates/accounts/forgot_password.html:28 templates/accounts/login.html:113
+msgid "Mot de passe oublié?"
+msgstr ""
+
+#: templates/accounts/forgot_password.html:29
+msgid ""
+"Entrez le pseudo et l'adresse e-mail que vous avez utilisée lors de votre "
+"inscription et nous vous enverrons des instructions pour réinitialiser votre "
+"mot de passe."
+msgstr ""
+
+#: templates/accounts/forgot_password.html:37
+msgid "Adresse email"
+msgstr ""
+
+#: templates/accounts/forgot_password.html:42
+msgid "Envoyer le lien de réinitialisation"
+msgstr ""
+
+#: templates/accounts/login.html:24 templates/accounts/profile.html:23
+#: templates/accounts/profile.html:237 templates/accounts/verify_email.html:23
+msgid "Retour à l'accueil"
+msgstr ""
+
+#: templates/accounts/login.html:29 templates/accounts/login.html:34
+#: templates/accounts/login.html:121 templates/main/header.html:166
+msgid "S'identifier"
+msgstr ""
+
+#: templates/accounts/login.html:30
+msgid "Connectez-vous pour accéder à votre profil."
+msgstr ""
+
+#: templates/accounts/login.html:35
+msgid "Connexion..."
+msgstr ""
+
+#: templates/accounts/login.html:36
+msgid "Succès"
+msgstr ""
+
+#: templates/accounts/login.html:37 templates/accounts/login.html:83
+msgid "Erreur"
+msgstr ""
+
+#: templates/accounts/login.html:38
+msgid "Réponse invalide du serveur."
+msgstr ""
+
+#: templates/accounts/login.html:39
+msgid "Redirection..."
+msgstr ""
+
+#: templates/accounts/login.html:40
+msgid "Connexion réussie"
+msgstr ""
+
+#: templates/accounts/login.html:41
+msgid "Impossible de se connecter"
+msgstr ""
+
+#: templates/accounts/login.html:42
+msgid "Identifiants invalides."
+msgstr ""
+
+#: templates/accounts/login.html:43
+msgid "Erreur réseau"
+msgstr ""
+
+#: templates/accounts/login.html:44
+msgid "Impossible de contacter le serveur. Réessayez."
+msgstr ""
+
+#: templates/accounts/login.html:45
+msgid "Ouvrir mon profil"
+msgstr ""
+
+#: templates/accounts/login.html:46
+msgid "Se déconnecter"
+msgstr ""
+
+#: templates/accounts/login.html:47 templates/accounts/profile.html:85
+msgid "Email vérifié"
+msgstr ""
+
+#: templates/accounts/login.html:48 templates/accounts/profile.html:87
+msgid "Email non vérifié"
+msgstr ""
+
+#: templates/accounts/login.html:49 templates/accounts/profile.html:155
+msgid "Ville"
+msgstr ""
+
+#: templates/accounts/login.html:50 templates/accounts/profile.html:147
+msgid "Sexe"
+msgstr ""
+
+#: templates/accounts/login.html:51 templates/accounts/profile.html:150
+msgid "Homme"
+msgstr ""
+
+#: templates/accounts/login.html:52 templates/accounts/profile.html:149
+msgid "Femme"
+msgstr ""
+
+#: templates/accounts/login.html:96
+msgid "Votre email ou Nom d'utilisateur"
+msgstr ""
+
+#: templates/accounts/login.html:97
+msgid "Entrer votre email ou nom"
+msgstr ""
+
+#: templates/accounts/login.html:102 templates/accounts/profile.html:118
+msgid "Mot de passe"
+msgstr ""
+
+#: templates/accounts/login.html:104
+msgid "Entrer votre mot de passe"
+msgstr ""
+
+#: templates/accounts/login.html:114
+msgid "Récupérer mon mot de passe"
+msgstr ""
+
+#: templates/accounts/login.html:116 templates/main/header.html:167
+msgid "Créer un compte"
+msgstr ""
+
+#: templates/accounts/login.html:126
+msgid "Astuce : vous pouvez utiliser votre email ou votre pseudo."
+msgstr ""
+
+#: templates/accounts/profile.html:28 templates/accounts/profile.html:48
+msgid "Profil"
+msgstr ""
+
+#: templates/accounts/profile.html:29
+msgid "Gérez vos informations, votre sécurité et votre token IRC."
+msgstr ""
+
+#: templates/accounts/profile.html:51
+msgid "Token IRC"
+msgstr ""
+
+#: templates/accounts/profile.html:54 templates/accounts/profile.html:217
+msgid "Compte"
+msgstr ""
+
+#: templates/accounts/profile.html:63
+msgid "Informations du profil"
+msgstr ""
+
+#: templates/accounts/profile.html:64
+msgid "Mettez à jour votre profil public et vos informations personnelles."
+msgstr ""
+
+#: templates/accounts/profile.html:95
+msgid "Changer la photo"
+msgstr ""
+
+#: templates/accounts/profile.html:97
+msgid "Aucun fichier"
+msgstr ""
+
+#: templates/accounts/profile.html:106
+msgid "Sélectionnez une image puis sauvegardez."
+msgstr ""
+
+#: templates/accounts/profile.html:115
+msgid "Modifier l'email"
+msgstr ""
+
+#: templates/accounts/profile.html:121
+msgid "Paramètres"
+msgstr ""
+
+#: templates/accounts/profile.html:125
+msgid "Vérifier"
+msgstr ""
+
+#: templates/accounts/profile.html:137
+msgid "Nom d'utilisateur"
+msgstr ""
+
+#: templates/accounts/profile.html:142
+msgid "Date de naissance"
+msgstr ""
+
+#: templates/accounts/profile.html:163
+msgid "À propos de moi"
+msgstr ""
+
+#: templates/accounts/profile.html:164
+msgid "Quelques mots sur vous…"
+msgstr ""
+
+#: templates/accounts/profile.html:168
+msgid "Sauvegarder les modifications"
+msgstr ""
+
+#: templates/accounts/profile.html:181
+msgid "Mot de passe IRC (token)"
+msgstr ""
+
+#: templates/accounts/profile.html:183
+msgid ""
+"Utilisez ce token comme mot de passe pour NickServ (à la place du mot de "
+"passe du site)."
+msgstr ""
+
+#: templates/accounts/profile.html:184
+msgid "Actifs"
+msgstr ""
+
+#: templates/accounts/profile.html:188
+msgid "Votre nouveau token IRC (copiez-le maintenant) :"
+msgstr ""
+
+#: templates/accounts/profile.html:190
+msgid "Cliquer pour copier"
+msgstr ""
+
+#: templates/accounts/profile.html:200
+msgid "Générer un token IRC"
+msgstr ""
+
+#: templates/accounts/profile.html:204
+msgid "Révoquer le token IRC"
+msgstr ""
+
+#: templates/accounts/profile.html:209
+msgid "Exemple"
+msgstr ""
+
+#: templates/accounts/profile.html:218
+msgid "Sécurité, paramètres et gestion du compte."
+msgstr ""
+
+#: templates/accounts/profile.html:221 templates/main/header.html:141
+msgid "Paramètres du compte"
+msgstr ""
+
+#: templates/accounts/profile.html:222 templates/main/header.html:147
+msgid "Modifier le mot de passe"
+msgstr ""
+
+#: templates/accounts/profile.html:223
+msgid "Réinitialiser le mot de passe par email"
+msgstr ""
+
+#: templates/accounts/profile.html:224
+msgid "Supprimer mon compte"
+msgstr ""
+
+#: templates/accounts/profile.html:233
+msgid "Accès refusé"
+msgstr ""
+
+#: templates/accounts/profile.html:234
+msgid "Vous n'avez pas la permission d'accéder à ce profil."
+msgstr ""
+
+#: templates/accounts/profile.html:240
+msgid "Se connecter"
+msgstr ""
+
+#: templates/accounts/verify_email.html:5
+msgid "Confirmer l'email"
+msgstr ""
+
+#: templates/accounts/verify_email.html:28
+msgid "Confirmez votre email"
+msgstr ""
+
+#: templates/accounts/verify_email.html:29
+msgid ""
+"Nous vous avons envoyé un code à 6 chiffres. Entrez-le ci-dessous pour "
+"activer votre compte."
+msgstr ""
+
+#: templates/accounts/verify_email.html:47
+msgid "Email"
+msgstr ""
+
+#: templates/accounts/verify_email.html:51
+msgid "Code"
+msgstr ""
+
+#: templates/accounts/verify_email.html:56
+msgid "Confirmer"
+msgstr ""
+
+#: templates/accounts/verify_email.html:57
+msgid "Renvoyer le code"
+msgstr ""
+
+#: templates/admin/login.html:26
+msgid ""
+"\n"
+"        Please correct the error below.\n"
+"    "
+msgid_plural ""
+"\n"
+"        Please correct the errors below.\n"
+"    "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/admin/login.html:43
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this "
+"page. Would you like to login to a different account?"
+msgstr ""
+
+#: templates/admin/login.html:65
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: templates/admin/login.html:73
+msgid "Log in"
+msgstr ""
+
+#: templates/main/footer.html:13 templates/main/footer.html:24
+#: templates/main/pages/about.html:4 templates/main/pages/about.html:83
+msgid "À propos"
+msgstr ""
+
+#: templates/main/footer.html:19 templates/main/pages/terms.html:4
+#: templates/main/pages/terms.html:138
+msgid "Conditions générales"
+msgstr ""
+
+#: templates/main/footer.html:29 templates/main/pages/legal.html:4
+#: templates/main/pages/legal.html:117
+msgid "Mentions légales"
+msgstr ""
+
+#: templates/main/footer.html:42
+msgid "Informations"
+msgstr ""
+
+#: templates/main/footer.html:68 templates/main/footer.html:69
+msgid "GitHub"
+msgstr ""
+
+#: templates/main/footer.html:74 templates/main/footer.html:109
+msgid "Bientôt disponible"
+msgstr ""
+
+#: templates/main/footer.html:86
+msgid "Liens utiles"
+msgstr ""
+
+#: templates/main/footer.html:121
+msgid "Articles récents"
+msgstr ""
+
+#: templates/main/footer.html:132
+msgid "Aucun article récent"
+msgstr ""
+
+#: templates/main/footer.html:144
+msgid "Derniers inscrits"
+msgstr ""
+
+#: templates/main/footer.html:172
+msgid "Aucun membre récent"
+msgstr ""
+
+#: templates/main/footer.html:184
+msgid "Tous droits réservés"
+msgstr ""
+
+#: templates/main/header.html:52 templates/main/header.html:54
+msgid "Network"
+msgstr ""
+
+#: templates/main/header.html:55 templates/main/header.html:72
+msgid "Blog Style Two"
+msgstr ""
+
+#: templates/main/header.html:56 templates/main/header.html:73
+msgid "Blog Details"
+msgstr ""
+
+#: templates/main/header.html:60
+msgid "Communauté"
+msgstr ""
+
+#: templates/main/header.html:62
+msgid "Community"
+msgstr ""
+
+#: templates/main/header.html:63
+msgid "All Group"
+msgstr ""
+
+#: templates/main/header.html:64
+msgid "Membres"
+msgstr ""
+
+#: templates/main/header.html:65
+msgid "Activity"
+msgstr ""
+
+#: templates/main/header.html:69 templates/main/header.html:71
+msgid "Blog"
+msgstr ""
+
+#: templates/main/header.html:86
+msgid "Changer de langue"
+msgstr ""
+
+#: templates/main/header.html:116 templates/main/header.html:163
+msgid "Accéder au tchat"
+msgstr ""
+
+#: templates/main/header.html:128
+#, python-format
+msgid "Compte : %(username)s"
+msgstr ""
+
+#: templates/main/header.html:135
+msgid "Mon profil"
+msgstr ""
+
+#: templates/main/header.html:154
+msgid "Déconnexion"
+msgstr ""
+
+#: templates/main/home.html:100
+msgid ""
+"Discute gratuitement, en temps réel, avec des personnes près de chez toi — "
+"ou à l’autre bout du monde."
+msgstr ""
+
+#: templates/main/home.html:127
+msgid "#!Accueil #!Musique #!Jeux"
+msgstr ""
+
+#: templates/main/home.html:443
+msgid "La communauté"
+msgstr ""
+
+#: templates/main/home.html:479
+msgid "Aucun profil à afficher pour le moment."
+msgstr ""
+
+#: templates/main/home.html:483
+msgid "Voir la communauté"
+msgstr ""
+
+#: templates/main/home.html:497
+#, python-format
+msgid "Pourquoi choisir %(site_name)s ?"
+msgstr ""
+
+#: templates/main/home.html:518
+msgid "Choisis ton pseudo"
+msgstr ""
+
+#: templates/main/home.html:534
+msgid "Des gens, pas des bots"
+msgstr ""
+
+#: templates/main/home.html:547
+msgid "Trouve ton salon"
+msgstr ""
+
+#: templates/main/home.html:548
+msgid ""
+"Du général aux passions : musique, tech, jeux, entraide… Rejoins un salon, "
+"ou crée le tien en 10 secondes."
+msgstr ""
+
+#: templates/main/home.html:560
+msgid "Crée des liens"
+msgstr ""
+
+#: templates/main/home.html:577
+msgid "Le blog"
+msgstr ""
+
+#: templates/main/home.html:629
+msgid "Aucun article de blog disponible pour le moment."
+msgstr ""
+
+#: templates/main/home.html:649
+msgid "Confiance & sécurité"
+msgstr ""
+
+#: templates/main/home.html:650
+msgid ""
+"Les échanges sont chiffrés (TLS/SSL) pour protéger tes données en transit. "
+"On préfère la simplicité, pas la surveillance."
+msgstr ""
+
+#: templates/main/home.html:663
+msgid "Des salons pour tous"
+msgstr ""
+
+#: templates/main/home.html:664
+msgid ""
+"Des salons variés, des sujets du quotidien aux passions. Tu peux aussi créer "
+"ton propre salon et lancer la discussion."
+msgstr ""
+
+#: templates/main/home.html:677
+msgid "Du monde à toute heure"
+msgstr ""
+
+#: templates/main/home.html:678
+msgid ""
+"Le tchat ne dort jamais : viens dire bonjour le matin, à la pause, ou tard "
+"le soir. Il y a toujours quelqu’un pour échanger."
+msgstr ""
+
+#: templates/main/home.html:691
+msgid "Gratuit, simple, sans friction"
+msgstr ""
+
+#: templates/main/home.html:692
+msgid ""
+"Un espace pour discuter tranquillement 24/7. Rapide, simple, sans "
+"inscription obligatoire : tu entres, tu parles, tu restes si tu veux."
+msgstr ""
+
+#: templates/main/pages/about.html:94
+#, python-format
+msgid ""
+"Bienvenue sur %(site_name)s. Notre objectif est de proposer un espace de "
+"discussion simple, rapide et convivial."
+msgstr ""
+
+#: templates/main/pages/about.html:99
+msgid "Besoin d'aide ? Rejoignez le salon"
+msgstr ""
