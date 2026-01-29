@@ -93,6 +93,8 @@ def site_branding(request):
         "site_brand": brand,
         "canonical_url": canonical_url,
         "static_version": getattr(settings, "STATIC_VERSION", "") or "1",
+        "cmp_enabled": bool(getattr(settings, "ENABLE_TCF_CMP", False)),
+        "google_fc_publisher_id": getattr(settings, "GOOGLE_FC_PUBLISHER_ID", None),
     }
 
 

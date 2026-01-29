@@ -32,6 +32,9 @@ def issue_email_verification_code(user, *, ttl_minutes: int = 20) -> str:
     Returns the plain code (useful for tests/logs). In production, do not display it.
     """
 
+    if not bool(getattr(settings, "EMAIL_ENABLED", True)):
+        raise ValidationError("Envoi d'email désactivé sur ce serveur.")
+
     # Basic resend cooldown to reduce spam and brute-force assistance.
     cooldown_seconds = int(getattr(settings, "EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS", 60))
     if user.email_verification_sent_at and (timezone.now() - user.email_verification_sent_at).total_seconds() < cooldown_seconds:

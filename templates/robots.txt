@@ -3,7 +3,7 @@ Allow: /
 
 Disallow: /admin/
 
-Sitemap: https://chaat.site/sitemap.xml
+Sitemap: https://www.chaat.site/sitemap.xml
 
 # Block common AI/LLM crawlers
 User-agent: GPTBot

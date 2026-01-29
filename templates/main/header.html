@@ -1,5 +1,8 @@
 {% load static %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
 <header class="header header--style2" id="navbar">
     <!--<div class="header__top d-none d-lg-block">
         <div class="container">
@@ -74,6 +77,38 @@
                         </ul>
                     </div>
                     <ul class="button-group">
+                        <li class="dropdown header-language-dropdown">
+                            <button
+                                class="header-lang-toggle dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-label="{% trans 'Changer de langue' %}"
+                            >
+                                <i class="bi bi-translate"></i>
+                                <span class="lang-code">{{ LANGUAGE_CODE|upper }}</span>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                {% for language in languages %}
+                                    <li>
+                                        <form action="{% url 'set_language' %}" method="post" class="lang-item-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                            <button
+                                                type="submit"
+                                                name="language"
+                                                value="{{ language.code }}"
+                                                class="dropdown-item{% if language.code == LANGUAGE_CODE %} active{% endif %}"
+                                            >
+                                                {{ language.name_local }} ({{ language.code|upper }})
+                                            </button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
                         {% if request.user.is_authenticated %}
                             <li>
                                 <a href="{% url 'main:home' %}#home-webchat" class="default-btn header-cta">

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+import logging
 from rest_framework.request import Request
 from django.contrib.auth import login, authenticate
 from rest_framework.test import APIRequestFactory  # Creates API-like requests
@@ -34,6 +35,8 @@ from .utils import issue_email_verification_code, verify_email_code
 
 factory = APIRequestFactory()
 CustomUser = get_user_model()
+
+logger = logging.getLogger(__name__)
 
 # ✅ Register View (Calls `register` API Directly)
 def register_view(request):
@@ -315,9 +318,22 @@ def logout_view(request):
 # ✅ Render Forgot Password Page
 def forgot_password_view(request):
     if request.method == "POST":
-        email = request.POST.get("email")
+        email = (request.POST.get("email") or "").strip()
+        if not email:
+            messages.error(request, "Email requis.")
+            return redirect("forgot_password")
+        try:
+            EmailValidator()(email)
+        except ValidationError:
+            messages.error(request, "Email invalide.")
+            return redirect("forgot_password")
+
         user = CustomUser.objects.filter(email__iexact=email).first()
         if user:
+            if not bool(getattr(settings, "EMAIL_ENABLED", True)):
+                messages.error(request, "Email désactivé sur ce serveur. Contactez l'administrateur.")
+                return redirect("forgot_password")
+
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             reset_url = request.build_absolute_uri(
@@ -325,7 +341,18 @@ def forgot_password_view(request):
             )
             subject = "Password Reset Request"
             message = render_to_string("accounts/password_reset_email.html", {"reset_url": reset_url, "user": user})
-            send_mail(subject, message, None, [user.email])
+            try:
+                from_email = getattr(settings, "DEFAULT_FROM_EMAIL", None) or None
+                send_mail(subject, message, from_email, [user.email], fail_silently=False)
+            except Exception:
+                logger.exception(
+                    "forgot_password_send_failed user_id=%s email=%r",
+                    getattr(user, "pk", None),
+                    email,
+                )
+                messages.error(request, "Impossible d'envoyer l'email pour le moment. Réessayez plus tard.")
+                return redirect("forgot_password")
+
             messages.success(request, "A password reset link has been sent to your email.")
         else:
             messages.error(request, "No user found with that email.")

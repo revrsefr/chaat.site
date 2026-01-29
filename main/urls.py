@@ -1,11 +1,12 @@
 from django.urls import path
 from .views import home, save_cookie_consent, webirc, LegalView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 app_name = "main"  # ✅ Set namespace for the 'main' app
 
 urlpatterns = [
-    path("home/", home, name="home"),  # ✅ Named URL for 'home'
+    # Legacy URL kept for backward compatibility; canonical home is now '/'
+    path("home/", RedirectView.as_view(url="/", permanent=True), name="home"),
     path("webirc/", webirc, name="webirc"),
     path('sitemap.xsl', TemplateView.as_view(template_name="sitemap.xsl"), name='sitemap_xslt'),
     path('cookie-consent/', save_cookie_consent, name='cookie_consent'),

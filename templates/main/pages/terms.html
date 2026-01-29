@@ -57,17 +57,88 @@
   .info-note {
     color: rgba(255, 255, 255, 0.78);
   }
+
+  /* Don't use flex gap on Bootstrap .row (can cause wrapping). Use gutters instead. */
+  .terms-layout {
+    --bs-gutter-x: 1.25rem;
+    --bs-gutter-y: 1.25rem;
+  }
+
+  .terms-nav {
+    position: sticky;
+    top: 92px;
+  }
+
+  .terms-toc {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .terms-toc a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.86);
+    text-decoration: none;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .terms-toc a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.96);
+  }
+
+  .terms-section {
+    padding: 18px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    /* So #anchors don't end up hidden under the fixed header */
+    scroll-margin-top: 110px;
+  }
+
+  .terms-section:last-child {
+    border-bottom: 0;
+  }
+
+  .terms-section h2 {
+    font-size: 1.15rem;
+    margin: 0 0 10px 0;
+  }
+
+  .terms-section p,
+  .terms-section li {
+    color: rgba(255, 255, 255, 0.84);
+  }
+
+  .terms-meta {
+    color: rgba(255, 255, 255, 0.70);
+    font-size: 0.95rem;
+  }
+
+  .terms-callout {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.20);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: rgba(255, 255, 255, 0.84);
+  }
 </style>
 
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-lg-9">
+    <div class="col-lg-10">
       <div class="info-page">
         <div class="info-hero p-4 p-md-5 mb-4">
           <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
             <div>
               <p class="info-kicker mb-2">Conditions & utilisation</p>
               <h1 class="info-title h2 mb-0">{% trans "Conditions générales" %}</h1>
+              <p class="terms-meta mt-2 mb-0">
+                Dernière mise à jour : {% now "Y-m-d" %}
+              </p>
             </div>
             <div class="info-badge">
               <i class="fa-solid fa-file-contract"></i>
@@ -76,14 +147,245 @@
           </div>
         </div>
 
-        <div class="card info-card">
-          <div class="card-body">
-            <p class="info-note mb-3">{% trans "Contenu à compléter." %}</p>
-            <p class="mb-0">{% trans "En utilisant ce site, vous acceptez de respecter les règles de bonne conduite et la législation en vigueur." %}</p>
+        <div class="row terms-layout">
+          <!-- Left submenu (desktop) -->
+          <div class="col-lg-4">
+            <div class="card info-card terms-nav">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <strong>Sommaire</strong>
+                  <span class="info-badge" style="padding: 6px 10px; font-size: 0.85rem;">CGU</span>
+                </div>
+
+                <!-- Mobile compact menu -->
+                <details class="d-lg-none mt-3">
+                  <summary style="cursor:pointer; color: rgba(255,255,255,0.88);">Ouvrir le sommaire</summary>
+                  <ul class="terms-toc mt-3">
+                    <li><a href="#preambule">1. Préambule</a></li>
+                    <li><a href="#definitions">2. Définitions</a></li>
+                    <li><a href="#acces">3. Accès au service</a></li>
+                    <li><a href="#compte">4. Compte & pseudo</a></li>
+                    <li><a href="#conduite">5. Règles de conduite</a></li>
+                    <li><a href="#contenus">6. Contenus publiés</a></li>
+                    <li><a href="#moderation">7. Modération & sanctions</a></li>
+                    <li><a href="#securite">8. Sécurité & signalement</a></li>
+                    <li><a href="#donnees">9. Données & cookies</a></li>
+                    <li><a href="#ip">10. Propriété intellectuelle</a></li>
+                    <li><a href="#responsabilite">11. Responsabilité</a></li>
+                    <li><a href="#droit">12. Droit applicable & contact</a></li>
+                  </ul>
+                </details>
+
+                <!-- Desktop menu -->
+                <ul class="terms-toc d-none d-lg-block mt-3">
+                  <li class="mb-2"><a href="#preambule">1. Préambule</a></li>
+                  <li class="mb-2"><a href="#definitions">2. Définitions</a></li>
+                  <li class="mb-2"><a href="#acces">3. Accès au service</a></li>
+                  <li class="mb-2"><a href="#compte">4. Compte & pseudo</a></li>
+                  <li class="mb-2"><a href="#conduite">5. Règles de conduite</a></li>
+                  <li class="mb-2"><a href="#contenus">6. Contenus publiés</a></li>
+                  <li class="mb-2"><a href="#moderation">7. Modération & sanctions</a></li>
+                  <li class="mb-2"><a href="#securite">8. Sécurité & signalement</a></li>
+                  <li class="mb-2"><a href="#donnees">9. Données & cookies</a></li>
+                  <li class="mb-2"><a href="#ip">10. Propriété intellectuelle</a></li>
+                  <li class="mb-2"><a href="#responsabilite">11. Responsabilité</a></li>
+                  <li class="mb-0"><a href="#droit">12. Droit applicable & contact</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right content -->
+          <div class="col-lg-8">
+            <div class="card info-card" id="terms-content">
+              <div class="terms-section" id="preambule">
+                <h2>1. Préambule</h2>
+                <p>
+                  Bienvenue sur {{ site_brand.site_name }}. Cette page regroupe les règles d’utilisation du site et du tchat (les « CGU »).
+                  Elles s’appliquent dès que vous consultez le site, rejoignez un salon, publiez un message ou interagissez avec d’autres utilisateurs.
+                </p>
+                <p class="mb-0">
+                  Si vous n’êtes pas d’accord avec ces règles, n’utilisez pas le Service.
+                </p>
+              </div>
+
+              <div class="terms-section" id="definitions">
+                <h2>2. Définitions</h2>
+                <ul class="mb-0">
+                  <li><strong>Service</strong> : le site et ses fonctionnalités (salons, messages, profils éventuels, pages d’aide, etc.).</li>
+                  <li><strong>Utilisateur</strong> : toute personne qui visite le site ou utilise le tchat.</li>
+                  <li><strong>Compte</strong> : espace utilisateur (si l’inscription / connexion est proposée) permettant d’accéder à certaines fonctions.</li>
+                  <li><strong>Contenu</strong> : tout ce que vous publiez (message, pseudo, avatar, image, lien, description, etc.).</li>
+                  <li><strong>Signalement</strong> : action permettant d’alerter l’équipe sur un abus ou un risque.</li>
+                  <li><strong>Modération</strong> : moyens (humains et/ou techniques) visant à limiter les abus et à appliquer les règles.</li>
+                </ul>
+              </div>
+
+              <div class="terms-section" id="acces">
+                <h2>3. Accès au service</h2>
+                <p>
+                  L’accès au Service nécessite une connexion Internet et un appareil compatible. Vous restez responsable de votre matériel, de votre navigateur et de la sécurité de vos équipements.
+                  Le Service peut être ralenti, indisponible ou modifié (maintenance, incident, mise à jour, lutte anti-spam, etc.).
+                </p>
+                <p class="mb-0">
+                  <strong>Âge / capacité :</strong> vous confirmez avoir l’âge requis et la capacité légale pour utiliser ce type de service. Si certaines zones sont réservées à un public majeur,
+                  vous vous engagez à ne pas y accéder si ce n’est pas votre cas.
+                </p>
+              </div>
+
+              <div class="terms-section" id="compte">
+                <h2>4. Compte & pseudo</h2>
+                <p>
+                  Selon les pages, l’accès peut se faire avec ou sans compte. Si un Compte existe, vous devez protéger vos identifiants et éviter tout partage.
+                  Les actions effectuées depuis votre Compte sont réputées réalisées par vous.
+                </p>
+                <p class="mb-0">
+                  Votre pseudo (et éventuellement avatar/description) ne doit pas imiter une autre personne, une marque ou un service officiel.
+                  Il ne doit pas non plus contenir d’insultes, de propos haineux ou de contenu illégal.
+                </p>
+              </div>
+
+              <div class="terms-section" id="conduite">
+                <h2>5. Règles de conduite</h2>
+                <p>Le tchat est un espace public/communautaire : restez respectueux, prudent, et conforme à la loi.</p>
+                <ul class="mb-0">
+                  <li>Pas de harcèlement, menaces, humiliation, ni propos discriminatoires.</li>
+                  <li>Pas de contenus illégaux ou dangereux (ex. : exploitation de mineurs, incitation à la violence, diffusion d’images sans droit, etc.).</li>
+                  <li>Pas de diffusion des données personnelles d’un tiers (adresse, téléphone, réseaux sociaux, etc.) sans accord explicite.</li>
+                  <li>Pas de spam, flood, publicité agressive, liens malveillants, arnaques, phishing.</li>
+                  <li>Pas de scripts, bots ou tentatives de contournement (multi-comptes abusifs, surcharge, attaques, etc.).</li>
+                </ul>
+              </div>
+
+              <div class="terms-section" id="contenus">
+                <h2>6. Contenus publiés</h2>
+                <p>
+                  Vous êtes seul responsable de ce que vous publiez. Publiez uniquement des contenus que vous avez le droit de partager (droits d’auteur, droit à l’image,
+                  autorisation des personnes concernées, etc.).
+                </p>
+                <p class="mb-0">
+                  Pour faire fonctionner le Service (affichage dans les salons, stockage technique, modération, lutte anti-spam), vous autorisez {{ site_brand.site_name }}
+                  à héberger et afficher vos Contenus. Cette autorisation est limitée aux besoins du Service.
+                </p>
+              </div>
+
+              <div class="terms-section" id="moderation">
+                <h2>7. Modération & sanctions</h2>
+                <p>
+                  Pour protéger la communauté, une modération peut être mise en place (automatique et/ou manuelle). Nous pouvons retirer un contenu,
+                  masquer un message, bloquer un lien, limiter certaines actions ou restreindre l’accès au Service en cas d’abus ou de non-respect des CGU.
+                </p>
+                <p class="mb-0">
+                  Les mesures possibles incluent : avertissement, limitation (“slow mode”), mise en sourdine, suspension, bannissement, et le cas échéant conservation d’éléments
+                  techniques utiles (ex. logs) et transmission aux autorités sur demande légale.
+                </p>
+              </div>
+
+              <div class="terms-section" id="securite">
+                <h2>8. Sécurité & signalement</h2>
+                <p>
+                  En cas d’abus, utilisez les outils de signalement (si disponibles) ou contactez l’équipe. Ne partagez pas d’informations sensibles dans les salons publics.
+                  Si vous envisagez une rencontre, faites-le avec prudence (lieu public, informer un proche, etc.).
+                </p>
+                <p class="mb-0">
+                  En cas de danger immédiat, contactez les services d’urgence. {{ site_brand.site_name }} ne peut pas garantir l’identité réelle des utilisateurs.
+                </p>
+              </div>
+
+              <div class="terms-section" id="donnees">
+                <h2>9. Données personnelles & cookies</h2>
+                <p>
+                  Nous utilisons des données strictement nécessaires au fonctionnement (ex. sécurité, anti-spam, stabilité, préférences). Selon vos choix de consentement,
+                  des outils de mesure d’audience et/ou publicitaires peuvent être activés.
+                </p>
+                <p class="mb-0">
+                  Consultez : <a href="/privacy/">Politique de confidentialité</a>.
+                </p>
+              </div>
+
+              <div class="terms-section" id="ip">
+                <h2>10. Propriété intellectuelle</h2>
+                <p>
+                  Le site, son design, ses logos et ses éléments techniques sont protégés. Toute réutilisation non autorisée (copie, extraction, scraping massif,
+                  reproduction du design ou des contenus éditoriaux) est interdite.
+                </p>
+                <p class="mb-0">
+                  Les marques, contenus et médias appartenant à des tiers restent la propriété de leurs titulaires.
+                </p>
+              </div>
+
+              <div class="terms-section" id="responsabilite">
+                <h2>11. Responsabilité</h2>
+                <p>
+                  Nous faisons de notre mieux pour maintenir un service stable, mais aucune disponibilité 100% continue ne peut être garantie.
+                  Le Service peut évoluer, être limité, ou subir des interruptions.
+                </p>
+                <p class="mb-0">
+                  Les échanges et rencontres entre Utilisateurs se font sous votre responsabilité. Restez vigilant(e), notamment en cas de demandes d’argent ou de liens suspects.
+                </p>
+              </div>
+
+              <div class="terms-section" id="droit">
+                <h2>12. Droit applicable & contact</h2>
+                <p>
+                  Ces CGU peuvent être mises à jour. La version affichée sur cette page est celle applicable.
+                  Le droit applicable et les informations d’éditeur (et/ou d’hébergeur) sont indiqués dans les mentions légales lorsque disponibles.
+                </p>
+                <p class="mb-0">
+                  Une question ou un signalement : <a href="/contact/">Contact</a>.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block page_scripts %}
+<script nonce="{{ request.csp_nonce }}">
+  (function () {
+    var OFFSET = 110; // header + spacing
+
+    function scrollToId(id) {
+      if (!id) return false;
+      var el = document.getElementById(id);
+      if (!el) return false;
+      var top = el.getBoundingClientRect().top + window.pageYOffset - OFFSET;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      return true;
+    }
+
+    // Capture click early to avoid other scripts interfering with hash links.
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('.terms-toc a[href^="#"]') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      var id = href.slice(1);
+      if (!id) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Update URL hash (without jumping), then smooth scroll with offset.
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, '', '#' + id);
+      } else {
+        window.location.hash = id;
+      }
+
+      scrollToId(id);
+    }, true);
+
+    // If the page loads with a hash, adjust scroll for the fixed header.
+    window.addEventListener('load', function () {
+      var hash = (window.location.hash || '').replace('#', '');
+      if (!hash) return;
+      // Let the browser do its initial jump, then correct it.
+      window.setTimeout(function () { scrollToId(hash); }, 0);
+    });
+  })();
+</script>
 {% endblock %}

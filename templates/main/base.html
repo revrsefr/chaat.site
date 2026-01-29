@@ -1,7 +1,7 @@
 {% load static i18n %}
 {% get_current_language as CURRENT_LANGUAGE %}
 <!DOCTYPE html>
-<html lang="{{ CURRENT_LANGUAGE|default:'fr' }}">
+<html lang="{{ CURRENT_LANGUAGE|default:'fr' }}" data-cmp-enabled="{{ cmp_enabled|yesno:'1,0' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,12 +19,39 @@
     <link rel="apple-touch-icon" sizes="152x152" href="{% static 'images/apple-touch-icon-152x152-precomposed.png' %}">
     <meta property="og:title" content="Rejoignez dès maintenant votre tchat gratuit sans inscription et discuter avec des milliers d'utilisateurs du monde entier. bon tchatche sur votre site de discussion !">
     <meta property="og:description" content="Rejoignez notre chat gratuit pour discuter en direct avec de nouvelles personnes. Aucune inscription requise !">
-    <meta property="og:image" content="{% static 'images/banner/shape/home3/01.png' %}">
+    <meta property="og:image" content="{{ site_brand.base_url }}{% static 'images/banner/shape/home3/01.png' %}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ site_brand.site_name }}">
     <meta property="og:locale" content="fr_FR">
     <link rel="canonical" href="{{ canonical_url }}">
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "WebSite",
+                    "@id": "{{ site_brand.base_url }}/#website",
+                    "url": "{{ site_brand.base_url }}/",
+                    "name": "{{ site_brand.site_name|escapejs }}"
+                },
+                {
+                    "@type": "Organization",
+                    "@id": "{{ site_brand.base_url }}/#organization",
+                    "url": "{{ site_brand.base_url }}/",
+                    "name": "{{ site_brand.site_name|escapejs }}"
+                },
+                {
+                    "@type": "WebPage",
+                    "@id": "{{ canonical_url }}#webpage",
+                    "url": "{{ canonical_url }}",
+                    "name": "{{ site_brand.site_name|escapejs }}",
+                    "isPartOf": {"@id": "{{ site_brand.base_url }}/#website"}
+                }
+            ]
+        }
+    </script>
 
 
     <title>{% block title %}{{ site_brand.default_title }}{% endblock %}</title>
@@ -70,11 +97,21 @@
 
     <link rel="preload" as="style" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}">
     <link rel="stylesheet" href="{% static 'css/font-display-overrides.css' %}?v={{ static_version }}">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
+    {% if not cmp_enabled %}
     <!-- Cookie consent UI styles (professional, informative, accessible) -->
     <link rel="preload" as="style" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}">
     <link rel="stylesheet" href="{% static 'css/cookie-consent.css' %}?v={{ static_version }}">
+    {% endif %}
+
+    {% if cmp_enabled and google_fc_publisher_id %}
+    <!-- IAB TCF CMP (Google Funding Choices) -->
+    <script async src="https://fundingchoicesmessages.google.com/i/{{ google_fc_publisher_id }}?ers=1"></script>
+    {% endif %}
 
     <!-- Google Consent Mode v2 (for GTM) -->
     <script nonce="{{ request.csp_nonce }}" data-cookieconsent="ignore">
@@ -99,22 +136,12 @@
         gtag('set', 'ads_data_redaction', true);
         gtag('set', 'url_passthrough', false);
 
-        // Load GTM only if the user consented (prevents console/network errors when denied).
+        // Load GTM only after consent.
         (function () {
             var loaded = false;
 
-            function getCookie(name) {
-                var match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
-                return match ? decodeURIComponent(match[1]) : '';
-            }
-
-            window.__loadGTMIfConsented = function () {
+            function loadGTMOnce() {
                 if (loaded) return;
-                // Require explicit consent on at least one tracking category.
-                var analytics = getCookie('cookie_analytics') === 'yes';
-                var advertising = getCookie('cookie_advertising') === 'yes';
-                if (!analytics && !advertising) return;
-
                 loaded = true;
                 window.dataLayer = window.dataLayer || [];
                 window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
@@ -125,10 +152,67 @@
                 script.nonce = "{{ request.csp_nonce }}";
                 var first = document.getElementsByTagName('script')[0];
                 first.parentNode.insertBefore(script, first);
-            };
+            }
 
-            // Attempt immediately for returning users (cookie already set).
-            window.__loadGTMIfConsented();
+            function updateFromTCF(tcData) {
+                // Conservative mapping from TCF purposes to Google Consent Mode.
+                // Purpose 1 (Store and/or access information on a device) gates any storage.
+                var canStore = !!(tcData && tcData.purpose && tcData.purpose.consents && tcData.purpose.consents[1]);
+
+                var p = (tcData && tcData.purpose && tcData.purpose.consents) ? tcData.purpose.consents : {};
+                var analytics = canStore && (!!p[8] || !!p[9] || !!p[10]);
+                var advertising = canStore && (!!p[2] || !!p[3] || !!p[4] || !!p[7]);
+
+                if (typeof window.gtag === 'function') {
+                    window.gtag('consent', 'update', {
+                        analytics_storage: analytics ? 'granted' : 'denied',
+                        ad_storage: advertising ? 'granted' : 'denied',
+                        ad_user_data: advertising ? 'granted' : 'denied',
+                        ad_personalization: (canStore && (!!p[3] || !!p[4])) ? 'granted' : 'denied',
+                        functionality_storage: canStore ? 'granted' : 'denied',
+                        personalization_storage: (canStore && (!!p[5] || !!p[6])) ? 'granted' : 'denied',
+                        security_storage: 'granted'
+                    });
+                }
+
+                if (analytics || advertising) {
+                    loadGTMOnce();
+                }
+            }
+
+            // Keep the <script> free of Django template syntax for editor/linters.
+            var cmpEnabled = document.documentElement.getAttribute('data-cmp-enabled') === '1';
+
+            if (cmpEnabled) {
+                // TCF CMP mode: react to consent changes via __tcfapi.
+                if (typeof window.__tcfapi === 'function') {
+                    window.__tcfapi('addEventListener', 2, function (tcData, success) {
+                        if (!success) return;
+                        if (!tcData) return;
+                        // Only act when the CMP has a usable signal.
+                        if (tcData.eventStatus === 'tcloaded' || tcData.eventStatus === 'useractioncomplete') {
+                            updateFromTCF(tcData);
+                        }
+                    });
+                }
+            } else {
+                // Custom banner mode: load GTM only if the user consented via first-party cookies.
+                function getCookie(name) {
+                    var match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
+                    return match ? decodeURIComponent(match[1]) : '';
+                }
+
+                window.__loadGTMIfConsented = function () {
+                    // Require explicit consent on at least one tracking category.
+                    var analytics = getCookie('cookie_analytics') === 'yes';
+                    var advertising = getCookie('cookie_advertising') === 'yes';
+                    if (!analytics && !advertising) return;
+                    loadGTMOnce();
+                };
+
+                // Attempt immediately for returning users (cookie already set).
+                window.__loadGTMIfConsented();
+            }
         })();
     </script>
 
@@ -143,11 +227,14 @@
 
     <div style="display:none">{% csrf_token %}</div>
 
-    <!-- Google Tag Manager (noscript) -->
-
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J4F54MR"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    {% if not cmp_enabled %}
+        {% if request.COOKIES.cookie_analytics == 'yes' or request.COOKIES.cookie_advertising == 'yes' %}
+        <!-- Google Tag Manager (noscript) - only for users who already consented -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J4F54MR"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        {% endif %}
+    {% endif %}
     {% include 'main/header.html' %}
 
     
@@ -159,6 +246,7 @@
 
     {% include 'main/footer.html' %}
 
+    {% if not cmp_enabled %}
     <!-- Cookie Banner -->
     <div id="cookie-banner" role="dialog" aria-modal="true" aria-label="Consentement cookies">
         <div class="cookie-header-row">
@@ -324,6 +412,7 @@
             <a href="#" id="cookie-manage-modal" rel="nofollow">Modifier plus tard</a>
         </div>
     </div>
+    {% endif %}
 
     {% block scripts %}
     
@@ -342,9 +431,11 @@
     {# Page-specific scripts that can load after main.js #}
     {% block page_scripts %}{% endblock %}
 
+    {% if not cmp_enabled %}
     <!-- Cookie consent logic -->
     <script nonce="{{ request.csp_nonce }}" defer src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
     <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/cookie-consent.js' %}?v={{ static_version }}&cb=20260116"></script>
+    {% endif %}
     
     <script nonce="{{ request.csp_nonce }}">
         (function() {

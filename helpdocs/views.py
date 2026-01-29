@@ -6,7 +6,7 @@ def help_index(request):
 
 
 def ircd(request):
-    return render(request, 'help/ircd.html', {'title': 'IRCD Admin', 'subtitle': 'Server operator commands'})
+    return render(request, 'help/ircd.html', {'title': 'IRCD Information', 'subtitle': 'Ircd Details'})
 
 
 def nickserv(request):
