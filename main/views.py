@@ -2,6 +2,7 @@ from django.shortcuts import render
 from accounts.models import CustomUser
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.contrib.sites.requests import RequestSite
 from irc.rpc_client import AnopeRPC
 from blog.models import BlogPost
 from django.http import JsonResponse  
@@ -63,7 +64,10 @@ def sitemap_xslt(request):
 
 
 def robots_txt(request):
-    content = render_to_string('robots.txt')
+    site = RequestSite(request)
+    content = render_to_string('robots.txt', {
+        "site_domain": site.domain,
+    })
     return HttpResponse(content, content_type='text/plain')
 
 
