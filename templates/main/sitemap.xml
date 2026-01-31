@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="{% url 'sitemap_xslt' %}"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-    <url>
-        <loc>https://chaat.site/main/home/</loc>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-    </url>
-    <url>
-        <loc>https://chaat.site/accounts/profile/reverse/</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
+    {% for url in urlset %}
+        <url>
+            <loc>{{ url.location }}</loc>
+            {% if url.lastmod %}<lastmod>{{ url.lastmod|date:"c" }}</lastmod>{% endif %}
+            {% if url.changefreq %}<changefreq>{{ url.changefreq }}</changefreq>{% endif %}
+            {% if url.priority %}<priority>{{ url.priority }}</priority>{% endif %}
+            {% for alt in url.alternates %}
+                <xhtml:link rel="alternate" hreflang="{{ alt.lang }}" href="{{ alt.location }}" />
+            {% endfor %}
+        </url>
+    {% endfor %}
 </urlset>
