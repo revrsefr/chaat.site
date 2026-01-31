@@ -61,6 +61,11 @@
 										<li><span><i class="fa-solid fa-user"></i> <a href="#">{{ post.author }}</a></span></li>
 										<li><span><i class="fa-solid fa-comments"></i> <a href="#"> {{ comments.count }} Comments</a></span></li>
 									</ul>
+									{% if post.source_url %}
+										<div class="mb-3">
+											<a href="{{ post.source_url }}" target="_blank" rel="nofollow noopener">Source</a>
+										</div>
+									{% endif %}
 									<div class="blog__post-body">
 										{{ post.content|sanitize_html }}
 									</div>

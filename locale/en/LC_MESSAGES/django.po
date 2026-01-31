@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 15:44+0000\n"
+"POT-Creation-Date: 2026-01-31 12:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,10 +124,12 @@ msgid "Sexe"
 msgstr ""
 
 #: templates/accounts/login.html:51 templates/accounts/profile.html:150
+#: templates/main/home.html:237
 msgid "Homme"
 msgstr ""
 
 #: templates/accounts/login.html:52 templates/accounts/profile.html:149
+#: templates/main/home.html:238
 msgid "Femme"
 msgstr ""
 
@@ -167,7 +169,7 @@ msgstr ""
 msgid "Gérez vos informations, votre sécurité et votre token IRC."
 msgstr ""
 
-#: templates/accounts/profile.html:51
+#: templates/accounts/profile.html:51 templates/main/home.html:326
 msgid "Token IRC"
 msgstr ""
 
@@ -289,7 +291,7 @@ msgstr ""
 msgid "Vous n'avez pas la permission d'accéder à ce profil."
 msgstr ""
 
-#: templates/accounts/profile.html:240
+#: templates/accounts/profile.html:240 templates/main/home.html:340
 msgid "Se connecter"
 msgstr ""
 
@@ -349,6 +351,201 @@ msgstr ""
 #: templates/admin/login.html:73
 msgid "Log in"
 msgstr ""
+
+#: templates/irc/dashboard.html:5
+msgid "Network: irc telemetry"
+msgstr "Network: IRC telemetry"
+
+#: templates/irc/dashboard.html:16
+msgid "Chaat.site Network"
+msgstr "Chaat.site Network"
+
+#: templates/irc/dashboard.html:17
+msgid "Live Network Telemetry"
+msgstr "Live Network Telemetry"
+
+#: templates/irc/dashboard.html:18
+msgid ""
+"Track channel heat, operator presence, and server health directly from "
+"services stream."
+msgstr "Track channel heat, operator presence, and server health directly from the services stream."
+
+#: templates/irc/dashboard.html:20
+msgid "Launch KiwiIRC"
+msgstr "Launch KiwiIRC"
+
+#: templates/irc/dashboard.html:20
+msgid "Open Webchat"
+msgstr "Open Webchat"
+
+#: templates/irc/dashboard.html:21
+msgid "Sync Now"
+msgstr "Sync Now"
+
+#: templates/irc/dashboard.html:25
+msgid "Last sync"
+msgstr "Last sync"
+
+#: templates/irc/dashboard.html:27
+msgid "Waiting for telemetry…"
+msgstr "Waiting for telemetry…"
+
+#: templates/irc/dashboard.html:33 templates/irc/dashboard.html:71
+#: templates/irc/dashboard.html:99 templates/irc/dashboard.html:182
+msgid "Users"
+msgstr "Users"
+
+#: templates/irc/dashboard.html:37 templates/irc/dashboard.html:72
+msgid "Channels"
+msgstr "Channels"
+
+#: templates/irc/dashboard.html:41 templates/irc/dashboard.html:73
+#: templates/irc/dashboard.html:162
+msgid "Servers"
+msgstr "Servers"
+
+#: templates/irc/dashboard.html:45 templates/irc/dashboard.html:74
+#: templates/irc/dashboard.html:172
+msgid "Operators"
+msgstr "Operators"
+
+#: templates/irc/dashboard.html:53
+msgid "Network history"
+msgstr "Network history"
+
+#: templates/irc/dashboard.html:54
+msgid "Current vs peak (from snapshots) + last 72h trend."
+msgstr "Current vs peak (from snapshots) + last 72h trend."
+
+#: templates/irc/dashboard.html:61
+msgid "Metric"
+msgstr "Metric"
+
+#: templates/irc/dashboard.html:62
+msgid "Current"
+msgstr "Current"
+
+#: templates/irc/dashboard.html:63
+msgid "Max"
+msgstr "Max"
+
+#: templates/irc/dashboard.html:67
+msgid "Snapshots pending…"
+msgstr "Snapshots pending…"
+
+#: templates/irc/dashboard.html:86
+msgid "Active channels"
+msgstr "Active channels"
+
+#: templates/irc/dashboard.html:87
+msgid ""
+"Top rooms ranked by population. Click the refresh control to pull fresh RPC "
+"stats on demand."
+msgstr "Top rooms ranked by population. Click the refresh control to pull fresh RPC stats on demand."
+
+#: templates/irc/dashboard.html:90
+msgid "Filter #channel or topic"
+msgstr "Filter #channel or topic"
+
+#: templates/irc/dashboard.html:91
+msgid "tracked"
+msgstr "tracked"
+
+#: templates/irc/dashboard.html:96 templates/irc/dashboard.html:136
+msgid "Channel"
+msgstr "Channel"
+
+#: templates/irc/dashboard.html:97
+msgid "Modes"
+msgstr "Modes"
+
+#: templates/irc/dashboard.html:98
+msgid "Topic"
+msgstr "Topic"
+
+#: templates/irc/dashboard.html:108
+msgid "Chanstats+"
+msgstr "Chanstats+"
+
+#: templates/irc/dashboard.html:109
+msgid "Top channels + talkers from"
+msgstr "Top channels + talkers from"
+
+#: templates/irc/dashboard.html:109
+msgid "(proxied via signed API)."
+msgstr "(proxied via signed API)."
+
+#: templates/irc/dashboard.html:115
+msgid "Top channels"
+msgstr "Top channels"
+
+#: templates/irc/dashboard.html:116 templates/irc/dashboard.html:152
+msgid "Full counters (ranked by lines)."
+msgstr "Full counters (ranked by lines)."
+
+#: templates/irc/dashboard.html:122
+msgid "Top nicks (channel)"
+msgstr "Top nicks (channel)"
+
+#: templates/irc/dashboard.html:123
+msgid "Choose a period and (optionally) a channel."
+msgstr "Choose a period and (optionally) a channel."
+
+#: templates/irc/dashboard.html:127
+msgid "Period"
+msgstr "Period"
+
+#: templates/irc/dashboard.html:129
+msgid "Daily"
+msgstr "Daily"
+
+#: templates/irc/dashboard.html:130
+msgid "Weekly"
+msgstr "Weekly"
+
+#: templates/irc/dashboard.html:131
+msgid "Monthly"
+msgstr "Monthly"
+
+#: templates/irc/dashboard.html:132
+msgid "Total"
+msgstr "Total"
+
+#: templates/irc/dashboard.html:141
+msgid "#dev (optional)"
+msgstr "#dev (optional)"
+
+#: templates/irc/dashboard.html:151
+msgid "Top nicks (global)"
+msgstr "Top nicks (global)"
+
+#: templates/irc/dashboard.html:163
+msgid "Connected uplinks and services status."
+msgstr "Connected uplinks and services status."
+
+#: templates/irc/dashboard.html:173
+msgid "Currently authenticated operators and their classes."
+msgstr "Currently authenticated operators and their classes."
+
+#: templates/irc/dashboard.html:183
+msgid "Click a nickname to fetch live details."
+msgstr "Click a nickname to fetch live details."
+
+#: templates/irc/dashboard.html:188
+msgid "Active users"
+msgstr "Active users"
+
+#: templates/irc/dashboard.html:195
+msgid "Select a user"
+msgstr "Select a user"
+
+#: templates/irc/dashboard.html:196
+msgid "Click a nickname to load live details."
+msgstr "Click a nickname to load live details."
+
+#: templates/irc/dashboard.html:202
+msgid "Awaiting user list…"
+msgstr "Awaiting user list…"
 
 #: templates/main/footer.html:13 templates/main/footer.html:24
 #: templates/main/pages/about.html:4 templates/main/pages/about.html:83
@@ -425,7 +622,7 @@ msgstr ""
 msgid "All Group"
 msgstr ""
 
-#: templates/main/header.html:64
+#: templates/main/header.html:64 templates/main/home.html:396
 msgid "Membres"
 msgstr ""
 
@@ -458,18 +655,238 @@ msgstr ""
 msgid "Déconnexion"
 msgstr ""
 
+#: templates/main/home.html:4
+msgid "Accueil"
+msgstr "Home"
+
+#: templates/main/home.html:94
+msgid "Logo chaat.site"
+msgstr "chaat.site logo"
+
+#: templates/main/home.html:99
+msgid "Le tchat IRC"
+msgstr "IRC chat"
+
+#: templates/main/home.html:99
+msgid "pour"
+msgstr "to"
+
+#: templates/main/home.html:99
+msgid "connecter tout le monde."
+msgstr "connect everyone."
+
 #: templates/main/home.html:100
 msgid ""
 "Discute gratuitement, en temps réel, avec des personnes près de chez toi — "
 "ou à l’autre bout du monde."
 msgstr ""
 
+#: templates/main/home.html:101
+msgid "Rejoindre le tchat en un clic"
+msgstr "Join the chat in one click"
+
+#: templates/main/home.html:115
+msgid "Illustration du tchat"
+msgstr "Chat illustration"
+
+#: templates/main/home.html:123
+msgid "Décoration"
+msgstr "Decoration"
+
 #: templates/main/home.html:127
 msgid "#!Accueil #!Musique #!Jeux"
+msgstr "#!Home #!Music #!Games"
+
+#: templates/main/home.html:158
+msgid ""
+"Un tchat IRC moderne pour discuter librement avec une communauté "
+"bienveillante, à tout âge."
+msgstr ""
+
+#: templates/main/home.html:163
+msgid "Nouveaux membres"
+msgstr ""
+
+#: templates/main/home.html:193
+msgid "Membre"
+msgstr "Member"
+
+#: templates/main/home.html:207
+msgid "Entre sur le tchat maintenant"
+msgstr ""
+
+#: templates/main/home.html:208
+msgid ""
+"Choisis un pseudo et discute tout de suite — sans inscription, sans appli, "
+"sans prise de tête."
+msgstr ""
+
+#: templates/main/home.html:214
+msgid "Pseudo"
+msgstr ""
+
+#: templates/main/home.html:222
+msgid "Entrer un pseudo"
+msgstr ""
+
+#: templates/main/home.html:225
+msgid "Saisis un pseudo (3 caractères minimum)."
+msgstr ""
+
+#: templates/main/home.html:230
+msgid "3 caractères minimum."
+msgstr ""
+
+#: templates/main/home.html:233
+msgid "Genre"
+msgstr ""
+
+#: templates/main/home.html:243
+msgid "Âge (optionnel)"
+msgstr ""
+
+#: templates/main/home.html:259
+msgid "Entre 18 et 99 ans."
+msgstr ""
+
+#: templates/main/home.html:262
+msgid "Ville (optionnel)"
+msgstr ""
+
+#: templates/main/home.html:270
+msgid "Tape ta ville (ex. : Paris)"
+msgstr "Type your city (e.g.: Paris)"
+
+#: templates/main/home.html:278
+msgid "Tape au moins 2 lettres pour voir des suggestions."
+msgstr ""
+
+#: templates/main/home.html:281
+msgid "Salon IRC"
+msgstr ""
+
+#: templates/main/home.html:289 templates/main/home.html:290
+msgid "#!Accueil"
+msgstr "#!Home"
+
+#: templates/main/home.html:294
+msgid "Tu peux choisir un autre salon (ex. : #Tech, #Musique, #Gaming)."
+msgstr ""
+
+#: templates/main/home.html:301
+msgid "Option mot de passe"
+msgstr ""
+
+#: templates/main/home.html:304
+msgid "Connexion sécurisée (token IRC)"
+msgstr ""
+
+#: templates/main/home.html:305
+msgid ""
+"Active cette option pour générer un token IRC. Tu pourras le copier-coller "
+"dans le champ « mot de passe » du webchat."
+msgstr ""
+"Enable this option to generate an IRC token. You can paste it into the "
+"webchat \"password\" field."
+
+#: templates/main/home.html:322
+msgid "Ton token IRC (à copier)"
+msgstr ""
+
+#: templates/main/home.html:323
+msgid "Régénérer"
+msgstr ""
+
+#: templates/main/home.html:327
+msgid "Afficher/masquer le token"
+msgstr ""
+
+#: templates/main/home.html:327
+msgid "Afficher"
+msgstr ""
+
+#: templates/main/home.html:328
+msgid "Copier"
+msgstr ""
+
+#: templates/main/home.html:330
+msgid ""
+"Valable quelques instants et utilisable une seule fois. Colle-le dans le "
+"champ « mot de passe » du webchat une fois ouvert."
+msgstr ""
+
+#: templates/main/home.html:337
+msgid "Mot de passe (membres)"
+msgstr ""
+
+#: templates/main/home.html:338
+msgid "Disponible lorsque tu es connecté."
+msgstr ""
+
+#: templates/main/home.html:348
+msgid "Ouvrir le webchat"
+msgstr ""
+
+#: templates/main/home.html:364
+msgid "Tout commence dans un salon…"
+msgstr ""
+
+#: templates/main/home.html:365
+msgid ""
+"Un message, un sujet, une discussion. Ici, on vient pour échanger, "
+"apprendre, rire et créer du lien — entre jeunes, moins jeunes, et tout le "
+"monde entre les deux."
+msgstr ""
+
+#: templates/main/home.html:375
+msgid "Icône serveur"
+msgstr "Server icon"
+
+#: templates/main/home.html:380
+msgid "Serveurs IRC"
+msgstr ""
+
+#: templates/main/home.html:391
+msgid "Icône utilisateurs"
+msgstr "Users icon"
+
+#: templates/main/home.html:407
+msgid "Icône opérateurs"
+msgstr "Operators icon"
+
+#: templates/main/home.html:412
+msgid "Opérateurs IRC"
+msgstr ""
+
+#: templates/main/home.html:423
+msgid "Icône salons"
+msgstr "Channels icon"
+
+#: templates/main/home.html:428
+msgid "Salons"
 msgstr ""
 
 #: templates/main/home.html:443
 msgid "La communauté"
+msgstr ""
+
+#: templates/main/home.html:444
+msgid ""
+"Des profils, des centres d’intérêt et des salons pour discuter. Ici, on "
+"privilégie les échanges simples, humains et respectueux."
+msgstr ""
+
+#: templates/main/home.html:470
+msgid "Dernière activité"
+msgstr ""
+
+#: templates/main/home.html:470
+#, python-format
+msgid "il y a %(m.last_login|timesince)s"
+msgstr ""
+
+#: templates/main/home.html:472
+msgid "Nouveau membre"
 msgstr ""
 
 #: templates/main/home.html:479
@@ -485,16 +902,43 @@ msgstr ""
 msgid "Pourquoi choisir %(site_name)s ?"
 msgstr ""
 
-#: templates/main/home.html:518
+#: templates/main/home.html:505 templates/main/home.html:506
+#: templates/main/home.html:507 templates/main/home.html:508
+#: templates/main/home.html:515 templates/main/home.html:530
+#: templates/main/home.html:544 templates/main/home.html:557
+#: templates/main/home.html:646 templates/main/home.html:660
+#: templates/main/home.html:674 templates/main/home.html:688
+msgid "Illustration"
+msgstr "Illustration"
+
+#: templates/main/home.html:505 templates/main/home.html:518
 msgid "Choisis ton pseudo"
 msgstr ""
 
-#: templates/main/home.html:534
+#: templates/main/home.html:506 templates/main/home.html:534
 msgid "Des gens, pas des bots"
 msgstr ""
 
-#: templates/main/home.html:547
+#: templates/main/home.html:507 templates/main/home.html:547
 msgid "Trouve ton salon"
+msgstr ""
+
+#: templates/main/home.html:508 templates/main/home.html:560
+msgid "Crée des liens"
+msgstr ""
+
+#: templates/main/home.html:519
+#, python-format
+msgid ""
+"Avec %(site_name)s, tu entres dans le tchat en quelques secondes : un "
+"pseudo, un salon, et c’est parti. Simple, rapide, efficace."
+msgstr ""
+
+#: templates/main/home.html:535
+#, python-format
+msgid ""
+"Sur %(site_name)s, on favorise les vraies discussions : moins de bruit, plus "
+"d’échanges. Anti-spam et modération pour garder une ambiance saine."
 msgstr ""
 
 #: templates/main/home.html:548
@@ -503,12 +947,18 @@ msgid ""
 "ou crée le tien en 10 secondes."
 msgstr ""
 
-#: templates/main/home.html:560
-msgid "Crée des liens"
+#: templates/main/home.html:561
+msgid ""
+"Des discussions simples, des gens de tous âges, des sujets qui rassemblent. "
+"Viens pour parler, reste pour la vibe."
 msgstr ""
 
 #: templates/main/home.html:577
 msgid "Le blog"
+msgstr ""
+
+#: templates/main/home.html:578
+msgid "Actus, coulisses, guides et idées de salons — pour mieux discuter."
 msgstr ""
 
 #: templates/main/home.html:629

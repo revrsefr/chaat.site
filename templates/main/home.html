@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}Accueil - {{ site_brand.title_suffix }}{% endblock %}
+{% block title %}{% trans "Accueil" %} - {{ site_brand.title_suffix }}{% endblock %}
 {% block head %}
     <link rel="preload" as="style" href="{% static 'css/home-webchat-form.css' %}?v=16">
     <link rel="stylesheet" href="{% static 'css/home-webchat-form.css' %}?v=16">
@@ -54,6 +54,107 @@
             color: inherit;
             line-height: 1;
         }
+
+        .story__slider {
+            padding: 8px 6px 24px;
+        }
+        .story__slider .swiper-slide {
+            height: auto;
+        }
+        .story__slider .story__item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(8, 12, 30, 0.22);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            overflow: hidden;
+            height: 100%;
+        }
+        .story__slider .story__inner {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .story__slider .story__item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 22px 46px rgba(8, 12, 30, 0.3);
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+        .story__slider .story__thumb img {
+            border-radius: 16px;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+        }
+        .story__slider .story__content {
+            padding: 20px 18px 22px;
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+        }
+        .story__content--author {
+            margin-top: auto;
+            min-height: 56px;
+        }
+        .story__cta {
+            margin-top: 12px;
+        }
+        .story__cta {
+            margin-top: 16px;
+        }
+        .story__btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #ffb347, #ff6f00);
+            color: #111;
+            font-weight: 700;
+            box-shadow: 0 12px 24px rgba(255, 111, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .story__btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 28px rgba(255, 111, 0, 0.4);
+            color: #111;
+        }
+        .story__nav {
+            display: inline-flex;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(15, 18, 35, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .story__prev,
+        .story__next {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .story__prev:hover,
+        .story__next:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+        .story__slider .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.4);
+            opacity: 1;
+        }
+        .story__slider .swiper-pagination-bullet-active {
+            background: #ff9b3f;
+        }
     </style>
 
     <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/home-webchat-cities.js' %}?v=2"></script>
@@ -91,14 +192,14 @@
                                     src="{% static 'images/logo/mark-2026-v4.svg' %}"
                                     width="56"
                                     height="56"
-                                    alt="Logo chaat.site"
+                                    alt="{% trans "Logo chaat.site" %}"
                                     decoding="async"
                                 >
                                 <span class="banner__brand-name">chaat.site</span>
                             </div>
-                            <h2>Le tchat IRC<span> pour </span> connecter tout le monde.</h2>
+                            <h2>{% trans "Le tchat IRC" %}<span>{% trans "pour" %}</span> {% trans "connecter tout le monde." %}</h2>
                             <p>{% trans "Discute gratuitement, en temps réel, avec des personnes près de chez toi — ou à l’autre bout du monde." %}</p>
-                            <a href="#" class="default-btn style-2"><span>Rejoindre le tchat en un clic</span></a>
+                            <a href="#" class="default-btn style-2"><span>{% trans "Rejoindre le tchat en un clic" %}</span></a>
                         </div>
                     </div>
                 </div>
@@ -112,7 +213,7 @@
                             >
                             <img
                                 src="{% static 'images/banner/03.png' %}"
-                                alt="Illustration du tchat"
+                                alt="{% trans "Illustration du tchat" %}"
                                 width="558"
                                 height="576"
                                 decoding="async"
@@ -120,7 +221,7 @@
                         </picture>
                         <div class="banner__thumb--shape">
                             <div class="shapeimg">
-                                <img src="{% static 'images/banner/shape/home3/01.png' %}" width="247" height="178" alt="Décoration" loading="lazy" decoding="async">
+                                <img src="{% static 'images/banner/shape/home3/01.png' %}" width="247" height="178" alt="{% trans "Décoration" %}" loading="lazy" decoding="async">
                             </div>
                         </div>
                         <div class="banner__thumb--title">
@@ -143,6 +244,28 @@
                     if (!bg) return;
                     el.style.backgroundImage = `url('${bg}')`;
                 });
+
+                const storySlider = document.querySelector('.story__slider');
+                if (storySlider && window.Swiper) {
+                    new Swiper(storySlider, {
+                        slidesPerView: 1,
+                        spaceBetween: 24,
+                        loop: false,
+                        pagination: {
+                            el: storySlider.querySelector('.swiper-pagination'),
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: storySlider.querySelector('.story__next'),
+                            prevEl: storySlider.querySelector('.story__prev'),
+                        },
+                        breakpoints: {
+                            576: { slidesPerView: 2 },
+                            992: { slidesPerView: 3 },
+                            1200: { slidesPerView: 4 },
+                        },
+                    });
+                }
             });
         </script>
     {% endblock %}
@@ -155,12 +278,12 @@
 							<div class="about__top">
                                 <div class="about__content">
                                     <h3>{{ site_brand.site_name }}</h3>
-                                <p>Un tchat IRC moderne pour discuter librement avec une communauté bienveillante, à tout âge.</p>
+                                <p>{% trans "Un tchat IRC moderne pour discuter librement avec une communauté bienveillante, à tout âge." %}</p>
 								</div>
 							</div>
 							<div class="about__bottom">
 								<div class="about__bottom--head">
-                                    <p class="h5 m-0 fw-semibold">Nouveaux membres</p>
+                                    <p class="h5 m-0 fw-semibold">{% trans "Nouveaux membres" %}</p>
 									<div class="about__bottom--navi">
 										<div class="ragi-prev"><i class="fa-solid fa-chevron-left"></i></div>
 										<div class="ragi-next active"><i class="fa-solid fa-chevron-right"></i></div>
@@ -190,7 +313,7 @@
                                             {% empty %}
                                                 <div class="swiper-slide">
                                                     <div class="ragi__thumb">
-                                                        <img src="{% static 'images/ragi/01.jpg' %}" width="100" height="100" alt="Membre" loading="lazy" decoding="async">
+                                                        <img src="{% static 'images/ragi/01.jpg' %}" width="100" height="100" alt="{% trans "Membre" %}" loading="lazy" decoding="async">
                                                     </div>
                                                 </div>
                                             {% endfor %}
@@ -204,14 +327,14 @@
 						<div class="about__right">
                             <div class="home-webchat-card" id="home-webchat">
                                 <div class="home-webchat-title">
-                                    <h3>Entre sur le tchat maintenant</h3>
-                                    <p>Choisis un pseudo et discute tout de suite — sans inscription, sans appli, sans prise de tête.</p>
+                                    <h3>{% trans "Entre sur le tchat maintenant" %}</h3>
+                                    <p>{% trans "Choisis un pseudo et discute tout de suite — sans inscription, sans appli, sans prise de tête." %}</p>
                                 </div>
                                 <form action="{% url 'webchat' %}" method="GET" class="home-webchat-form" target="_blank" id="form-desktop">
                                     {% if user.is_authenticated %}{% csrf_token %}{% endif %}
                                     <div class="row g-3">
                                         <div class="col-lg-6 col-12">
-										<label class="form-label" for="webchat-nick">Pseudo</label>
+										<label class="form-label" for="webchat-nick">{% trans "Pseudo" %}</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-person"></i>
                                                 <input
@@ -219,28 +342,28 @@
                                                     id="webchat-nick"
                                                     name="nick"
                                                     class="home-webchat-input"
-                                                    placeholder="{% if user.is_authenticated %}{{ user.username }}{% else %}Entrer un pseudo{% endif %}"
+                                                    placeholder="{% if user.is_authenticated %}{{ user.username }}{% else %}{% trans "Entrer un pseudo" %}{% endif %}"
                                                     {% if user.is_authenticated %}value="{{ user.username }}"{% endif %}
                                                     pattern=".{3,}"
-                                                    title="Saisis un pseudo (3 caractères minimum)."
+                                                    title="{% trans "Saisis un pseudo (3 caractères minimum)." %}"
                                                     required
                                                     autocomplete="username"
                                                 >
                                             </div>
-                                            <div class="home-webchat-hint">3 caractères minimum.</div>
+                                            <div class="home-webchat-hint">{% trans "3 caractères minimum." %}</div>
                                         </div>
                                         <div class="col-lg-6 col-12">
-										<label class="form-label" for="webchat-sexe">Genre</label>
+										<label class="form-label" for="webchat-sexe">{% trans "Genre" %}</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-gender-ambiguous"></i>
                                                 <select id="webchat-sexe" name="sexe" class="home-webchat-select">
-											<option value="homme">Homme</option>
-											<option value="femme" selected>Femme</option>
+											<option value="homme">{% trans "Homme" %}</option>
+											<option value="femme" selected>{% trans "Femme" %}</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-12">
-										<label class="form-label" for="webchat-age">Âge (optionnel)</label>
+										<label class="form-label" for="webchat-age">{% trans "Âge (optionnel)" %}</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-calendar2-week"></i>
                                                 <input
@@ -256,10 +379,10 @@
                                                     autocomplete="off"
                                                 >
                                             </div>
-										<div class="home-webchat-hint">Entre 18 et 99 ans.</div>
+										<div class="home-webchat-hint">{% trans "Entre 18 et 99 ans." %}</div>
                                         </div>
                                         <div class="col-lg-6 col-12">
-										<label class="form-label" for="webchat-ville">Ville (optionnel)</label>
+										<label class="form-label" for="webchat-ville">{% trans "Ville (optionnel)" %}</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-geo-alt"></i>
                                                 <input
@@ -267,7 +390,7 @@
                                                     id="webchat-ville"
                                                     name="ville"
                                                     class="home-webchat-input"
-                                                    placeholder="Tape ta ville (ex. : Paris)"
+                                                    placeholder="{% trans "Tape ta ville (ex. : Paris)" %}"
                                                     list="webchat-ville-list"
                                                     autocomplete="address-level2"
                                                     data-cities-endpoint="{% url 'get_cities' %}"
@@ -275,10 +398,10 @@
                                                 <datalist id="webchat-ville-list"></datalist>
                                                 <div class="home-webchat-suggestions" id="webchat-ville-suggestions" hidden></div>
                                             </div>
-										<div class="home-webchat-hint">Tape au moins 2 lettres pour voir des suggestions.</div>
+										<div class="home-webchat-hint">{% trans "Tape au moins 2 lettres pour voir des suggestions." %}</div>
                                         </div>
                                         <div class="col-12">
-										<label class="form-label" for="webchat-channel">Salon IRC</label>
+										<label class="form-label" for="webchat-channel">{% trans "Salon IRC" %}</label>
                                             <div class="home-webchat-field">
                                                 <i class="bi bi-hash"></i>
                                                 <input
@@ -286,23 +409,23 @@
                                                     id="webchat-channel"
                                                     name="channel"
                                                     class="home-webchat-input"
-                                                    value="#!Accueil"
-                                                    placeholder="#!Accueil"
+                                                    value="{% trans "#!Accueil" %}"
+                                                    placeholder="{% trans "#!Accueil" %}"
                                                     autocomplete="off"
                                                 >
                                             </div>
-										<div class="home-webchat-hint">Tu peux choisir un autre salon (ex. : #Tech, #Musique, #Gaming).</div>
+										<div class="home-webchat-hint">{% trans "Tu peux choisir un autre salon (ex. : #Tech, #Musique, #Gaming)." %}</div>
                                         </div>
 
                                         <input type="hidden" name="show_password" value="false">
 
                                         {% if user.is_authenticated %}
                                             <div class="col-12">
-                                                <div class="home-webchat-toggle" role="group" aria-label="Option mot de passe">
+                                                <div class="home-webchat-toggle" role="group" aria-label="{% trans "Option mot de passe" %}">
                                                     <div class="home-webchat-toggle-row">
                                                         <div class="home-webchat-toggle-text">
-												<div class="home-webchat-toggle-title">Connexion sécurisée (token IRC)</div>
-												<div class="home-webchat-toggle-sub">Active cette option pour générer un token IRC. Tu pourras le copier-coller dans le champ « mot de passe » du webchat.</div>
+												<div class="home-webchat-toggle-title">{% trans "Connexion sécurisée (token IRC)" %}</div>
+                                                <div class="home-webchat-toggle-sub">{% trans "Active cette option pour générer un token IRC. Tu pourras le copier-coller dans le champ « mot de passe » du webchat." %}</div>
                                                         </div>
                                                         <label class="home-webchat-switch" for="webchat-show-password">
                                                             <input
@@ -319,25 +442,25 @@
 
                                                     <div class="home-webchat-token" id="home-webchat-token" hidden>
                                                         <div class="home-webchat-token-head">
-												<div class="home-webchat-token-title">Ton token IRC (à copier)</div>
-												<button type="button" class="home-webchat-token-regenerate" id="home-webchat-token-regenerate">Régénérer</button>
+												<div class="home-webchat-token-title">{% trans "Ton token IRC (à copier)" %}</div>
+												<button type="button" class="home-webchat-token-regenerate" id="home-webchat-token-regenerate">{% trans "Régénérer" %}</button>
                                                         </div>
                                                         <div class="home-webchat-token-row">
-												<input type="password" class="home-webchat-token-input" id="home-webchat-token-input" value="" readonly autocomplete="off" spellcheck="false" aria-label="Token IRC">
-												<button type="button" class="home-webchat-token-reveal" id="home-webchat-token-reveal" aria-pressed="false" aria-label="Afficher/masquer le token">Afficher</button>
-												<button type="button" class="home-webchat-token-copy" id="home-webchat-token-copy">Copier</button>
+												<input type="password" class="home-webchat-token-input" id="home-webchat-token-input" value="" readonly autocomplete="off" spellcheck="false" aria-label="{% trans "Token IRC" %}">
+												<button type="button" class="home-webchat-token-reveal" id="home-webchat-token-reveal" aria-pressed="false" aria-label="{% trans "Afficher/masquer le token" %}">{% trans "Afficher" %}</button>
+												<button type="button" class="home-webchat-token-copy" id="home-webchat-token-copy">{% trans "Copier" %}</button>
                                                         </div>
-												<div class="home-webchat-token-hint" id="home-webchat-token-hint">Valable quelques instants et utilisable une seule fois. Colle-le dans le champ « mot de passe » du webchat une fois ouvert.</div>
+												<div class="home-webchat-token-hint" id="home-webchat-token-hint">{% trans "Valable quelques instants et utilisable une seule fois. Colle-le dans le champ « mot de passe » du webchat une fois ouvert." %}</div>
                                                     </div>
                                                 </div>
                                             </div>
                                         {% else %}
                                             <div class="col-12">
                                                 <div class="home-webchat-token home-webchat-token--locked">
-											<div class="home-webchat-token-title">Mot de passe (membres)</div>
-											<div class="home-webchat-token-hint">Disponible lorsque tu es connecté.</div>
+											<div class="home-webchat-token-title">{% trans "Mot de passe (membres)" %}</div>
+											<div class="home-webchat-token-hint">{% trans "Disponible lorsque tu es connecté." %}</div>
                                                     <div class="home-webchat-token-actions">
-												<a class="home-webchat-token-login" href="{% url 'login' %}?next={{ request.path|urlencode }}%23home-webchat" target="_self">Se connecter</a>
+												<a class="home-webchat-token-login" href="{% url 'login' %}?next={{ request.path|urlencode }}%23home-webchat" target="_self">{% trans "Se connecter" %}</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -345,7 +468,7 @@
 
                                         <div class="col-12">
                                             <button type="submit" class="default-btn d-block home-webchat-submit">
-										<span>Ouvrir le webchat <i class="bi bi-chat-dots"></i></span>
+										<span>{% trans "Ouvrir le webchat" %} <i class="bi bi-chat-dots"></i></span>
                                             </button>
                                         </div>
                                     </div>
@@ -361,8 +484,8 @@
 	<div class="about padding-top padding-bottom">
 		<div class="container">
 			<div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
-                <h2>Tout commence dans un salon…</h2>
-                <p>Un message, un sujet, une discussion. Ici, on vient pour échanger, apprendre, rire et créer du lien — entre jeunes, moins jeunes, et tout le monde entre les deux.</p>
+                <h2>{% trans "Tout commence dans un salon…" %}</h2>
+                <p>{% trans "Un message, un sujet, une discussion. Ici, on vient pour échanger, apprendre, rire et créer du lien — entre jeunes, moins jeunes, et tout le monde entre les deux." %}</p>
 			</div>
 			<div class="section__wrapper">
 				<div class="row g-4 justify-content-center row-cols-xl-4 row-cols-lg-3 row-cols-sm-2 row-cols-1">
@@ -372,12 +495,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/serveur-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/serveur.png' %}" width="100" height="100" alt="Icône serveur" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/serveur.png' %}" width="100" height="100" alt="{% trans "Icône serveur" %}" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ server_count }}" data-speed="1500">{{ server_count }}</span></h3>
-									<p>Serveurs IRC</p>
+									<p>{% trans "Serveurs IRC" %}</p>
                                 </div>
 							</div>
 						</div>
@@ -388,12 +511,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/utilisateurs-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/utilisateurs.png' %}" width="100" height="100" alt="Icône utilisateurs" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/utilisateurs.png' %}" width="100" height="100" alt="{% trans "Icône utilisateurs" %}" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ user_count }}" data-speed="1500">{{ user_count }}</span></h3>
-									<p>Membres</p>
+									<p>{% trans "Membres" %}</p>
                                 </div>
 							</div>
 						</div>
@@ -404,12 +527,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/operateurs-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/operateurs.png' %}" width="100" height="100" alt="Icône opérateurs" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/operateurs.png' %}" width="100" height="100" alt="{% trans "Icône opérateurs" %}" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ oper_count }}" data-speed="1500">{{ oper_count }}</span></h3>
-									<p>Opérateurs IRC</p>
+									<p>{% trans "Opérateurs IRC" %}</p>
                                 </div>                                
 							</div>
 						</div>
@@ -420,12 +543,12 @@
 								<div class="about__thumb">
                                     <picture>
                                         <source type="image/webp" srcset="{% static 'images/about/icon/channels-100.webp' %}">
-                                        <img src="{% static 'images/about/icon/channels.png' %}" width="100" height="100" alt="Icône salons" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/about/icon/channels.png' %}" width="100" height="100" alt="{% trans "Icône salons" %}" loading="lazy" decoding="async">
                                     </picture>
 								</div>
 								<div class="about__content">
                                     <h3><span class="counter" data-to="{{ channel_count }}" data-speed="1500">{{ channel_count }}</span></h3>
-									<p>Salons</p>
+									<p>{% trans "Salons" %}</p>
                                 </div>                                
 							</div>
 						</div>
@@ -441,7 +564,7 @@
         <div class="container">
             <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
                 <h2>{% trans "La communauté" %}</h2>
-                <p>Des profils, des centres d’intérêt et des salons pour discuter. Ici, on privilégie les échanges simples, humains et respectueux.</p>
+                <p>{% trans "Des profils, des centres d’intérêt et des salons pour discuter. Ici, on privilégie les échanges simples, humains et respectueux." %}</p>
             </div>
             <div class="section__wrapper">
                 <div class="row g-0 mx-12-none justify-content-center wow fadeInUp" data-wow-duration="1.5s">
@@ -467,9 +590,9 @@
 								<a href="{% url 'member_profile' username=m.username %}"><span class="h5 d-inline-block mb-0">{{ m.username }}</span></a>
                                 <p>
                                     {% if m.last_login %}
-                                        Dernière activité : il y a {{ m.last_login|timesince }}
+                                        {% trans "Dernière activité" %} {% blocktrans %}il y a {{ m.last_login|timesince }}{% endblocktrans %}
                                     {% else %}
-                                        Nouveau membre
+                                        {% trans "Nouveau membre" %}
                                     {% endif %}
                                 </p>
                             </div>
@@ -493,30 +616,30 @@
     <div class="work padding-top padding-bottom bg_img" data-background="{% static 'images/banner/bg.jpg' %}">
         <div class="container">
             <div class="section__header text-center wow fadeInUp" data-wow-duration="1.5s">
-				<h2>
-					{% blocktrans trimmed with site_name=site_brand.site_name %}
-						Pourquoi choisir {{ site_name }} ?
-					{% endblocktrans %}
-				</h2>
+                <h2>
+                    {% blocktrans trimmed with site_name=site_brand.site_name %}
+                        Pourquoi choisir {{ site_name }} ?
+                    {% endblocktrans %}
+                </h2>
             </div>
             <div class="section__wrapper wow fadeInUp" data-wow-duration="1.5s">
                 <div class="d-xl-flex align-items-start work__area">
                     <div class="nav flex-xl-column nav-pills me-xl-4 work__tablist" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <button class="nav-link" id="work__tab1-tab" data-bs-toggle="pill" data-bs-target="#work__tab1" type="button" role="tab" aria-controls="work__tab1" aria-selected="true"><img src="{% static 'images/work/01.png' %}" width="40" height="40" alt="Illustration" class="me-3" decoding="async"><span>Choisis ton pseudo</span></button>
-                        <button class="nav-link active" id="work__tab2-tab" data-bs-toggle="pill" data-bs-target="#work__tab2" type="button" role="tab" aria-controls="work__tab2" aria-selected="false"><img src="{% static 'images/work/02.png' %}" width="40" height="40" alt="Illustration" class="me-3" decoding="async"><span>Des gens, pas des bots</span></button>
-                        <button class="nav-link" id="work__tab3-tab" data-bs-toggle="pill" data-bs-target="#work__tab3" type="button" role="tab" aria-controls="work__tab3" aria-selected="false"><img src="{% static 'images/work/03.png' %}" width="40" height="40" alt="Illustration" class="me-3" decoding="async"><span>Trouve ton salon</span></button>
-                        <button class="nav-link" id="work__tab4-tab" data-bs-toggle="pill" data-bs-target="#work__tab4" type="button" role="tab" aria-controls="work__tab4" aria-selected="false"><img src="{% static 'images/work/04.png' %}" width="36" height="40" alt="Illustration" class="me-3" decoding="async"><span>Crée des liens</span></button>
+                        <button class="nav-link" id="work__tab1-tab" data-bs-toggle="pill" data-bs-target="#work__tab1" type="button" role="tab" aria-controls="work__tab1" aria-selected="true"><img src="{% static 'images/work/01.png' %}" width="40" height="40" alt="{% trans "Illustration" %}" class="me-3" decoding="async"><span>{% trans "Choisis ton pseudo" %}</span></button>
+                        <button class="nav-link active" id="work__tab2-tab" data-bs-toggle="pill" data-bs-target="#work__tab2" type="button" role="tab" aria-controls="work__tab2" aria-selected="false"><img src="{% static 'images/work/02.png' %}" width="40" height="40" alt="{% trans "Illustration" %}" class="me-3" decoding="async"><span>{% trans "Des gens, pas des bots" %}</span></button>
+                        <button class="nav-link" id="work__tab3-tab" data-bs-toggle="pill" data-bs-target="#work__tab3" type="button" role="tab" aria-controls="work__tab3" aria-selected="false"><img src="{% static 'images/work/03.png' %}" width="40" height="40" alt="{% trans "Illustration" %}" class="me-3" decoding="async"><span>{% trans "Trouve ton salon" %}</span></button>
+                        <button class="nav-link" id="work__tab4-tab" data-bs-toggle="pill" data-bs-target="#work__tab4" type="button" role="tab" aria-controls="work__tab4" aria-selected="false"><img src="{% static 'images/work/04.png' %}" width="36" height="40" alt="{% trans "Illustration" %}" class="me-3" decoding="async"><span>{% trans "Crée des liens" %}</span></button>
                     </div>
                     <div class="tab-content work__tabcontent" id="v-pills-tabContent">
                         <div class="tab-pane fade" id="work__tab1" role="tabpanel" aria-labelledby="work__tab1-tab">
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/05.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/work/05.png' %}" width="261" height="244" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Choisis ton pseudo" %}</h3>
-									<p>Avec {{ site_brand.site_name }}, tu entres dans le tchat en quelques secondes : un pseudo, un salon, et c’est parti. Simple, rapide, efficace.</p>
+									<p>{% blocktrans with site_name=site_brand.site_name %}Avec {{ site_name }}, tu entres dans le tchat en quelques secondes : un pseudo, un salon, et c’est parti. Simple, rapide, efficace.{% endblocktrans %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -527,12 +650,12 @@
                                     <div class="work__thumb">
                                         <picture>
                                             <source type="image/webp" srcset="{% static 'images/work/06.webp' %}">
-                                            <img src="{% static 'images/work/06.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
+                                            <img src="{% static 'images/work/06.png' %}" width="261" height="244" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                         </picture>
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Des gens, pas des bots" %}</h3>
-									<p>Sur {{ site_brand.site_name }}, on favorise les vraies discussions : moins de bruit, plus d’échanges. Anti-spam et modération pour garder une ambiance saine.</p>
+									<p>{% blocktrans with site_name=site_brand.site_name %}Sur {{ site_name }}, on favorise les vraies discussions : moins de bruit, plus d’échanges. Anti-spam et modération pour garder une ambiance saine.{% endblocktrans %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -541,7 +664,7 @@
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/07.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/work/07.png' %}" width="261" height="244" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Trouve ton salon" %}</h3>
@@ -554,11 +677,11 @@
                             <div class="work__item">
                                 <div class="work__inner">
                                     <div class="work__thumb">
-                                        <img src="{% static 'images/work/08.png' %}" width="261" height="244" alt="illustration" loading="lazy" decoding="async">
+                                        <img src="{% static 'images/work/08.png' %}" width="261" height="244" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                     </div>
                                     <div class="work__content">
                                         <h3>{% trans "Crée des liens" %}</h3>
-									<p>Des discussions simples, des gens de tous âges, des sujets qui rassemblent. Viens pour parler, reste pour la vibe.</p>
+									<p>{% trans "Des discussions simples, des gens de tous âges, des sujets qui rassemblent. Viens pour parler, reste pour la vibe." %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -575,60 +698,79 @@
     <div class="container">
         <div class="section__header style-2 text-center wow fadeInUp" data-wow-duration="1.5s">
             <h2>{% trans "Le blog" %}</h2>
-			<p>Actus, coulisses, guides et idées de salons — pour mieux discuter.</p>
+			<p>{% trans "Actus, coulisses, guides et idées de salons — pour mieux discuter." %}</p>
         </div>
         <div class="section__wrapper wow fadeInUp" data-wow-duration="2s">
-            <div class="row g-4 justify-content-center row-cols-lg-3 row-cols-sm-2 row-cols-1">
-                {% for post in posts %}
-                <div class="col">
-                    <div class="story__item">
-                        <div class="story__inner">
-                            <div class="story__thumb">
-                                <a href="{% url 'blog:blog_detail' slug=post.slug %}">
-                                    <img
-                                        src="{{ post.image_thumb_326_url|default:post.image.url }}"
-                                        srcset="{{ post.image_thumb_326_url }} 326w, {{ post.image_thumb_652_url }} 652w, {{ post.image.url }} 1200w"
-                                        sizes="(max-width: 991px) 90vw, 326px"
-                                        width="326"
-                                        height="326"
-                                        alt="{{ post.title }}"
-                                        loading="lazy"
-                                        decoding="async"
-                                    >
-                                </a>
-                                <span class="member__activity member__activity--offline">{{ post.category }}</span>
-                            </div>
-                            <div class="story__content">
-                                <a href="{% url 'blog:blog_detail' slug=post.slug %}">
-								<p class="h4 mb-0">{{ post.title }}</p>
-                                </a>
-                                <div class="story__content--author">
-                                    <div class="story__content--thumb">
-                                        <img
-                                            src="{% if post.author.avatar_thumb_100_url %}{{ post.author.avatar_thumb_100_url }}{% elif post.author.avatar_url %}{{ post.author.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
-                                            srcset="{{ post.author.avatar_thumb_100_url }} 100w, {{ post.author.avatar_thumb_320_url }} 320w, {{ post.author.avatar_url }} 1024w"
-                                            sizes="42px"
-                                            width="42"
-                                            height="42"
-                                            alt="{{ post.author.username }}"
-                                            loading="lazy"
-                                            decoding="async"
-                                            data-fallback-src="{% static 'images/default-avatar.svg' %}"
-                                        >
-                                    </div>
-                                    <div class="story__content--content">
-									<p class="mb-0 fw-semibold">{{ post.author.username }}</p>
-                                        <p>{{ post.created_at|date:"F j, Y" }}</p>
+            {% if posts %}
+                <div class="swiper story__slider">
+                    <div class="swiper-wrapper">
+                        {% for post in posts %}
+                            <div class="swiper-slide">
+                                <div class="story__item">
+                                    <div class="story__inner">
+                                        <div class="story__thumb">
+                                            <a href="{% url 'blog:blog_detail' slug=post.slug %}">
+                                                <img
+                                                    src="{{ post.image_thumb_326_url|default:post.image.url }}"
+                                                    srcset="{{ post.image_thumb_326_url }} 326w, {{ post.image_thumb_652_url }} 652w, {{ post.image.url }} 1200w"
+                                                    sizes="(max-width: 991px) 90vw, 326px"
+                                                    width="326"
+                                                    height="326"
+                                                    alt="{{ post.title }}"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                >
+                                            </a>
+                                            <span class="member__activity member__activity--offline">{{ post.category }}</span>
+                                        </div>
+                                        <div class="story__content">
+                                            <a href="{% url 'blog:blog_detail' slug=post.slug %}">
+									<p class="h4 mb-0">{{ post.title }}</p>
+                                            </a>
+                                            <div class="story__content--author">
+                                                <div class="story__content--thumb">
+                                                    <img
+                                                        src="{% if post.author.avatar_thumb_100_url %}{{ post.author.avatar_thumb_100_url }}{% elif post.author.avatar_url %}{{ post.author.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
+                                                        srcset="{{ post.author.avatar_thumb_100_url }} 100w, {{ post.author.avatar_thumb_320_url }} 320w, {{ post.author.avatar_url }} 1024w"
+                                                        sizes="42px"
+                                                        width="42"
+                                                        height="42"
+                                                        alt="{{ post.author.username }}"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                        data-fallback-src="{% static 'images/default-avatar.svg' %}"
+                                                    >
+                                                </div>
+                                                <div class="story__content--content">
+										<p class="mb-0 fw-semibold">{{ post.author.username }}</p>
+                                                    <p>{{ post.created_at|date:"F j, Y" }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="story__cta">
+                                                <a class="story__btn" href="{% url 'blog:blog_detail' slug=post.slug %}">
+                                                    {% trans "Lire l’article" %}
+                                                    <i class="fa-solid fa-arrow-right"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="story__nav text-center mt-3">
+                        <button class="story__prev" type="button" aria-label="Previous">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button class="story__next" type="button" aria-label="Next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
-                {% empty %}
+            {% else %}
 				<p class="text-center text-muted">{% trans "Aucun article de blog disponible pour le moment." %}</p>
-                {% endfor %}
-            </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -643,7 +785,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Confiance & sécurité" %}</h3>
@@ -657,7 +799,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Des salons pour tous" %}</h3>
@@ -671,7 +813,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Du monde à toute heure" %}</h3>
@@ -685,7 +827,7 @@
                         <div class="work__item">
                             <div class="work__inner">
                                 <div class="work__thumb">
-                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="illustration" loading="lazy" decoding="async">
+                                    <img src="{% static 'images/work/09.png' %}" width="200" height="252" alt="{% trans "Illustration" %}" loading="lazy" decoding="async">
                                 </div>
                                 <div class="work__content">
                                     <h3>{% trans "Gratuit, simple, sans friction" %}</h3>

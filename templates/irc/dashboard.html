@@ -1,7 +1,8 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Network: irc telemetry{% endblock %}
+{% block title %}{% trans "Network: irc telemetry" %}{% endblock %}
 
 {% block head %}
 {{ block.super }}
@@ -12,36 +13,36 @@
 <main class="irc-dashboard">
     <section class="dashboard-hero">
         <div class="hero-copy">
-            <p class="eyebrow">Chaat.site Network</p>
-            <h1>Live Network Telemetry</h1>
-            <p>Track channel heat, operator presence, and server health directly from services stream.</p>
+            <p class="eyebrow">{% trans "Chaat.site Network" %}</p>
+            <h1>{% trans "Live Network Telemetry" %}</h1>
+            <p>{% trans "Track channel heat, operator presence, and server health directly from services stream." %}</p>
             <div class="hero-actions">
-                <a href="{% url 'webchat' %}" title="Launch KiwiIRC">Open Webchat</a>
-                <button type="button" id="refresh-dashboard">Sync Now</button>
+                <a href="{% url 'webchat' %}" title="{% trans "Launch KiwiIRC" %}">{% trans "Open Webchat" %}</a>
+                <button type="button" id="refresh-dashboard">{% trans "Sync Now" %}</button>
             </div>
         </div>
         <div class="status-card">
-            <p>Last sync</p>
+            <p>{% trans "Last sync" %}</p>
             <span id="last-sync">--</span>
-            <small id="dashboard-status" class="dashboard-status">Waiting for telemetry…</small>
+            <small id="dashboard-status" class="dashboard-status">{% trans "Waiting for telemetry…" %}</small>
         </div>
     </section>
 
     <section class="stats-grid" aria-live="polite">
         <article class="stat-card" data-metric="users">
-            <span class="stat-label">Users</span>
+            <span class="stat-label">{% trans "Users" %}</span>
             <span class="stat-value">--</span>
         </article>
         <article class="stat-card" data-metric="channels">
-            <span class="stat-label">Channels</span>
+            <span class="stat-label">{% trans "Channels" %}</span>
             <span class="stat-value">--</span>
         </article>
         <article class="stat-card" data-metric="servers">
-            <span class="stat-label">Servers</span>
+            <span class="stat-label">{% trans "Servers" %}</span>
             <span class="stat-value">--</span>
         </article>
         <article class="stat-card" data-metric="operators">
-            <span class="stat-label">Operators</span>
+            <span class="stat-label">{% trans "Operators" %}</span>
             <span class="stat-value">--</span>
         </article>
     </section>
@@ -49,28 +50,28 @@
     <section class="panel">
         <header>
             <div>
-                <h2>Network history</h2>
-                <p>Current vs peak (from snapshots) + last 72h trend.</p>
+                <h2>{% trans "Network history" %}</h2>
+                <p>{% trans "Current vs peak (from snapshots) + last 72h trend." %}</p>
             </div>
         </header>
         <div class="history-grid">
             <div>
                 <div class="history-table" role="table" aria-label="Network current and max">
                     <div class="row head" role="row">
-                        <span>Metric</span>
-                        <span>Current</span>
-                        <span>Max</span>
+                        <span>{% trans "Metric" %}</span>
+                        <span>{% trans "Current" %}</span>
+                        <span>{% trans "Max" %}</span>
                     </div>
                     <div id="history-rows"></div>
                 </div>
-                <p id="history-hint" class="dashboard-status">Snapshots pending…</p>
+                <p id="history-hint" class="dashboard-status">{% trans "Snapshots pending…" %}</p>
             </div>
             <div class="history-chart" aria-label="Network trend chart">
                 <div class="pill-list" id="history-series">
-                    <button type="button" data-series="users" aria-pressed="true">Users</button>
-                    <button type="button" data-series="channels" aria-pressed="true">Channels</button>
-                    <button type="button" data-series="servers" aria-pressed="false">Servers</button>
-                    <button type="button" data-series="operators" aria-pressed="false">Operators</button>
+                    <button type="button" data-series="users" aria-pressed="true">{% trans "Users" %}</button>
+                    <button type="button" data-series="channels" aria-pressed="true">{% trans "Channels" %}</button>
+                    <button type="button" data-series="servers" aria-pressed="false">{% trans "Servers" %}</button>
+                    <button type="button" data-series="operators" aria-pressed="false">{% trans "Operators" %}</button>
                 </div>
                 <div class="history-legend" id="history-legend" aria-label="Chart legend"></div>
                 <p class="history-help" id="history-help"></p>
@@ -82,20 +83,20 @@
     <section class="panel">
         <header>
             <div>
-                <h2>Active channels</h2>
-                <p>Top rooms ranked by population. Click the refresh control to pull fresh RPC stats on demand.</p>
+                <h2>{% trans "Active channels" %}</h2>
+                <p>{% trans "Top rooms ranked by population. Click the refresh control to pull fresh RPC stats on demand." %}</p>
             </div>
             <div class="channel-controls">
-                <input type="search" id="channel-search" placeholder="Filter #channel or topic">
-                <span class="badge"><span id="channel-count">0</span> tracked</span>
+                <input type="search" id="channel-search" placeholder="{% trans "Filter #channel or topic" %}">
+                <span class="badge"><span id="channel-count">0</span> {% trans "tracked" %}</span>
             </div>
         </header>
         <div class="channel-table" role="table">
             <div class="row head" role="row">
-                <span>Channel</span>
-                <span>Modes</span>
-                <span>Topic</span>
-                <span>Users</span>
+                <span>{% trans "Channel" %}</span>
+                <span>{% trans "Modes" %}</span>
+                <span>{% trans "Topic" %}</span>
+                <span>{% trans "Users" %}</span>
             </div>
             <div id="channel-rows"></div>
         </div>
@@ -104,40 +105,40 @@
     <section class="panel">
         <header>
             <div>
-                <h2>Chanstats+</h2>
-                <p>Top channels + talkers from <code>chanstats_plus</code> (proxied via signed API).</p>
+                <h2>{% trans "Chanstats+" %}</h2>
+                <p>{% trans "Top channels + talkers from" %} <code>chanstats_plus</code> {% trans "(proxied via signed API)." %}</p>
             </div>
         </header>
         <div class="chanstats-grid">
             <article>
                 <header>
-                    <h3>Top channels</h3>
-                    <p class="topic">Full counters (ranked by lines).</p>
+                    <h3>{% trans "Top channels" %}</h3>
+                    <p class="topic">{% trans "Full counters (ranked by lines)." %}</p>
                 </header>
                 <div class="chanstats-list" id="chanstats-top-channels"></div>
             </article>
             <article>
                 <header>
-                    <h3>Top nicks (channel)</h3>
-                    <p id="chanstats-channel-subtitle" class="topic">Choose a period and (optionally) a channel.</p>
+                    <h3>{% trans "Top nicks (channel)" %}</h3>
+                    <p id="chanstats-channel-subtitle" class="topic">{% trans "Choose a period and (optionally) a channel." %}</p>
                 </header>
                 <div class="chanstats-toolbar" aria-label="Chanstats filters">
                     <div class="chanstats-group">
-                        <span class="chanstats-label">Period</span>
+                        <span class="chanstats-label">{% trans "Period" %}</span>
                         <div class="chanstats-segmented" id="chanstats-period" role="group" aria-label="Chanstats period">
-                            <button type="button" data-period="daily" aria-pressed="true">Daily</button>
-                            <button type="button" data-period="weekly" aria-pressed="false">Weekly</button>
-                            <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
-                            <button type="button" data-period="total" aria-pressed="false">Total</button>
+                            <button type="button" data-period="daily" aria-pressed="true">{% trans "Daily" %}</button>
+                            <button type="button" data-period="weekly" aria-pressed="false">{% trans "Weekly" %}</button>
+                            <button type="button" data-period="monthly" aria-pressed="false">{% trans "Monthly" %}</button>
+                            <button type="button" data-period="total" aria-pressed="false">{% trans "Total" %}</button>
                         </div>
                     </div>
                     <div class="chanstats-group grow">
-                        <span class="chanstats-label">Channel</span>
+                        <span class="chanstats-label">{% trans "Channel" %}</span>
                         <input
                             type="text"
                             id="chanstats-channel"
                             class="chanstats-input"
-                            placeholder="#dev (optional)"
+                            placeholder="{% trans "#dev (optional)" %}"
                             autocomplete="off"
                             spellcheck="false"
                         >
@@ -147,8 +148,8 @@
             </article>
             <article>
                 <header>
-                    <h3>Top nicks (global)</h3>
-                    <p class="topic">Full counters (ranked by lines).</p>
+                    <h3>{% trans "Top nicks (global)" %}</h3>
+                    <p class="topic">{% trans "Full counters (ranked by lines)." %}</p>
                 </header>
                 <div class="chanstats-list" id="chanstats-top-nicks-global"></div>
             </article>
@@ -158,8 +159,8 @@
     <section class="panel">
         <header>
             <div>
-                <h2>Servers</h2>
-                <p>Connected uplinks and services status.</p>
+                <h2>{% trans "Servers" %}</h2>
+                <p>{% trans "Connected uplinks and services status." %}</p>
             </div>
         </header>
         <div class="server-grid" id="server-grid"></div>
@@ -168,8 +169,8 @@
     <section class="panel">
         <header>
             <div>
-                <h2>Operators</h2>
-                <p>Currently authenticated operators and their classes.</p>
+                <h2>{% trans "Operators" %}</h2>
+                <p>{% trans "Currently authenticated operators and their classes." %}</p>
             </div>
         </header>
         <ul class="stacked-list" id="operator-list"></ul>
@@ -178,27 +179,27 @@
     <section class="panel">
         <header>
             <div>
-                <h2>Users</h2>
-                <p>Click a nickname to fetch live details.</p>
+                <h2>{% trans "Users" %}</h2>
+                <p>{% trans "Click a nickname to fetch live details." %}</p>
             </div>
         </header>
         <div class="history-grid">
             <div>
-                <div class="pill-list" id="user-pills" aria-label="Active users"></div>
+                <div class="pill-list" id="user-pills" aria-label="{% trans "Active users" %}"></div>
             </div>
             <div class="user-detail-card" aria-live="polite">
                 <div class="user-detail-header">
                     <div class="user-ident">
                         <div class="user-avatar" id="user-detail-avatar">?</div>
                         <div class="user-titles">
-                            <h3 id="user-detail-title">Select a user</h3>
-                            <p id="user-detail-subtitle">Click a nickname to load live details.</p>
+                            <h3 id="user-detail-title">{% trans "Select a user" %}</h3>
+                            <p id="user-detail-subtitle">{% trans "Click a nickname to load live details." %}</p>
                         </div>
                     </div>
                     <div class="user-badges" id="user-detail-badges"></div>
                 </div>
                 <div id="user-detail-body">
-                    <p class="empty-hint">Awaiting user list…</p>
+                    <p class="empty-hint">{% trans "Awaiting user list…" %}</p>
                 </div>
             </div>
         </div>

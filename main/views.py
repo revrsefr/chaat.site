@@ -32,7 +32,7 @@ def home(request):
         .order_by("-last_login")
         .only("username", "avatar", "last_login")[:8]
     )
-    latest_posts = BlogPost.objects.filter(is_published=True).order_by("-created_at")[:3]  # ✅ Get latest 3 posts
+    latest_posts = BlogPost.objects.filter(is_published=True).order_by("-created_at")[:6]  # ✅ Get latest 6 posts
 
     rpc = AnopeRPC(token=settings.ANOPE_RPC_TOKEN)
     users = rpc.list_users() or []

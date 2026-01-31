@@ -92,7 +92,7 @@
                                             </li>
                                         </ul>
 
-                                        <p>{{ post.content|striptags|truncatewords:40 }}</p>
+                                        <p>{{ post.content|striptags }}</p>
 
                                         <div class="text-center">
                                             <a href="{% url 'blog:blog_detail' post.slug %}" class="default-btn reverse"><span>Read More</span></a>

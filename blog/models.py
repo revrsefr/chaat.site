@@ -19,6 +19,8 @@ class BlogPost(models.Model):
     keywords = models.TextField(blank=True)  # Added for SEO
     category = models.CharField(max_length=255, blank=True)  # Added for categories
     tags = models.TextField(blank=True)  # Added for tags
+    source_id = models.CharField(max_length=32, unique=True, blank=True, null=True)
+    source_url = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     is_published = models.BooleanField(default=True)  # ✅ MUST EXIST
 
