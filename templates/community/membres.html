@@ -1,8 +1,9 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% load querystring %}
+{% load i18n %}
 
-{% block title %}Membres - {{ site_brand.title_suffix }}{% endblock %}
+{% block title %}{% trans "Membres" %} - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block content %}
 
@@ -21,21 +22,6 @@
 <a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
 <!-- scrollToTop ending here -->
 
- <!-- ================> Page Header section start here <================== -->
- <div class="pageheader bg_img" style="background-image: url('{% static "images/bg-img/pageheader.jpg" %}');">
-    <div class="container">
-        <div class="pageheader__content text-center">
-            <h2>La famille TChatZone</h2>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb justify-content-center mb-0">
-                  <li class="breadcrumb-item"><a href="{% url 'main:home' %}">home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Communauté</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-</div>
-<!-- ================> Page Header section end here <================== -->
 
 <!-- ================> Member section start here <================== -->
 <div class="member member--style2 padding-top padding-bottom">
@@ -45,23 +31,23 @@
                 <div class="member__info--left">
                     <div class="member__info--filter">
                         <div class="default-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <span>Filter Your Search <i class="fa-solid fa-sliders"></i></span>
+                            <span>{% trans "Filtrer votre recherche" %} <i class="fa-solid fa-sliders"></i></span>
                         </div>
                     </div>
                     <div class="member__info--count">
-                        <div class="default-btn"><span>All Members</span></div>
+                        <div class="default-btn"><span>{% trans "Tous les membres" %}</span></div>
                         <p>{{ members.paginator.count }}</p> <!-- ✅ Dynamic count -->
                     </div>
                 </div>
                 <div class="member__info--right">
                     <div class="member__info--customselect right w-100">
-                        <div class="default-btn"><span>Order By:</span></div>
+                        <div class="default-btn"><span>{% trans "Trier par :" %}</span></div>
                         <div class="banner__inputlist">
                             <select id="order-by">
-                                <option value="last_active" {% if order == "last_active" %}selected{% endif %}>Last Active</option>
-                                <option value="oldest" {% if order == "oldest" %}selected{% endif %}>Oldest</option>
-                                <option value="popular" {% if order == "popular" %}selected{% endif %}>Popular</option>
-                                <option value="most_active" {% if order == "most_active" %}selected{% endif %}>Most Active</option>
+                                <option value="last_active" {% if order == "last_active" %}selected{% endif %}>{% trans "Dernière activité" %}</option>
+                                <option value="oldest" {% if order == "oldest" %}selected{% endif %}>{% trans "Les plus anciens" %}</option>
+                                <option value="popular" {% if order == "popular" %}selected{% endif %}>{% trans "Populaires" %}</option>
+                                <option value="most_active" {% if order == "most_active" %}selected{% endif %}>{% trans "Les plus actifs" %}</option>
                             </select>
                         </div>
                     </div>
@@ -84,23 +70,23 @@
                             <a href="{% url 'member_profile' username=member.username %}"><h5>{{ member.username }}</h5></a>
                             <p>
                                 {% if member.last_login %}
-                                    {{ member.last_login|timesince }} ago
+                                    {% blocktrans with last_seen=member.last_login|timesince %}{{ last_seen }} ago{% endblocktrans %}
                                 {% else %}
-                                    Inactive
+                                    {% trans "Inactive" %}
                                 {% endif %}
                             </p>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <p>No members found.</p>
+                <p>{% trans "Aucun membre trouvé." %}</p>
                 {% endfor %}
             </div>
 
             <!-- ✅ Fixed Pagination -->
             <div class="member__pagination mt-4">
                 <div class="member__pagination--left">
-                    <p>Viewing {{ members.start_index }} - {{ members.end_index }} of {{ members.paginator.count }} Members</p>
+                    <p>{% blocktrans with start=members.start_index end=members.end_index total=members.paginator.count %}Affichage de {{ start }} - {{ end }} sur {{ total }} membres{% endblocktrans %}</p>
                 </div>
                 <div class="member__pagination--right">
                     <ul class="default-pagination">
@@ -130,7 +116,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Filter your search</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{% trans "Filtrer votre recherche" %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -138,10 +124,10 @@
                     <div class="banner__list">
                         <div class="row align-items-center row-cols-1">
                             <div class="col">
-                                <label>I am a</label>
+                                <label>{% trans "Je suis" %}</label>
                                 <div class="banner__inputlist">
                                     <select name="gender">
-                                        <option value="">Select Gender</option>
+                                        <option value="">{% trans "Sélectionner le genre" %}</option>
                                         {% for value,label in gender_choices %}
                                             <option value="{{ value }}" {% if request.GET.gender == value %}selected{% endif %}>{{ label }}</option>
                                         {% endfor %}
@@ -149,12 +135,12 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <label>Age</label>
+                                <label>{% trans "Âge" %}</label>
                                 <div class="row g-3">
                                     <div class="col-6">
                                         <div class="banner__inputlist">
                                             <select name="age_min">
-                                                <option value="">Min</option>
+                                                <option value="">{% trans "Min" %}</option>
                                                 {% for age in ages %}
                                                     <option value="{{ age }}" {% if request.GET.age_min == age|stringformat:"s" %}selected{% endif %}>{{ age }}</option>
                                                 {% endfor %}
@@ -164,7 +150,7 @@
                                     <div class="col-6">
                                         <div class="banner__inputlist">
                                             <select name="age_max">
-                                                <option value="">Max</option>
+                                                <option value="">{% trans "Max" %}</option>
                                                 {% for age in ages %}
                                                     <option value="{{ age }}" {% if request.GET.age_max == age|stringformat:"s" %}selected{% endif %}>{{ age }}</option>
                                                 {% endfor %}
@@ -174,13 +160,13 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <label>Country</label>
+                                <label>{% trans "Pays" %}</label>
                                 <div class="banner__inputlist">
-                                    <input type="text" name="country" placeholder="Country / City" value="{{ request.GET.country|default:'' }}">
+                                    <input type="text" name="country" placeholder="{% trans "Pays / Ville" %}" value="{{ request.GET.country|default:'' }}">
                                 </div>
                             </div>
                             <div class="col">
-                                <button type="submit" class="default-btn reverse d-block"><span>Find Your Partner</span></button>
+                                <button type="submit" class="default-btn reverse d-block"><span>{% trans "Trouver votre partenaire" %}</span></button>
                             </div>
                         </div>
                     </div>

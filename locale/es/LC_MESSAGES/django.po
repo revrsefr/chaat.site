@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-01 18:41+0000\n"
+"POT-Creation-Date: 2026-02-01 21:33+0000\n"
 "PO-Revision-Date: 2026-01-25 15:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -40,6 +40,7 @@ msgid "Mot de passe oublié"
 msgstr "Contraseña olvidada"
 
 #: templates/accounts/forgot_password.html:23 templates/accounts/login.html:5
+#: templates/main/footer.html:86 templates/main/footer.html:132
 msgid "Connexion"
 msgstr "Iniciar sesión"
 
@@ -128,6 +129,7 @@ msgid "Se déconnecter"
 msgstr "Cerrar sesión"
 
 #: templates/accounts/login.html:47 templates/accounts/profile.html:85
+#: templates/community/member_detail.html:127
 msgid "Email vérifié"
 msgstr "Correo verificado"
 
@@ -136,6 +138,7 @@ msgid "Email non vérifié"
 msgstr "Correo no verificado"
 
 #: templates/accounts/login.html:49 templates/accounts/profile.html:155
+#: templates/community/member_detail.html:109
 msgid "Ville"
 msgstr "Ciudad"
 
@@ -183,6 +186,7 @@ msgid "Astuce : vous pouvez utiliser votre email ou votre pseudo."
 msgstr "Consejo: puedes usar tu correo o tu apodo."
 
 #: templates/accounts/password_reset_email.html:2
+#, python-format
 msgid "Bonjour %(username)s,"
 msgstr "Hola %(username)s,"
 
@@ -190,39 +194,49 @@ msgstr "Hola %(username)s,"
 msgid ""
 "Nous avons reçu une demande de réinitialisation du mot de passe pour votre "
 "compte."
-msgstr "Hemos recibido una solicitud para restablecer la contraseña de tu cuenta."
+msgstr ""
+"Hemos recibido una solicitud para restablecer la contraseña de tu cuenta."
 
 #: templates/accounts/password_reset_email.html:6
 msgid ""
 "Pour choisir un nouveau mot de passe, cliquez sur le lien ci-dessous (ou "
 "copiez/collez-le dans votre navigateur) :"
-msgstr "Para elegir una nueva contraseña, haz clic en el enlace de abajo (o cópialo y pégalo en tu navegador):"
+msgstr ""
+"Para elegir una nueva contraseña, haz clic en el enlace de abajo (o cópialo "
+"y pégalo en tu navegador):"
 
 #: templates/accounts/password_reset_email.html:10
 msgid ""
 "Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet "
 "email : aucun changement ne sera effectué."
-msgstr "Si no solicitaste este cambio, puedes ignorar este correo: no se realizará ningún cambio."
+msgstr ""
+"Si no solicitaste este cambio, puedes ignorar este correo: no se realizará "
+"ningún cambio."
 
 #: templates/accounts/password_reset_email.html:11
 msgid ""
 "Pour toute question, n’hésitez pas à nous contacter a rejoindre le salon #!"
 "aide sur notre serveur."
-msgstr "Si tienes alguna pregunta, no dudes en contactarnos o unirte a la sala #!aide en nuestro servidor."
+msgstr ""
+"Si tienes alguna pregunta, no dudes en contactarnos o unirte a la sala #!"
+"aide en nuestro servidor."
 
 #: templates/accounts/password_reset_email.html:13
 msgid "Cordialement,"
 msgstr "Cordialmente,"
 
 #: templates/accounts/password_reset_email.html:14
+#, python-format
 msgid "Services@%(site_name)s"
 msgstr "Servicios@%(site_name)s"
 
 #: templates/accounts/password_reset_email.html:15
+#, python-format
 msgid "%(site_name)s Network"
 msgstr "Red %(site_name)s"
 
 #: templates/accounts/profile.html:28 templates/accounts/profile.html:48
+#: templates/community/member_detail.html:37
 msgid "Profil"
 msgstr "Perfil"
 
@@ -355,6 +369,8 @@ msgid "Se connecter"
 msgstr "Iniciar sesión"
 
 #: templates/accounts/register.html:5 templates/accounts/register.html:17
+#: templates/community/member_detail.html:113 templates/main/footer.html:83
+#: templates/main/footer.html:129
 msgid "Inscription"
 msgstr "Inscripción"
 
@@ -628,7 +644,7 @@ msgid "Aucune catégorie disponible"
 msgstr "No hay categorías disponibles"
 
 #: templates/blog/blog-single.html:178 templates/blog/blog.html:139
-#: templates/main/footer.html:144
+#: templates/main/footer.html:153
 msgid "Articles récents"
 msgstr "Artículos recientes"
 
@@ -661,6 +677,200 @@ msgstr "No hay artículos de blog disponibles por el momento."
 #| msgid "Aucun article récent"
 msgid "Aucun article récent disponible."
 msgstr "No hay artículos recientes disponibles."
+
+#: templates/community/member_detail.html:5 templates/main/header.html:60
+msgid "Communauté"
+msgstr "Comunidad"
+
+#: templates/community/member_detail.html:32
+msgid "Activité"
+msgstr "Actividad"
+
+#: templates/community/member_detail.html:42
+msgid "Sites"
+msgstr "Sitios"
+
+#: templates/community/member_detail.html:47
+msgid "Media"
+msgstr "Medios"
+
+#: templates/community/member_detail.html:66
+msgid "Publications"
+msgstr "Publicaciones"
+
+#: templates/community/member_detail.html:80
+msgid "Voir l’article"
+msgstr "Ver el artículo"
+
+#: templates/community/member_detail.html:85
+msgid "Aucune activité publique pour le moment."
+msgstr "No hay actividad pública por el momento."
+
+#: templates/community/member_detail.html:93
+msgid "Infos"
+msgstr "Información"
+
+#: templates/community/member_detail.html:97
+msgid "Nom d’utilisateur"
+msgstr "Nombre de usuario"
+
+#: templates/community/member_detail.html:101 templates/main/home.html:399
+msgid "Genre"
+msgstr "Género"
+
+#: templates/community/member_detail.html:105
+#: templates/community/membres.html:138
+msgid "Âge"
+msgstr "Edad"
+
+#: templates/community/member_detail.html:117
+#: templates/community/membres.html:47 templates/main/home.html:636
+msgid "Dernière activité"
+msgstr "Última actividad"
+
+#: templates/community/member_detail.html:120
+#: templates/community/member_detail.html:254
+#: templates/community/member_detail.html:277
+#: templates/community/membres.html:73
+#, python-format
+msgid "%(last_seen)s ago"
+msgstr "hace %(last_seen)s"
+
+#: templates/community/member_detail.html:128
+msgid "Oui"
+msgstr "Sí"
+
+#: templates/community/member_detail.html:128
+msgid "Non"
+msgstr "No"
+
+#: templates/community/member_detail.html:135 templates/main/footer.html:36
+#: templates/main/footer.html:47 templates/main/pages/about.html:4
+#: templates/main/pages/about.html:83
+msgid "À propos"
+msgstr "Acerca de"
+
+#: templates/community/member_detail.html:140
+msgid "Aucune description."
+msgstr "Sin descripción."
+
+#: templates/community/member_detail.html:150
+msgid "Liens"
+msgstr "Enlaces"
+
+#: templates/community/member_detail.html:152
+msgid "Aucun lien public pour le moment."
+msgstr "No hay enlaces públicos por el momento."
+
+#: templates/community/member_detail.html:160
+msgid "Dernières images"
+msgstr "Últimas imágenes"
+
+#: templates/community/member_detail.html:172
+msgid "Aucun média pour le moment."
+msgstr "No hay medios por el momento."
+
+#: templates/community/member_detail.html:196
+#, python-format
+msgid "Active %(last_seen)s ago"
+msgstr "Activo hace %(last_seen)s"
+
+#: templates/community/member_detail.html:198
+#: templates/community/member_detail.html:256
+#: templates/community/member_detail.html:279
+#: templates/community/membres.html:75
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: templates/community/member_detail.html:205
+msgid "Aucune bio."
+msgstr "Sin biografía."
+
+#: templates/community/member_detail.html:209
+msgid "Photos récentes"
+msgstr "Fotos recientes"
+
+#: templates/community/member_detail.html:218
+msgid "Aucune photo."
+msgstr "No hay fotos."
+
+#: templates/community/member_detail.html:232
+#: templates/community/membres.html:6 templates/main/footer.html:77
+#: templates/main/footer.html:123 templates/main/header.html:64
+#: templates/main/home.html:562
+msgid "Membres"
+msgstr "Miembros"
+
+#: templates/community/member_detail.html:235
+msgid "Nouveaux"
+msgstr "Nuevos"
+
+#: templates/community/member_detail.html:238
+#: templates/community/membres.html:49
+msgid "Populaires"
+msgstr "Populares"
+
+#: templates/community/member_detail.html:263
+#: templates/community/member_detail.html:286
+msgid "Aucun membre."
+msgstr "Ningún miembro."
+
+#: templates/community/membres.html:34 templates/community/membres.html:119
+msgid "Filtrer votre recherche"
+msgstr "Filtrar tu búsqueda"
+
+#: templates/community/membres.html:38
+msgid "Tous les membres"
+msgstr "Todos los miembros"
+
+#: templates/community/membres.html:44
+msgid "Trier par :"
+msgstr "Ordenar por:"
+
+#: templates/community/membres.html:48
+msgid "Les plus anciens"
+msgstr "Los más antiguos"
+
+#: templates/community/membres.html:50
+msgid "Les plus actifs"
+msgstr "Los más activos"
+
+#: templates/community/membres.html:82
+msgid "Aucun membre trouvé."
+msgstr "No se encontraron miembros."
+
+#: templates/community/membres.html:89
+#, python-format
+msgid "Affichage de %(start)s - %(end)s sur %(total)s membres"
+msgstr "Mostrando %(start)s - %(end)s de %(total)s miembros"
+
+#: templates/community/membres.html:127
+msgid "Je suis"
+msgstr "Soy"
+
+#: templates/community/membres.html:130
+msgid "Sélectionner le genre"
+msgstr "Seleccionar el género"
+
+#: templates/community/membres.html:143
+msgid "Min"
+msgstr "Mín"
+
+#: templates/community/membres.html:153 templates/irc/dashboard.html:63
+msgid "Max"
+msgstr "Máximo"
+
+#: templates/community/membres.html:163
+msgid "Pays"
+msgstr "País"
+
+#: templates/community/membres.html:165
+msgid "Pays / Ville"
+msgstr "País / Ciudad"
+
+#: templates/community/membres.html:169
+msgid "Trouver votre partenaire"
+msgstr "Encontrar tu pareja"
 
 #: templates/irc/dashboard.html:5
 msgid "Network: irc telemetry"
@@ -736,10 +946,6 @@ msgstr "Métrica"
 #: templates/irc/dashboard.html:62
 msgid "Current"
 msgstr "Actual"
-
-#: templates/irc/dashboard.html:63
-msgid "Max"
-msgstr "Máximo"
 
 #: templates/irc/dashboard.html:67
 msgid "Snapshots pending…"
@@ -861,10 +1067,9 @@ msgstr "Haz clic en un apodo para cargar detalles en vivo."
 msgid "Awaiting user list…"
 msgstr "Esperando lista de usuarios…"
 
-#: templates/main/footer.html:36 templates/main/footer.html:47
-#: templates/main/pages/about.html:4 templates/main/pages/about.html:83
-msgid "À propos"
-msgstr "Acerca de"
+#: templates/main/footer.html:27
+msgid "Footer"
+msgstr "Pie de página"
 
 #: templates/main/footer.html:42 templates/main/pages/terms.html:4
 #: templates/main/pages/terms.html:138
@@ -880,37 +1085,43 @@ msgstr "Aviso legal"
 msgid "Informations"
 msgstr "Información"
 
-#: templates/main/footer.html:91 templates/main/footer.html:92
+#: templates/main/footer.html:74 templates/main/header.html:52
+#: templates/main/header.html:54
+msgid "Network"
+msgstr "Red"
+
+#: templates/main/footer.html:80 templates/main/footer.html:126
+#: templates/main/header.html:69 templates/main/header.html:71
+msgid "Blog"
+msgstr "Blog"
+
+#: templates/main/footer.html:96 templates/main/footer.html:97
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/main/footer.html:97 templates/main/footer.html:132
+#: templates/main/footer.html:102 templates/main/footer.html:141
 msgid "Bientôt disponible"
 msgstr "Disponible pronto"
 
-#: templates/main/footer.html:109
+#: templates/main/footer.html:114
 msgid "Liens utiles"
 msgstr "Enlaces útiles"
 
-#: templates/main/footer.html:155
+#: templates/main/footer.html:164
 msgid "Aucun article récent"
 msgstr "No hay artículos recientes"
 
-#: templates/main/footer.html:167
+#: templates/main/footer.html:176
 msgid "Derniers inscrits"
 msgstr "Últimos registrados"
 
-#: templates/main/footer.html:195
+#: templates/main/footer.html:204
 msgid "Aucun membre récent"
 msgstr "No hay miembros recientes"
 
-#: templates/main/footer.html:207
+#: templates/main/footer.html:216
 msgid "Tous droits réservés"
 msgstr "Todos los derechos reservados"
-
-#: templates/main/header.html:52 templates/main/header.html:54
-msgid "Network"
-msgstr "Red"
 
 #: templates/main/header.html:55 templates/main/header.html:72
 msgid "Blog Style Two"
@@ -920,10 +1131,6 @@ msgstr "Blog estilo dos"
 msgid "Blog Details"
 msgstr "Detalles del blog"
 
-#: templates/main/header.html:60
-msgid "Communauté"
-msgstr "Comunidad"
-
 #: templates/main/header.html:62
 msgid "Community"
 msgstr "Comunidad"
@@ -932,17 +1139,9 @@ msgstr "Comunidad"
 msgid "All Group"
 msgstr "Todos los grupos"
 
-#: templates/main/header.html:64 templates/main/home.html:562
-msgid "Membres"
-msgstr "Miembros"
-
 #: templates/main/header.html:65
 msgid "Activity"
 msgstr "Actividad"
-
-#: templates/main/header.html:69 templates/main/header.html:71
-msgid "Blog"
-msgstr "Blog"
 
 #: templates/main/header.html:86
 msgid "Changer de langue"
@@ -1046,10 +1245,6 @@ msgstr "Introduce un apodo (mínimo 3 caracteres)."
 #: templates/main/home.html:396
 msgid "3 caractères minimum."
 msgstr "Mínimo 3 caracteres."
-
-#: templates/main/home.html:399
-msgid "Genre"
-msgstr "Género"
 
 #: templates/main/home.html:409
 msgid "Âge (optionnel)"
@@ -1192,10 +1387,6 @@ msgid ""
 msgstr ""
 "Perfiles, intereses y salas para conversar. Aquí privilegiamos intercambios "
 "simples, humanos y respetuosos."
-
-#: templates/main/home.html:636
-msgid "Dernière activité"
-msgstr "Última actividad"
 
 #: templates/main/home.html:636
 #, python-format
@@ -1351,6 +1542,617 @@ msgstr ""
 #: templates/main/pages/about.html:99
 msgid "Besoin d'aide ? Rejoignez le salon"
 msgstr "¿Necesitas ayuda? Únete a la sala"
+
+#: templates/main/pages/terms.html:137
+msgid "Conditions & utilisation"
+msgstr "Condiciones y uso"
+
+#: templates/main/pages/terms.html:140
+msgid "Dernière mise à jour :"
+msgstr "Ultima actualizacion:"
+
+#: templates/main/pages/terms.html:156
+msgid "Sommaire"
+msgstr "Indice"
+
+#: templates/main/pages/terms.html:162
+msgid "Ouvrir le sommaire"
+msgstr "Abrir el indice"
+
+#: templates/main/pages/terms.html:164 templates/main/pages/terms.html:181
+#: templates/main/pages/terms.html:202
+msgid "1. Préambule"
+msgstr "1. Preambulo"
+
+#: templates/main/pages/terms.html:165 templates/main/pages/terms.html:182
+#: templates/main/pages/terms.html:215
+msgid "2. Définitions"
+msgstr "2. Definiciones"
+
+#: templates/main/pages/terms.html:166 templates/main/pages/terms.html:183
+#: templates/main/pages/terms.html:227
+msgid "3. Accès au service"
+msgstr "3. Acceso al servicio"
+
+#: templates/main/pages/terms.html:167 templates/main/pages/terms.html:184
+#: templates/main/pages/terms.html:241
+msgid "4. Compte & pseudo"
+msgstr "4. Cuenta y apodo"
+
+#: templates/main/pages/terms.html:168 templates/main/pages/terms.html:185
+#: templates/main/pages/terms.html:257
+msgid "5. Règles de conduite"
+msgstr "5. Reglas de conducta"
+
+#: templates/main/pages/terms.html:169 templates/main/pages/terms.html:186
+#: templates/main/pages/terms.html:269
+msgid "6. Contenus publiés"
+msgstr "6. Contenidos publicados"
+
+#: templates/main/pages/terms.html:170 templates/main/pages/terms.html:187
+#: templates/main/pages/terms.html:285
+msgid "7. Modération & sanctions"
+msgstr "7. Moderacion y sanciones"
+
+#: templates/main/pages/terms.html:171 templates/main/pages/terms.html:188
+#: templates/main/pages/terms.html:301
+msgid "8. Sécurité & signalement"
+msgstr "8. Seguridad y reportes"
+
+#: templates/main/pages/terms.html:172 templates/main/pages/terms.html:189
+#: templates/main/pages/terms.html:316
+msgid "9. Données personnelles & cookies"
+msgstr "9. Datos personales y cookies"
+
+#: templates/main/pages/terms.html:173 templates/main/pages/terms.html:190
+#: templates/main/pages/terms.html:329
+msgid "10. Propriété intellectuelle"
+msgstr "10. Propiedad intelectual"
+
+#: templates/main/pages/terms.html:174 templates/main/pages/terms.html:191
+#: templates/main/pages/terms.html:342
+msgid "11. Responsabilité"
+msgstr "11. Responsabilidad"
+
+#: templates/main/pages/terms.html:175 templates/main/pages/terms.html:192
+#: templates/main/pages/terms.html:355
+msgid "12. Droit applicable & contact"
+msgstr "12. Derecho aplicable y contacto"
+
+#: templates/main/pages/terms.html:204
+#, python-format
+msgid ""
+"Bienvenue sur %(site_name)s. Cette page regroupe les règles d’utilisation du "
+"site et du tchat (les « CGU »). Elles s’appliquent dès que vous consultez le "
+"site, rejoignez un salon, publiez un message ou interagissez avec d’autres "
+"utilisateurs."
+msgstr ""
+"Bienvenido a %(site_name)s. Esta pagina reune las reglas de uso del sitio y "
+"del chat (las «CGU»). Se aplican desde que consulta el sitio, se une a una "
+"sala, publica un mensaje o interactua con otros usuarios."
+
+#: templates/main/pages/terms.html:210
+msgid "Si vous n’êtes pas d’accord avec ces règles, n’utilisez pas le Service."
+msgstr "Si no esta de acuerdo con estas reglas, no utilice el Servicio."
+
+#: templates/main/pages/terms.html:217
+msgid ""
+"<strong>Service</strong> : le site et ses fonctionnalités (salons, messages, "
+"profils éventuels, pages d’aide, etc.)."
+msgstr ""
+"<strong>Servicio</strong> : el sitio y sus funcionalidades (salas, mensajes, "
+"perfiles opcionales, paginas de ayuda, etc.)."
+
+#: templates/main/pages/terms.html:218
+msgid ""
+"<strong>Utilisateur</strong> : toute personne qui visite le site ou utilise "
+"le tchat."
+msgstr ""
+"<strong>Usuario</strong> : toda persona que visita el sitio o usa el chat."
+
+#: templates/main/pages/terms.html:219
+msgid ""
+"<strong>Compte</strong> : espace utilisateur (si l’inscription / connexion "
+"est proposée) permettant d’accéder à certaines fonctions."
+msgstr ""
+"<strong>Cuenta</strong> : espacio de usuario (si se ofrece registro/inicio de "
+"sesion) que permite acceder a ciertas funciones."
+
+#: templates/main/pages/terms.html:220
+msgid ""
+"<strong>Contenu</strong> : tout ce que vous publiez (message, pseudo, "
+"avatar, image, lien, description, etc.)."
+msgstr ""
+"<strong>Contenido</strong> : todo lo que publica (mensaje, apodo, avatar, "
+"imagen, enlace, descripcion, etc.)."
+
+#: templates/main/pages/terms.html:221
+msgid ""
+"<strong>Signalement</strong> : action permettant d’alerter l’équipe sur un "
+"abus ou un risque."
+msgstr ""
+"<strong>Reporte</strong> : accion que permite alertar al equipo sobre un "
+"abuso o un riesgo."
+
+#: templates/main/pages/terms.html:222
+msgid ""
+"<strong>Modération</strong> : moyens (humains et/ou techniques) visant à "
+"limiter les abus et à appliquer les règles."
+msgstr ""
+"<strong>Moderacion</strong> : medios (humanos y/o tecnicos) para limitar los "
+"abusos y aplicar las reglas."
+
+#: templates/main/pages/terms.html:229
+msgid ""
+"L’accès au Service nécessite une connexion Internet et un appareil "
+"compatible. Vous restez responsable de votre matériel, de votre navigateur "
+"et de la sécurité de vos équipements. Le Service peut être ralenti, "
+"indisponible ou modifié (maintenance, incident, mise à jour, lutte anti-"
+"spam, etc.)."
+msgstr ""
+"El acceso al Servicio requiere una conexion a Internet y un dispositivo "
+"compatible. Usted sigue siendo responsable de su equipo, su navegador y la "
+"seguridad de sus dispositivos. El Servicio puede ralentizarse, no estar "
+"disponible o modificarse (mantenimiento, incidente, actualizacion, lucha "
+"anti-spam, etc.)."
+
+#: templates/main/pages/terms.html:235
+msgid ""
+"<strong>Âge / capacité :</strong> vous confirmez avoir l’âge requis et la "
+"capacité légale pour utiliser ce type de service. Si certaines zones sont "
+"réservées à un public majeur, vous vous engagez à ne pas y accéder si ce "
+"n’est pas votre cas."
+msgstr ""
+"<strong>Edad / capacidad :</strong> confirma tener la edad requerida y la "
+"capacidad legal para usar este tipo de servicio. Si algunas zonas estan "
+"reservadas a un publico adulto, se compromete a no acceder si no es su caso."
+
+#: templates/main/pages/terms.html:243
+msgid ""
+"Selon les pages, l’accès peut se faire avec ou sans compte. Si un Compte "
+"existe, vous devez protéger vos identifiants et éviter tout partage. Les "
+"actions effectuées depuis votre Compte sont réputées réalisées par vous."
+msgstr ""
+"Segun las paginas, el acceso puede hacerse con o sin cuenta. Si existe una "
+"Cuenta, debe proteger sus credenciales y evitar cualquier comparticion. Las "
+"acciones realizadas desde su Cuenta se consideran realizadas por usted."
+
+#: templates/main/pages/terms.html:249
+msgid ""
+"Votre pseudo (et éventuellement avatar/description) ne doit pas imiter une "
+"autre personne, une marque ou un service officiel. Il ne doit pas non plus "
+"contenir d’insultes, de propos haineux ou de contenu illégal."
+msgstr ""
+"Su apodo (y eventualmente avatar/descripcion) no debe imitar a otra "
+"persona, una marca o un servicio oficial. Tampoco debe contener insultos, "
+"comentarios de odio o contenido ilegal."
+
+#: templates/main/pages/terms.html:258
+msgid ""
+"Le tchat est un espace public/communautaire : restez respectueux, prudent, "
+"et conforme à la loi."
+msgstr ""
+"El chat es un espacio publico/comunitario: sea respetuoso, prudente y "
+"conforme a la ley."
+
+#: templates/main/pages/terms.html:260
+msgid "Pas de harcèlement, menaces, humiliation, ni propos discriminatoires."
+msgstr "No acoso, amenazas, humillacion ni comentarios discriminatorios."
+
+#: templates/main/pages/terms.html:261
+msgid ""
+"Pas de contenus illégaux ou dangereux (ex. : exploitation de mineurs, "
+"incitation à la violence, diffusion d’images sans droit, etc.)."
+msgstr ""
+"No contenidos ilegales o peligrosos (ej.: explotacion de menores, "
+"incitacion a la violencia, difusion de imagenes sin derecho, etc.)."
+
+#: templates/main/pages/terms.html:262
+msgid ""
+"Pas de diffusion des données personnelles d’un tiers (adresse, téléphone, "
+"réseaux sociaux, etc.) sans accord explicite."
+msgstr ""
+"No difusion de datos personales de terceros (direccion, telefono, redes "
+"sociales, etc.) sin acuerdo explicito."
+
+#: templates/main/pages/terms.html:263
+msgid ""
+"Pas de spam, flood, publicité agressive, liens malveillants, arnaques, "
+"phishing."
+msgstr ""
+"No spam, flood, publicidad agresiva, enlaces maliciosos, estafas, phishing."
+
+#: templates/main/pages/terms.html:264
+msgid ""
+"Pas de scripts, bots ou tentatives de contournement (multi-comptes abusifs, "
+"surcharge, attaques, etc.)."
+msgstr ""
+"No scripts, bots o intentos de elusion (multi-cuentas abusivas, sobrecarga, "
+"ataques, etc.)."
+
+#: templates/main/pages/terms.html:271
+msgid ""
+"Vous êtes seul responsable de ce que vous publiez. Publiez uniquement des "
+"contenus que vous avez le droit de partager (droits d’auteur, droit à "
+"l’image, autorisation des personnes concernées, etc.)."
+msgstr ""
+"Usted es el unico responsable de lo que publica. Publique solo contenidos "
+"que tenga derecho a compartir (derechos de autor, derecho de imagen, "
+"autorizacion de las personas involucradas, etc.)."
+
+#: templates/main/pages/terms.html:277
+#, python-format
+msgid ""
+"Pour faire fonctionner le Service (affichage dans les salons, stockage "
+"technique, modération, lutte anti-spam), vous autorisez %(site_name)s à "
+"héberger et afficher vos Contenus. Cette autorisation est limitée aux "
+"besoins du Service."
+msgstr ""
+"Para hacer funcionar el Servicio (visualizacion en las salas, almacenamiento "
+"tecnico, moderacion, lucha anti-spam), autoriza a %(site_name)s a alojar y "
+"mostrar sus Contenidos. Esta autorizacion se limita a las necesidades del "
+"Servicio."
+
+#: templates/main/pages/terms.html:287
+msgid ""
+"Pour protéger la communauté, une modération peut être mise en place "
+"(automatique et/ou manuelle). Nous pouvons retirer un contenu, masquer un "
+"message, bloquer un lien, limiter certaines actions ou restreindre l’accès "
+"au Service en cas d’abus ou de non-respect des CGU."
+msgstr ""
+"Para proteger la comunidad, puede establecerse una moderacion (automatica "
+"y/o manual). Podemos retirar un contenido, ocultar un mensaje, bloquear un "
+"enlace, limitar ciertas acciones o restringir el acceso al Servicio en caso "
+"de abuso o incumplimiento de las CGU."
+
+#: templates/main/pages/terms.html:293
+msgid ""
+"Les mesures possibles incluent : avertissement, limitation (“slow mode”), "
+"mise en sourdine, suspension, bannissement, et le cas échéant conservation "
+"d’éléments techniques utiles (ex. logs) et transmission aux autorités sur "
+"demande légale."
+msgstr ""
+"Las medidas posibles incluyen: advertencia, limitacion (""slow mode""), "
+"silenciamiento, suspension, expulsion y, en su caso, conservacion de "
+"elementos tecnicos utiles (ej. logs) y transmision a las autoridades por "
+"solicitud legal."
+
+#: templates/main/pages/terms.html:303
+msgid ""
+"En cas d’abus, utilisez les outils de signalement (si disponibles) ou "
+"contactez l’équipe. Ne partagez pas d’informations sensibles dans les salons "
+"publics. Si vous envisagez une rencontre, faites-le avec prudence (lieu "
+"public, informer un proche, etc.)."
+msgstr ""
+"En caso de abuso, use las herramientas de reporte (si estan disponibles) o "
+"contacte al equipo. No comparta informacion sensible en salas publicas. Si "
+"planea un encuentro, hagalo con prudencia (lugar publico, informar a un "
+"cercano, etc.)."
+
+#: templates/main/pages/terms.html:309
+#, python-format
+msgid ""
+"En cas de danger immédiat, contactez les services d’urgence. %(site_name)s "
+"ne peut pas garantir l’identité réelle des utilisateurs."
+msgstr ""
+"En caso de peligro inmediato, contacte a los servicios de emergencia. "
+"%(site_name)s no puede garantizar la identidad real de los usuarios."
+
+#: templates/main/pages/terms.html:318
+msgid ""
+"Nous utilisons des données strictement nécessaires au fonctionnement (ex. "
+"sécurité, anti-spam, stabilité, préférences). Selon vos choix de "
+"consentement, des outils de mesure d’audience et/ou publicitaires peuvent "
+"être activés."
+msgstr ""
+"Usamos datos estrictamente necesarios para el funcionamiento (ej. seguridad, "
+"anti-spam, estabilidad, preferencias). Segun sus opciones de consentimiento, "
+"pueden activarse herramientas de medicion de audiencia y/o publicitarias."
+
+#: templates/main/pages/terms.html:324
+msgid "Consultez : <a href=\"/privacy/\">Politique de confidentialité</a>."
+msgstr "Consulte: <a href=\"/privacy/\">Politica de privacidad</a>."
+
+#: templates/main/pages/terms.html:331
+msgid ""
+"Le site, son design, ses logos et ses éléments techniques sont protégés. "
+"Toute réutilisation non autorisée (copie, extraction, scraping massif, "
+"reproduction du design ou des contenus éditoriaux) est interdite."
+msgstr ""
+"El sitio, su diseno, sus logotipos y sus elementos tecnicos estan protegidos. "
+"Cualquier reutilizacion no autorizada (copia, extraccion, scraping masivo, "
+"reproduccion del diseno o de contenidos editoriales) esta prohibida."
+
+#: templates/main/pages/terms.html:337
+msgid ""
+"Les marques, contenus et médias appartenant à des tiers restent la propriété "
+"de leurs titulaires."
+msgstr ""
+"Las marcas, contenidos y medios pertenecientes a terceros siguen siendo "
+"propiedad de sus titulares."
+
+#: templates/main/pages/terms.html:344
+#, python-format
+msgid ""
+"Nous faisons de notre mieux pour maintenir un service stable, mais aucune "
+"disponibilité 100%% continue ne peut être garantie. Le Service peut évoluer, "
+"être limité, ou subir des interruptions."
+msgstr ""
+"Hacemos lo posible por mantener un servicio estable, pero no se puede "
+"garantizar una disponibilidad 100%% continua. El Servicio puede evolucionar, "
+"ser limitado o sufrir interrupciones."
+
+#: templates/main/pages/terms.html:350
+msgid ""
+"Les échanges et rencontres entre Utilisateurs se font sous votre "
+"responsabilité. Restez vigilant(e), notamment en cas de demandes d’argent ou "
+"de liens suspects."
+msgstr ""
+"Los intercambios y encuentros entre Usuarios se realizan bajo su "
+"responsabilidad. Mantengase vigilante, especialmente ante solicitudes de "
+"dinero o enlaces sospechosos."
+
+#: templates/main/pages/terms.html:357
+msgid ""
+"Ces CGU peuvent être mises à jour. La version affichée sur cette page est "
+"celle applicable. Le droit applicable et les informations d’éditeur (et/ou "
+"d’hébergeur) sont indiqués dans les mentions légales lorsque disponibles."
+msgstr ""
+"Estas CGU pueden actualizarse. La version mostrada en esta pagina es la "
+"aplicable. El derecho aplicable y la informacion del editor (y/o del "
+"proveedor de alojamiento) se indican en las menciones legales cuando estan "
+"disponibles."
+
+#: templates/main/pages/terms.html:363
+msgid "Une question ou un signalement : <a href=\"/contact/\">Contact</a>."
+msgstr "Una pregunta o un reporte: <a href=\"/contact/\">Contacto</a>."
+
+# Cookie consent
+#~ msgid "Consentement cookies"
+#~ msgstr "Consentimiento de cookies"
+
+#~ msgid "Cookies"
+#~ msgstr "Cookies"
+
+#~ msgid "Ouvrir les préférences cookies"
+#~ msgstr "Abrir preferencias de cookies"
+
+#~ msgid ""
+#~ "Nous utilisons des cookies pour faire fonctionner le site, mesurer "
+#~ "l’audience et (si vous l’autorisez) proposer des contenus/publicités plus "
+#~ "pertinents.\n"
+#~ "        Vous pouvez modifier vos préférences à tout moment."
+#~ msgstr ""
+#~ "Utilizamos cookies para hacer funcionar el sitio, medir la audiencia y "
+#~ "(si lo autoriza) ofrecer contenidos/publicidad más relevantes.\n"
+#~ "        Puede modificar sus preferencias en cualquier momento."
+
+#~ msgid "Accepter"
+#~ msgstr "Aceptar"
+
+#~ msgid "Personnaliser"
+#~ msgstr "Personalizar"
+
+#~ msgid "Refuser"
+#~ msgstr "Rechazar"
+
+#~ msgid "Préférences des cookies"
+#~ msgstr "Preferencias de cookies"
+
+#~ msgid ""
+#~ "Choisissez ce que vous autorisez. Les cookies strictement nécessaires au "
+#~ "fonctionnement du site peuvent être utilisés même en cas de refus.\n"
+#~ "                Les chiffres ci-dessous reflètent uniquement les cookies "
+#~ "1ère partie détectés dans votre navigateur."
+#~ msgstr ""
+#~ "Elija lo que autoriza. Las cookies estrictamente necesarias para el "
+#~ "funcionamiento del sitio pueden usarse incluso si se rechazan.\n"
+#~ "                Las cifras a continuacion reflejan solo las cookies de "
+#~ "primera parte detectadas en su navegador."
+
+#~ msgid "Fermer"
+#~ msgstr "Cerrar"
+
+#~ msgid "État actuel"
+#~ msgstr "Estado actual"
+
+#~ msgid "Cookies détectés (1ère partie)"
+#~ msgstr "Cookies detectadas (primera parte)"
+
+#~ msgid ""
+#~ "Le compteur liste uniquement les cookies <strong>1ère partie</strong> "
+#~ "visibles via <code>document.cookie</code>. Selon votre navigateur/"
+#~ "adblock, il peut rester à 0 tant qu’aucun cookie n’a été posé (souvent "
+#~ "après consentement + rechargement). Les cookies <strong>tiers</strong> ne "
+#~ "sont pas détectables ici."
+#~ msgstr ""
+#~ "El contador solo lista las cookies de <strong>primera parte</strong> "
+#~ "visibles via <code>document.cookie</code>. Segun su navegador o "
+#~ "bloqueador, puede permanecer en 0 mientras no se haya creado ninguna "
+#~ "cookie (a menudo despues del consentimiento y la recarga). Las cookies de "
+#~ "<strong>terceros</strong> no se pueden detectar aqui."
+
+#~ msgid "Mesure d’audience"
+#~ msgstr "Medicion de audiencia"
+
+#~ msgid "détecté(s)"
+#~ msgstr "detectado(s)"
+
+#~ msgid "connu(s)"
+#~ msgstr "conocido(s)"
+
+#~ msgid ""
+#~ "Permet de mesurer la fréquentation (pages vues, temps de visite, erreurs) "
+#~ "afin d’améliorer le site. Exemple : Google Analytics / tags équivalents."
+#~ msgstr ""
+#~ "Permite medir el trafico (paginas vistas, tiempo de visita, errores) para "
+#~ "mejorar el sitio. Ejemplo: Google Analytics o etiquetas equivalentes."
+
+#~ msgid "Voir les cookies détectés"
+#~ msgstr "Ver las cookies detectadas"
+
+#~ msgid "Fonctionnels"
+#~ msgstr "Funcionales"
+
+#~ msgid ""
+#~ "Mémorise vos choix et améliore l’expérience (préférences, sécurité, "
+#~ "sessions). La désactivation peut dégrader certaines fonctionnalités."
+#~ msgstr ""
+#~ "Guarda sus elecciones y mejora la experiencia (preferencias, seguridad, "
+#~ "sesiones). La desactivacion puede degradar algunas funciones."
+
+#~ msgid "Publicitaires"
+#~ msgstr "Publicitarias"
+
+#~ msgid ""
+#~ "Utilisés pour mesurer des campagnes, limiter la répétition, et proposer "
+#~ "des publicités plus pertinentes (selon votre consentement)."
+#~ msgstr ""
+#~ "Se usan para medir campanas, limitar la repeticion y ofrecer publicidad "
+#~ "mas relevante (segun su consentimiento)."
+
+#~ msgid "Sécurité (toujours actif)"
+#~ msgstr "Seguridad (siempre activo)"
+
+#~ msgid "Protection anti-abus, sécurité du site"
+#~ msgstr "Proteccion contra abusos, seguridad del sitio"
+
+#~ msgid "Activé"
+#~ msgstr "Activo"
+
+#~ msgid ""
+#~ "Certains stockages strictement nécessaires peuvent être utilisés pour "
+#~ "protéger le site (ex. prévention des fraudes / sécurité)."
+#~ msgstr ""
+#~ "Algunos almacenamientos estrictamente necesarios pueden utilizarse para "
+#~ "proteger el sitio (por ejemplo, prevencion de fraudes y seguridad)."
+
+#~ msgid "Tout accepter"
+#~ msgstr "Aceptar todo"
+
+#~ msgid "Tout refuser"
+#~ msgstr "Rechazar todo"
+
+#~ msgid "Sauvegarder"
+#~ msgstr "Guardar"
+
+#~ msgid "Modifier plus tard"
+#~ msgstr "Modificar mas tarde"
+
+#~ msgid "Home"
+#~ msgstr "Inicio"
+
+#~ msgid "Home Page One"
+#~ msgstr "Página de inicio uno"
+
+#~ msgid "Home Page Two"
+#~ msgstr "Página de inicio dos"
+
+#~ msgid "Home Page Three"
+#~ msgstr "Página de inicio tres"
+
+#~ msgid "Pages"
+#~ msgstr "Páginas"
+
+#~ msgid "About Us"
+#~ msgstr "Sobre nosotros"
+
+#~ msgid "Membership"
+#~ msgstr "Membresía"
+
+#~ msgid "comingsoon"
+#~ msgstr "próximamente"
+
+#~ msgid "All Members"
+#~ msgstr "Todos los miembros"
+
+#~ msgid "Shops"
+#~ msgstr "Tiendas"
+
+#~ msgid "Product"
+#~ msgstr "Producto"
+
+#~ msgid "Product Details"
+#~ msgstr "Detalles del producto"
+
+#~ msgid "Product Cart"
+#~ msgstr "Carrito de productos"
+
+#~ msgid "Blogs"
+#~ msgstr "Blogs"
+
+#~ msgid "contact"
+#~ msgstr "contacto"
+
+#~ msgid "My Account"
+#~ msgstr "Mi cuenta"
+
+#~ msgid "Log In"
+#~ msgstr "Iniciar sesión"
+
+#~ msgid "Sign Up"
+#~ msgstr "Registrarse"
+
+#~ msgid "Profile"
+#~ msgstr "Perfil"
+
+#~ msgid "Site Link"
+#~ msgstr "Enlace del sitio"
+
+#~ msgid "Active 5 months ago"
+#~ msgstr "Activo hace 5 meses"
+
+#~ msgid "Visit Site"
+#~ msgstr "Visitar sitio"
+
+#~ msgid "Active 2 months ago"
+#~ msgstr "Activo hace 2 meses"
+
+#~ msgid "Viewing 1 - 2 of 2 sites"
+#~ msgstr "Viendo 1 - 2 de 2 sitios"
+
+#~ msgid "A modern theme for community experiences."
+#~ msgstr "Un tema moderno para experiencias comunitarias."
+
+#~ msgid "Newsletter Sign up"
+#~ msgstr "Suscripción al boletín"
+
+#~ msgid "Your email address"
+#~ msgstr "Tu dirección de correo"
+
+#~ msgid "Subscribe"
+#~ msgstr "Suscribirse"
+
+#~ msgid "Join Community"
+#~ msgstr "Unirse a la comunidad"
+
+#, python-format
+#~ msgid "About %(site_name)s"
+#~ msgstr "Acerca de %(site_name)s"
+
+#, python-format
+#~ msgid "%(site_name)s is a friendly community experience for everyone."
+#~ msgstr "%(site_name)s es una experiencia comunitaria amigable para todos."
+
+#~ msgid "Address"
+#~ msgstr "Dirección"
+
+#~ msgid "Contact"
+#~ msgstr "Contacto"
+
+#~ msgid "Featured Members"
+#~ msgstr "Miembros destacados"
+
+#~ msgid "Active"
+#~ msgstr "Activo"
+
+#, python-format
+#~ msgid ""
+#~ "All Rights Reserved &copy; <a href=\"index.html\">%(site_name)s</a> || "
+#~ "Design By: CodexCoder"
+#~ msgstr ""
+#~ "Todos los derechos reservados &copy; <a "
+#~ "href=\"index.html\">%(site_name)s</a> || Diseñado por: CodexCoder"
 
 #~ msgid "Publier"
 #~ msgstr "Publicar"

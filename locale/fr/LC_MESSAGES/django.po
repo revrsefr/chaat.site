@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-01 18:41+0000\n"
+"POT-Creation-Date: 2026-02-01 20:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,6 +127,7 @@ msgid "Se déconnecter"
 msgstr ""
 
 #: templates/accounts/login.html:47 templates/accounts/profile.html:85
+#: templates/community/member_detail.html:144
 msgid "Email vérifié"
 msgstr ""
 
@@ -135,6 +136,7 @@ msgid "Email non vérifié"
 msgstr ""
 
 #: templates/accounts/login.html:49 templates/accounts/profile.html:155
+#: templates/community/member_detail.html:126
 msgid "Ville"
 msgstr ""
 
@@ -225,6 +227,8 @@ msgid "%(site_name)s Network"
 msgstr ""
 
 #: templates/accounts/profile.html:28 templates/accounts/profile.html:48
+#: templates/community/member_detail.html:32
+#: templates/community/member_detail.html:54
 msgid "Profil"
 msgstr ""
 
@@ -355,6 +359,7 @@ msgid "Se connecter"
 msgstr ""
 
 #: templates/accounts/register.html:5 templates/accounts/register.html:17
+#: templates/community/member_detail.html:130
 msgid "Inscription"
 msgstr ""
 
@@ -640,6 +645,393 @@ msgstr ""
 msgid "Aucun article récent disponible."
 msgstr ""
 
+#: templates/community/member-single.html:91
+msgid "Home"
+msgstr ""
+
+#: templates/community/member-single.html:93
+msgid "Home Page One"
+msgstr ""
+
+#: templates/community/member-single.html:94
+msgid "Home Page Two"
+msgstr ""
+
+#: templates/community/member-single.html:95
+msgid "Home Page Three"
+msgstr ""
+
+#: templates/community/member-single.html:99
+msgid "Pages"
+msgstr ""
+
+#: templates/community/member-single.html:101
+msgid "About Us"
+msgstr ""
+
+#: templates/community/member-single.html:102
+msgid "Membership"
+msgstr ""
+
+#: templates/community/member-single.html:103
+msgid "comingsoon"
+msgstr ""
+
+#: templates/community/member-single.html:108
+#: templates/community/member-single.html:110 templates/main/header.html:62
+msgid "Community"
+msgstr ""
+
+#: templates/community/member-single.html:111 templates/main/header.html:63
+msgid "All Group"
+msgstr ""
+
+#: templates/community/member-single.html:112
+msgid "All Members"
+msgstr ""
+
+#: templates/community/member-single.html:113
+#: templates/community/member-single.html:160 templates/main/header.html:65
+msgid "Activity"
+msgstr ""
+
+#: templates/community/member-single.html:118
+msgid "Shops"
+msgstr ""
+
+#: templates/community/member-single.html:120
+msgid "Product"
+msgstr ""
+
+#: templates/community/member-single.html:121
+msgid "Product Details"
+msgstr ""
+
+#: templates/community/member-single.html:122
+msgid "Product Cart"
+msgstr ""
+
+#: templates/community/member-single.html:126
+msgid "Blogs"
+msgstr ""
+
+#: templates/community/member-single.html:128 templates/main/header.html:69
+#: templates/main/header.html:71
+msgid "Blog"
+msgstr ""
+
+#: templates/community/member-single.html:129 templates/main/header.html:55
+#: templates/main/header.html:72
+msgid "Blog Style Two"
+msgstr ""
+
+#: templates/community/member-single.html:130 templates/main/header.html:56
+#: templates/main/header.html:73
+msgid "Blog Details"
+msgstr ""
+
+#: templates/community/member-single.html:133
+msgid "contact"
+msgstr ""
+
+#: templates/community/member-single.html:137
+msgid "My Account"
+msgstr ""
+
+#: templates/community/member-single.html:139
+msgid "Log In"
+msgstr ""
+
+#: templates/community/member-single.html:140
+msgid "Sign Up"
+msgstr ""
+
+#: templates/community/member-single.html:163
+msgid "Profile"
+msgstr ""
+
+#: templates/community/member-single.html:166
+#: templates/community/member_detail.html:59
+msgid "Sites"
+msgstr ""
+
+#: templates/community/member-single.html:169
+#: templates/community/member_detail.html:64
+msgid "Media"
+msgstr ""
+
+#: templates/community/member-single.html:626
+msgid "Site Link"
+msgstr ""
+
+#: templates/community/member-single.html:637
+#: templates/community/member-single.html:661
+#: templates/community/member-single.html:685
+msgid "Active 5 months ago"
+msgstr ""
+
+#: templates/community/member-single.html:640
+#: templates/community/member-single.html:652
+#: templates/community/member-single.html:664
+#: templates/community/member-single.html:676
+#: templates/community/member-single.html:688
+#: templates/community/member-single.html:700
+msgid "Visit Site"
+msgstr ""
+
+#: templates/community/member-single.html:649
+#: templates/community/member-single.html:673
+#: templates/community/member-single.html:697
+msgid "Active 2 months ago"
+msgstr ""
+
+#: templates/community/member-single.html:706
+msgid "Viewing 1 - 2 of 2 sites"
+msgstr ""
+
+#: templates/community/member-single.html:1231
+msgid "A modern theme for community experiences."
+msgstr ""
+
+#: templates/community/member-single.html:2537
+msgid "Newsletter Sign up"
+msgstr ""
+
+#: templates/community/member-single.html:2541
+msgid "Your email address"
+msgstr ""
+
+#: templates/community/member-single.html:2542
+msgid "Subscribe"
+msgstr ""
+
+#: templates/community/member-single.html:2550
+msgid "Join Community"
+msgstr ""
+
+#: templates/community/member-single.html:2574
+#, python-format
+msgid "About %(site_name)s"
+msgstr ""
+
+#: templates/community/member-single.html:2577
+#, python-format
+msgid "%(site_name)s is a friendly community experience for everyone."
+msgstr ""
+
+#: templates/community/member-single.html:2580
+msgid "Address"
+msgstr ""
+
+#: templates/community/member-single.html:2581
+msgid "Contact"
+msgstr ""
+
+#: templates/community/member-single.html:2592
+msgid "Featured Members"
+msgstr ""
+
+#: templates/community/member-single.html:2603
+msgid "Active"
+msgstr ""
+
+#: templates/community/member-single.html:2702
+#, python-format
+msgid ""
+"All Rights Reserved &copy; <a href=\"index.html\">%(site_name)s</a> || "
+"Design By: CodexCoder"
+msgstr ""
+
+#: templates/community/member_detail.html:5
+#: templates/community/member_detail.html:31 templates/main/header.html:60
+msgid "Communauté"
+msgstr ""
+
+#: templates/community/member_detail.html:30 templates/main/home.html:4
+msgid "Accueil"
+msgstr ""
+
+#: templates/community/member_detail.html:49
+msgid "Activité"
+msgstr ""
+
+#: templates/community/member_detail.html:83
+msgid "Publications"
+msgstr ""
+
+#: templates/community/member_detail.html:97
+msgid "Voir l’article"
+msgstr ""
+
+#: templates/community/member_detail.html:102
+msgid "Aucune activité publique pour le moment."
+msgstr ""
+
+#: templates/community/member_detail.html:110
+msgid "Infos"
+msgstr ""
+
+#: templates/community/member_detail.html:114
+msgid "Nom d’utilisateur"
+msgstr ""
+
+#: templates/community/member_detail.html:118 templates/main/home.html:399
+msgid "Genre"
+msgstr ""
+
+#: templates/community/member_detail.html:122
+#: templates/community/membres.html:138
+msgid "Âge"
+msgstr ""
+
+#: templates/community/member_detail.html:134
+#: templates/community/membres.html:47 templates/main/home.html:636
+msgid "Dernière activité"
+msgstr ""
+
+#: templates/community/member_detail.html:137
+#: templates/community/member_detail.html:271
+#: templates/community/member_detail.html:294
+#: templates/community/membres.html:73
+#, python-format
+msgid "%(last_seen)s ago"
+msgstr ""
+
+#: templates/community/member_detail.html:145
+msgid "Oui"
+msgstr ""
+
+#: templates/community/member_detail.html:145
+msgid "Non"
+msgstr ""
+
+#: templates/community/member_detail.html:152 templates/main/footer.html:36
+#: templates/main/footer.html:47 templates/main/pages/about.html:4
+#: templates/main/pages/about.html:83
+msgid "À propos"
+msgstr ""
+
+#: templates/community/member_detail.html:157
+msgid "Aucune description."
+msgstr ""
+
+#: templates/community/member_detail.html:167
+msgid "Liens"
+msgstr ""
+
+#: templates/community/member_detail.html:169
+msgid "Aucun lien public pour le moment."
+msgstr ""
+
+#: templates/community/member_detail.html:177
+msgid "Dernières images"
+msgstr ""
+
+#: templates/community/member_detail.html:189
+msgid "Aucun média pour le moment."
+msgstr ""
+
+#: templates/community/member_detail.html:213
+#, python-format
+msgid "Active %(last_seen)s ago"
+msgstr ""
+
+#: templates/community/member_detail.html:215
+#: templates/community/member_detail.html:273
+#: templates/community/member_detail.html:296
+#: templates/community/membres.html:75
+msgid "Inactive"
+msgstr ""
+
+#: templates/community/member_detail.html:222
+msgid "Aucune bio."
+msgstr ""
+
+#: templates/community/member_detail.html:226
+msgid "Photos récentes"
+msgstr ""
+
+#: templates/community/member_detail.html:235
+msgid "Aucune photo."
+msgstr ""
+
+#: templates/community/member_detail.html:249
+#: templates/community/membres.html:6 templates/main/header.html:64
+#: templates/main/home.html:562
+msgid "Membres"
+msgstr ""
+
+#: templates/community/member_detail.html:252
+msgid "Nouveaux"
+msgstr ""
+
+#: templates/community/member_detail.html:255
+#: templates/community/membres.html:49
+msgid "Populaires"
+msgstr ""
+
+#: templates/community/member_detail.html:280
+#: templates/community/member_detail.html:303
+msgid "Aucun membre."
+msgstr ""
+
+#: templates/community/membres.html:34 templates/community/membres.html:119
+msgid "Filtrer votre recherche"
+msgstr ""
+
+#: templates/community/membres.html:38
+msgid "Tous les membres"
+msgstr ""
+
+#: templates/community/membres.html:44
+msgid "Trier par :"
+msgstr ""
+
+#: templates/community/membres.html:48
+msgid "Les plus anciens"
+msgstr ""
+
+#: templates/community/membres.html:50
+msgid "Les plus actifs"
+msgstr ""
+
+#: templates/community/membres.html:82
+msgid "Aucun membre trouvé."
+msgstr ""
+
+#: templates/community/membres.html:89
+#, python-format
+msgid "Affichage de %(start)s - %(end)s sur %(total)s membres"
+msgstr ""
+
+#: templates/community/membres.html:127
+msgid "Je suis"
+msgstr ""
+
+#: templates/community/membres.html:130
+msgid "Sélectionner le genre"
+msgstr ""
+
+#: templates/community/membres.html:143
+msgid "Min"
+msgstr ""
+
+#: templates/community/membres.html:153 templates/irc/dashboard.html:63
+msgid "Max"
+msgstr ""
+
+#: templates/community/membres.html:163
+msgid "Pays"
+msgstr ""
+
+#: templates/community/membres.html:165
+msgid "Pays / Ville"
+msgstr ""
+
+#: templates/community/membres.html:169
+msgid "Trouver votre partenaire"
+msgstr ""
+
 #: templates/irc/dashboard.html:5
 msgid "Network: irc telemetry"
 msgstr ""
@@ -711,10 +1103,6 @@ msgstr ""
 
 #: templates/irc/dashboard.html:62
 msgid "Current"
-msgstr ""
-
-#: templates/irc/dashboard.html:63
-msgid "Max"
 msgstr ""
 
 #: templates/irc/dashboard.html:67
@@ -835,11 +1223,6 @@ msgstr ""
 msgid "Awaiting user list…"
 msgstr ""
 
-#: templates/main/footer.html:36 templates/main/footer.html:47
-#: templates/main/pages/about.html:4 templates/main/pages/about.html:83
-msgid "À propos"
-msgstr ""
-
 #: templates/main/footer.html:42 templates/main/pages/terms.html:4
 #: templates/main/pages/terms.html:138
 msgid "Conditions générales"
@@ -886,38 +1269,6 @@ msgstr ""
 msgid "Network"
 msgstr ""
 
-#: templates/main/header.html:55 templates/main/header.html:72
-msgid "Blog Style Two"
-msgstr ""
-
-#: templates/main/header.html:56 templates/main/header.html:73
-msgid "Blog Details"
-msgstr ""
-
-#: templates/main/header.html:60
-msgid "Communauté"
-msgstr ""
-
-#: templates/main/header.html:62
-msgid "Community"
-msgstr ""
-
-#: templates/main/header.html:63
-msgid "All Group"
-msgstr ""
-
-#: templates/main/header.html:64 templates/main/home.html:562
-msgid "Membres"
-msgstr ""
-
-#: templates/main/header.html:65
-msgid "Activity"
-msgstr ""
-
-#: templates/main/header.html:69 templates/main/header.html:71
-msgid "Blog"
-msgstr ""
-
 #: templates/main/header.html:86
 msgid "Changer de langue"
 msgstr ""
@@ -937,10 +1288,6 @@ msgstr ""
 
 #: templates/main/header.html:154
 msgid "Déconnexion"
-msgstr ""
-
-#: templates/main/home.html:4
-msgid "Accueil"
 msgstr ""
 
 #: templates/main/home.html:196
@@ -1012,10 +1359,6 @@ msgstr ""
 
 #: templates/main/home.html:396
 msgid "3 caractères minimum."
-msgstr ""
-
-#: templates/main/home.html:399
-msgid "Genre"
 msgstr ""
 
 #: templates/main/home.html:409
@@ -1149,10 +1492,6 @@ msgstr ""
 msgid ""
 "Des profils, des centres d’intérêt et des salons pour discuter. Ici, on "
 "privilégie les échanges simples, humains et respectueux."
-msgstr ""
-
-#: templates/main/home.html:636
-msgid "Dernière activité"
 msgstr ""
 
 #: templates/main/home.html:636

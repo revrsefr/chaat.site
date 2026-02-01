@@ -24,7 +24,7 @@
     }
 </style>
 
-<footer class="footer footer--style3 footer--modern" aria-label="Footer">
+<footer class="footer footer--style3 footer--modern" aria-label="{% trans "Footer" %}">
     <div class="footer__top bg_img wow fadeInUp" data-wow-duration="1.5s" style="background-image: url('{% static footer.background_image %}');">
         <div class="footer__toparea padding-top padding-bottom">
             <div class="container">
@@ -71,15 +71,20 @@
                                                 <a class="text-nowrap" href="{{ item.url|safe_url }}">
                                                     {% with label=item.label|lower %}
                                                         {% if label == 'network' %}
-                                                            <i class="fa-solid fa-network-wired"></i> {{ item.label }}
+                                                            {% trans "Network" as display_label %}
+                                                            <i class="fa-solid fa-network-wired"></i> {{ display_label }}
                                                         {% elif label == 'membres' or label == 'members' %}
-                                                            <i class="fa-solid fa-users"></i> {{ item.label }}
+                                                            {% trans "Membres" as display_label %}
+                                                            <i class="fa-solid fa-users"></i> {{ display_label }}
                                                         {% elif label == 'blog' %}
-                                                            <i class="fa-solid fa-newspaper"></i> {{ item.label }}
+                                                            {% trans "Blog" as display_label %}
+                                                            <i class="fa-solid fa-newspaper"></i> {{ display_label }}
                                                         {% elif label == 'inscription' or label == 'register' or label == 'signup' %}
-                                                            <i class="fa-solid fa-user-plus"></i> {{ item.label }}
+                                                            {% trans "Inscription" as display_label %}
+                                                            <i class="fa-solid fa-user-plus"></i> {{ display_label }}
                                                         {% elif label == 'connexion' or label == 'login' %}
-                                                            <i class="fa-solid fa-right-to-bracket"></i> {{ item.label }}
+                                                            {% trans "Connexion" as display_label %}
+                                                            <i class="fa-solid fa-right-to-bracket"></i> {{ display_label }}
                                                         {% else %}
                                                             <i class="fa-solid fa-angle-right"></i> {{ item.label }}
                                                         {% endif %}
@@ -115,13 +120,17 @@
                                                 <a class="text-nowrap" href="{{ item.url|safe_url }}">
                                                     {% with label=item.label|lower %}
                                                         {% if label == 'membres' or label == 'members' %}
-                                                            <i class="fa-solid fa-users"></i> {{ item.label }}
+                                                            {% trans "Membres" as display_label %}
+                                                            <i class="fa-solid fa-users"></i> {{ display_label }}
                                                         {% elif label == 'blog' %}
-                                                            <i class="fa-solid fa-newspaper"></i> {{ item.label }}
+                                                            {% trans "Blog" as display_label %}
+                                                            <i class="fa-solid fa-newspaper"></i> {{ display_label }}
                                                         {% elif label == 'inscription' or label == 'register' or label == 'signup' %}
-                                                            <i class="fa-solid fa-user-plus"></i> {{ item.label }}
+                                                            {% trans "Inscription" as display_label %}
+                                                            <i class="fa-solid fa-user-plus"></i> {{ display_label }}
                                                         {% elif label == 'connexion' or label == 'login' %}
-                                                            <i class="fa-solid fa-right-to-bracket"></i> {{ item.label }}
+                                                            {% trans "Connexion" as display_label %}
+                                                            <i class="fa-solid fa-right-to-bracket"></i> {{ display_label }}
                                                         {% else %}
                                                             <i class="fa-solid fa-angle-right"></i> {{ item.label }}
                                                         {% endif %}

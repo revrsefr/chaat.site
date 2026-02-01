@@ -1,0 +1,165 @@
+<!-- Cookie Banner -->
+<div id="cookie-banner" role="dialog" aria-modal="true" aria-label="Consentement cookies">
+    <div class="cookie-header-row">
+        <div class="cookie-title" aria-hidden="true">
+            <svg class="cookie-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="cookieGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#ffcc80" />
+                        <stop offset="1" stop-color="#ffb74d" />
+                    </linearGradient>
+                </defs>
+                <path d="M32 6c9 0 17 4 22 10-5 4-11 6-17 6-6 0-11-2-15-6C19 10 25 6 32 6Z" fill="rgba(0,0,0,0.12)"/>
+                <path d="M32 10c12.2 0 22 9.8 22 22S44.2 54 32 54 10 44.2 10 32c0-1.6.2-3.2.5-4.7C18 30 26 26 30 18c6 6 16 6 22 0 1.3 2.1 2 4.6 2 7.3 0 7.7-6.3 14-14 14-6.9 0-12.7-5-13.8-11.6-4.2 6.2-11.6 9.2-18.9 8.4C8.4 45.1 18.9 54 32 54Z" fill="rgba(0,0,0,0.08)"/>
+                <circle cx="32" cy="32" r="22" fill="url(#cookieGrad)"/>
+                <circle cx="22" cy="26" r="3.2" fill="#6d4c41" opacity="0.9"/>
+                <circle cx="38" cy="24" r="2.8" fill="#6d4c41" opacity="0.9"/>
+                <circle cx="42" cy="36" r="3.4" fill="#6d4c41" opacity="0.9"/>
+                <circle cx="26" cy="40" r="2.6" fill="#6d4c41" opacity="0.9"/>
+                <circle cx="32" cy="44" r="2.2" fill="#6d4c41" opacity="0.9"/>
+            </svg>
+            <span class="cookie-title-site">{{ site_brand.site_name }} demande votre consentement</span>
+            <span class="cookie-title-generic">Cookies</span>
+        </div>
+        <div class="cookie-mini-actions" aria-hidden="true">
+            <div id="cookie-status" class="cookie-status" aria-live="polite"></div>
+            <button id="cookie-mini-settings" class="cookie-mini-settings" type="button" aria-label="Ouvrir les préférences cookies">
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M12 2a10 10 0 1 0 10 10c0-.4 0-.8-.1-1.2-2.8.2-5.4-.8-7.2-2.6C12.9 6.4 12 4.2 12 2Zm0 4.2c.3 1.4 1 2.7 2.1 3.8 2 2 4.9 2.9 7.7 2.3A8 8 0 1 1 12 6.2Zm-3.2 6.5a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Zm3.7-2.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2Zm2.8 5.5a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <p class="cookie-description">
+        Nous utilisons des cookies pour faire fonctionner le site, mesurer l’audience et (si vous l’autorisez) proposer des contenus/publicités plus pertinents.
+        Vous pouvez modifier vos préférences à tout moment.
+    </p>
+    <div class="cookie-buttons">
+        <button id="cookie-accept" class="cookie-button cookie-accept" type="button">Accepter</button>
+        <button id="cookie-settings" class="cookie-button cookie-settings" type="button">Personnaliser</button>
+        <button id="cookie-decline" class="cookie-button cookie-decline" type="button">Refuser</button>
+    </div>
+    <div class="cookie-links">
+        <a class="cookie-privacy" href="/privacy/" rel="nofollow">Politique de confidentialité</a>
+    </div>
+</div>
+
+<div id="cookie-backdrop" aria-hidden="true"></div>
+
+<!-- Cookie Settings Modal -->
+<div id="cookie-modal" role="dialog" aria-modal="true" aria-label="Préférences des cookies">
+    <div class="cookie-modal-header">
+        <div>
+            <h3 class="cookie-modal-title">Préférences des cookies</h3>
+            <p class="cookie-modal-subtitle">
+                Choisissez ce que vous autorisez. Les cookies strictement nécessaires au fonctionnement du site peuvent être utilisés même en cas de refus.
+                Les chiffres ci-dessous reflètent uniquement les cookies 1ère partie détectés dans votre navigateur.
+            </p>
+        </div>
+        <button id="close-cookie-settings" class="cookie-modal-close" type="button" aria-label="Fermer">
+            ✕
+        </button>
+    </div>
+
+    <div class="cookie-summary" aria-live="polite">
+        <div class="cookie-summary-row">
+            <span>État actuel</span>
+            <span class="cookie-pill" id="cookie-choice-pill">—</span>
+        </div>
+        <div class="cookie-summary-row">
+            <span>Cookies détectés (1ère partie)</span>
+            <strong><span id="cookie-count-total">0</span></strong>
+        </div>
+        <div class="cookie-summary-note">
+            Le compteur liste uniquement les cookies <strong>1ère partie</strong> visibles via <code>document.cookie</code>. Selon votre navigateur/adblock, il peut rester à 0 tant qu’aucun cookie n’a été posé (souvent après consentement + rechargement). Les cookies <strong>tiers</strong> ne sont pas détectables ici.
+        </div>
+        <div class="cookie-summary-row">
+            <span>Dernière mise à jour</span>
+            <strong><span id="cookie-last-updated">—</span></strong>
+        </div>
+    </div>
+
+    <div class="cookie-grid">
+        <div class="cookie-card">
+            <div class="cookie-card-head">
+                <div>
+                    <p class="cookie-card-title">Mesure d’audience</p>
+                    <div class="cookie-card-meta"><span id="cookie-count-analytics">0</span> détecté(s) • <span id="cookie-known-analytics">0</span> connu(s)</div>
+                </div>
+                <label class="cookie-switch" for="cookie-analytics">
+                    <input type="checkbox" id="cookie-analytics" aria-label="Mesure d’audience">
+                </label>
+            </div>
+            <p class="cookie-card-desc">
+                Permet de mesurer la fréquentation (pages vues, temps de visite, erreurs) afin d’améliorer le site. Exemple : Google Analytics / tags équivalents.
+            </p>
+            <details class="cookie-details">
+                <summary>Voir les cookies détectés</summary>
+                <ul class="cookie-cookie-list" id="cookie-list-analytics"></ul>
+            </details>
+        </div>
+
+        <div class="cookie-card">
+            <div class="cookie-card-head">
+                <div>
+                    <p class="cookie-card-title">Fonctionnels</p>
+                    <div class="cookie-card-meta"><span id="cookie-count-functional">0</span> détecté(s) • <span id="cookie-known-functional">0</span> connu(s)</div>
+                </div>
+                <label class="cookie-switch" for="cookie-functional">
+                    <input type="checkbox" id="cookie-functional" aria-label="Fonctionnels">
+                </label>
+            </div>
+            <p class="cookie-card-desc">
+                Mémorise vos choix et améliore l’expérience (préférences, sécurité, sessions). La désactivation peut dégrader certaines fonctionnalités.
+            </p>
+            <details class="cookie-details">
+                <summary>Voir les cookies détectés</summary>
+                <ul class="cookie-cookie-list" id="cookie-list-functional"></ul>
+            </details>
+        </div>
+
+        <div class="cookie-card">
+            <div class="cookie-card-head">
+                <div>
+                    <p class="cookie-card-title">Publicitaires</p>
+                    <div class="cookie-card-meta"><span id="cookie-count-advertising">0</span> détecté(s) • <span id="cookie-known-advertising">0</span> connu(s)</div>
+                </div>
+                <label class="cookie-switch" for="cookie-advertising">
+                    <input type="checkbox" id="cookie-advertising" aria-label="Publicitaires">
+                </label>
+            </div>
+            <p class="cookie-card-desc">
+                Utilisés pour mesurer des campagnes, limiter la répétition, et proposer des publicités plus pertinentes (selon votre consentement).
+            </p>
+            <details class="cookie-details">
+                <summary>Voir les cookies détectés</summary>
+                <ul class="cookie-cookie-list" id="cookie-list-advertising"></ul>
+            </details>
+        </div>
+
+        <div class="cookie-card">
+            <div class="cookie-card-head">
+                <div>
+                    <p class="cookie-card-title">Sécurité (toujours actif)</p>
+                    <div class="cookie-card-meta">Protection anti-abus, sécurité du site</div>
+                </div>
+                <span class="cookie-pill">Activé</span>
+            </div>
+            <p class="cookie-card-desc">
+                Certains stockages strictement nécessaires peuvent être utilisés pour protéger le site (ex. prévention des fraudes / sécurité).
+            </p>
+        </div>
+    </div>
+
+    <div class="cookie-modal-actions">
+        <button id="cookie-modal-accept-all" class="cookie-button cookie-accept" type="button">Tout accepter</button>
+        <button id="cookie-modal-decline-all" class="cookie-button cookie-decline" type="button">Tout refuser</button>
+        <button id="save-cookie-settings" class="cookie-button cookie-settings" type="button">Sauvegarder</button>
+    </div>
+
+    <div class="cookie-links" style="margin-top: 12px;">
+        <a href="/main/terms/#donnees" rel="nofollow">Politique de confidentialité</a>
+        <span class="cookie-sep">&nbsp;•&nbsp;</span>
+        <a href="#" id="cookie-manage-modal" rel="nofollow">Modifier plus tard</a>
+    </div>
+</div>

@@ -101,7 +101,7 @@
                                                 value="{{ language.code }}"
                                                 class="dropdown-item{% if language.code == LANGUAGE_CODE %} active{% endif %}"
                                             >
-                                                {{ language.name_local }} ({{ language.code|upper }})
+                                                {{ language.name_local|capfirst }} ({{ language.code|upper }})
                                             </button>
                                         </form>
                                     </li>
