@@ -15,9 +15,9 @@
             <div class="col-12 col-lg-10 col-xl-9">
                 <div class="log-reg-inner">
                     <div class="profile-brand-row">
-                        <a class="profile-brand" href="{% url 'main:home' %}" aria-label="chaat.site">
+                        <a class="profile-brand" href="{% url 'main:home' %}" aria-label="{{ site_brand.site_name }}">
                             <img src="{% static 'images/logo/mark-2026-v4.svg' %}" alt="" aria-hidden="true" decoding="async">
-                            <span>chaat.site</span>
+                            <span>{{ site_brand.site_name }}</span>
                         </a>
                         <a href="{% url 'main:home' %}" class="profile-back">
                             <i class="fas fa-chevron-left"></i> {% trans "Retour à l'accueil" %}

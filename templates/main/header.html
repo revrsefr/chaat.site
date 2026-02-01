@@ -28,9 +28,9 @@
     <div class="header__bottom">
         <div class="container">
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="{% url 'main:home' %}" aria-label="chaat.site">
+                <a class="navbar-brand" href="{% url 'main:home' %}" aria-label="{{ site_brand.site_name }}">
                     <img
-                        src="{% static 'images/logo/mark-2026-v4.svg' %}"
+                        src="{% static site_brand.logo_url %}"
                         width="56"
                         height="56"
                         alt=""
@@ -38,7 +38,7 @@
                         aria-hidden="true"
                         decoding="async"
                     >
-                    <span class="brand-name" aria-hidden="true">chaat.site</span>
+                    <span class="brand-name" aria-hidden="true">{{ site_brand.site_name }}</span>
                 </a>
                 <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"

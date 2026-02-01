@@ -1,7 +1,8 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Inscription - {{ site_brand.title_suffix }}{% endblock %}
+{% block title %}{% trans "Inscription" %} - {{ site_brand.title_suffix }}{% endblock %}
 
 {% block head %}
 <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
@@ -13,94 +14,94 @@
 
 {% block content %}
 
-<section class="log-reg register-page-root" aria-label="Register">
+<section class="log-reg register-page-root" aria-label="{% trans "Inscription" %}">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-7 col-xl-6">
                 <div class="log-reg-inner">
                     <div class="register-brand-row">
-                        <a class="register-brand" href="{% url 'main:home' %}" aria-label="chaat.site">
+                        <a class="register-brand" href="{% url 'main:home' %}" aria-label="{{ site_brand.site_name }}">
                             <img src="{% static 'images/logo/mark-2026-v4.svg' %}" alt="" aria-hidden="true" decoding="async">
-                            <span>chaat.site</span>
+                            <span>{{ site_brand.site_name }}</span>
                         </a>
                         <a href="{% url 'main:home' %}" class="register-back">
-                            <i class="fas fa-chevron-left"></i> Retour à l'accueil
+                            <i class="fas fa-chevron-left"></i> {% trans "Retour à l'accueil" %}
                         </a>
                     </div>
 
                     <div class="section-header inloginp">
-                        <h3 class="title">Créez votre compte</h3>
-                        <p class="register-subtitle">Inscrivez-vous en moins d’une minute.</p>
+                        <h3 class="title">{% trans "Créez votre compte" %}</h3>
+                        <p class="register-subtitle">{% trans "Inscrivez-vous en moins d’une minute." %}</p>
                     </div>
                     <div class="main-content">
                         <form id="register-form" method="POST" action="{% url 'register' %}" enctype="multipart/form-data" data-validate-url="{% url 'register_validate' %}">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label>Pseudo</label>
-                                <input type="text" class="my-form-control" id="username" name="username" placeholder="Entrer un pseudo" required>
+                                <label>{% trans "Pseudo" %}</label>
+                                <input type="text" class="my-form-control" id="username" name="username" placeholder="{% trans "Entrer un pseudo" %}" required>
                                 <div id="usernameFeedback" class="field-error" role="alert" aria-live="polite"></div>
                             </div>
                             <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" class="my-form-control" id="email" name="email" placeholder="Entrer votre email" required>
+                                <label>{% trans "Email" %}</label>
+                                <input type="email" class="my-form-control" id="email" name="email" placeholder="{% trans "Entrer votre email" %}" required>
                                 <div id="emailFeedback" class="field-error" role="alert" aria-live="polite"></div>
                             </div>
                             <div class="form-group">
-                                <label>Mot de passe</label>
-                                <input type="password" class="my-form-control" id="password1" name="password1" placeholder="Entrez votre mot de passe" required>
+                                <label>{% trans "Mot de passe" %}</label>
+                                <input type="password" class="my-form-control" id="password1" name="password1" placeholder="{% trans "Entrez votre mot de passe" %}" required>
                                 <div id="password1Feedback" class="field-error" role="alert" aria-live="polite"></div>
                             </div>
                             <div class="form-group">
-                                <label>Confirmer le mot de passe</label>
-                                <input type="password" class="my-form-control" id="password2" name="password2" placeholder="Confirmez votre mot de passe" required>
+                                <label>{% trans "Confirmer le mot de passe" %}</label>
+                                <input type="password" class="my-form-control" id="password2" name="password2" placeholder="{% trans "Confirmez votre mot de passe" %}" required>
                                 <div id="password2Feedback" class="field-error" role="alert" aria-live="polite"></div>
                             </div>
                             <div class="form-group">
-                                <label>Date de naissance</label>
+                                <label>{% trans "Date de naissance" %}</label>
                                 <div class="register-date-wrap" style="position: relative;">
-                                    <input type="date" class="my-form-control" id="birthday" name="birthday" required data-modern-date="1" placeholder="JJ/MM/AAAA">
+                                    <input type="date" class="my-form-control" id="birthday" name="birthday" required data-modern-date="1" placeholder="{% trans "JJ/MM/AAAA" %}">
                                     <span class="register-date-icon" aria-hidden="true">📅</span>
                                 </div>
                                 <div id="birthdayFeedback" class="field-error" role="alert" aria-live="polite"></div>
                             </div>
                             <div class="form-group">
-                                <label>Je suis un/e*</label>
+                                <label>{% trans "Je suis un/e*" %}</label>
                                 <div class="banner__inputlist">
                                     <div class="s-input me-3">
                                         <input type="radio" name="gender" value="M" id="male" required>
-                                        <label for="male">Homme</label>
+                                        <label for="male">{% trans "Homme" %}</label>
                                     </div>
                                     <div class="s-input">
                                         <input type="radio" name="gender" value="F" id="female" required>
-                                        <label for="female">Femme</label>
+                                        <label for="female">{% trans "Femme" %}</label>
                                     </div>
                                 </div>
                                 <div id="genderFeedback" class="field-error" role="alert" aria-live="polite"></div>
                             </div>
                             <div class="form-group">
-                                <label>Ville*</label>
-                                <input type="text" class="my-form-control" id="city" name="city" placeholder="Entrez votre ville" required>
+                                <label>{% trans "Ville*" %}</label>
+                                <input type="text" class="my-form-control" id="city" name="city" placeholder="{% trans "Entrez votre ville" %}" required>
                                 <div id="cityFeedback" class="field-error" role="alert" aria-live="polite"></div>
                             </div>
                             <div class="form-group">
-                                <label>Avatar</label>
+                                <label>{% trans "Avatar" %}</label>
                                 <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                                     <img
                                         id="registerAvatarPreview"
                                         src="{% static 'images/default-avatar.jpg' %}"
-                                        alt="Aperçu avatar"
+                                        alt="{% trans "Aperçu avatar" %}"
                                         style="width: 64px; height: 64px; border-radius: 999px; object-fit: cover; border: 1px solid rgba(15,23,42,0.14);"
                                     >
 
                                     <div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 260px;">
                                         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                                             <label for="avatar" class="default-btn reverse" style="margin: 0; padding: 10px 14px; font-size: 13px; cursor: pointer;">
-                                                <span>Choisir une photo</span>
+                                                <span>{% trans "Choisir une photo" %}</span>
                                             </label>
-                                            <span id="registerAvatarFileName" style="font-size: 12px; opacity: 0.85;">Aucun fichier</span>
+                                            <span id="registerAvatarFileName" style="font-size: 12px; opacity: 0.85;">{% trans "Aucun fichier" %}</span>
                                         </div>
                                         <div style="font-size: 12px; opacity: 0.75;">
-                                            Formats: JPG/PNG/WebP. Taille max recommandée: 2MB.
+                                            {% trans "Formats: JPG/PNG/WebP. Taille max recommandée: 2MB." %}
                                         </div>
                                     </div>
 
@@ -118,7 +119,7 @@
                                 <br><div class="g-recaptcha" data-sitekey="6Lc3cl4aAAAAAPzQYUICPgVfCXC6mqlBqe4ueu0L"></div>
                             </div>
 
-                            <button type="submit" class="default-btn" id="registerSubmitBtn"><span>Créer mon compte</span></button>
+                            <button type="submit" class="default-btn" id="registerSubmitBtn"><span>{% trans "Créer mon compte" %}</span></button>
                             <div id="register-message"></div>
                         </form>
                     </div>

@@ -81,6 +81,7 @@ def site_branding(request):
             "title_suffix": brand.get("title_suffix") or host_value,
             "meta_author": brand.get("meta_author") or site_name,
             "base_url": base_url.rstrip("/"),
+            "logo_url": brand.get("logo_url") or "images/logo/mark-2026-v4.svg",
         }
     )
 
@@ -202,7 +203,7 @@ def site_footer(request):
         "latest_users": [],
     }
 
-    recent_articles_count = int(configured.get("recent_articles_count", 5) or 5)
+    recent_articles_count = int(configured.get("recent_articles_count", 3) or 3)
     if recent_articles_count > 0:
         try:
             from blog.models import BlogPost

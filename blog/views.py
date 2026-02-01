@@ -61,8 +61,18 @@ def create_post(request):
     else:
         form = BlogPostForm()
 
+    # Get all unique categories from existing blog posts
+    categories = (
+        BlogPost.objects.filter(is_active=True, is_published=True)
+        .exclude(category="")
+        .values_list("category", flat=True)
+        .distinct()
+        .order_by("category")
+    )
+
     return render(request, "blog/blog-create.html", {
         "form": form,
+        "categories": categories,
     })
 
 def blog_detail(request, slug):

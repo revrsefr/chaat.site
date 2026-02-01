@@ -1,6 +1,29 @@
 {% load static %}
 {% load i18n %}
 {% load safe_url %}
+
+<style>
+    .footer__article-link {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    .footer__article-link i {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .footer__article-title {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>
+
 <footer class="footer footer--style3 footer--modern" aria-label="Footer">
     <div class="footer__top bg_img wow fadeInUp" data-wow-duration="1.5s" style="background-image: url('{% static footer.background_image %}');">
         <div class="footer__toparea padding-top padding-bottom">
@@ -124,8 +147,8 @@
                                     <ul>
                                         {% for item in footer.recent_articles %}
                                             <li>
-                                                <a href="{{ item.url|safe_url }}">
-                                                    <i class="fa-solid fa-newspaper"></i> {{ item.title }}
+                                                <a href="{{ item.url|safe_url }}" class="footer__article-link">
+                                                    <i class="fa-solid fa-newspaper"></i> <span class="footer__article-title">{{ item.title|truncatewords:6 }}</span>
                                                 </a>
                                             </li>
                                         {% empty %}

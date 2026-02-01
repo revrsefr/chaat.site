@@ -111,16 +111,17 @@
             gap: 8px;
             padding: 10px 18px;
             border-radius: 999px;
-            background: linear-gradient(135deg, #ffb347, #ff6f00);
-            color: #111;
+            background: #17a34a;
+            color: #fff;
             font-weight: 700;
-            box-shadow: 0 12px 24px rgba(255, 111, 0, 0.3);
+            box-shadow: 0 12px 24px rgba(23, 163, 74, 0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .story__btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 16px 28px rgba(255, 111, 0, 0.4);
-            color: #111;
+            box-shadow: 0 16px 28px rgba(23, 163, 74, 0.4);
+            background: #15803d;
+            color: #fff;
         }
         .story__nav {
             display: inline-flex;
@@ -189,13 +190,13 @@
                         <div class="banner__title">
                             <div class="banner__brand">
                                 <img
-                                    src="{% static 'images/logo/mark-2026-v4.svg' %}"
+                                    src="{% static site_brand.logo_url %}"
                                     width="56"
                                     height="56"
-                                    alt="{% trans "Logo chaat.site" %}"
+                                    alt="{% blocktrans with site_name=site_brand.site_name %}Logo {{ site_name }}{% endblocktrans %}"
                                     decoding="async"
                                 >
-                                <span class="banner__brand-name">chaat.site</span>
+                                <span class="banner__brand-name">{{ site_brand.site_name }}</span>
                             </div>
                             <h2>{% trans "Le tchat IRC" %}<span>{% trans "pour" %}</span> {% trans "connecter tout le monde." %}</h2>
                             <p>{% trans "Discute gratuitement, en temps réel, avec des personnes près de chez toi — ou à l’autre bout du monde." %}</p>
@@ -238,6 +239,65 @@
         <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/swiper.min.js' %}"></script>
         <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/counterup.js' %}"></script>
         <script nonce="{{ request.csp_nonce }}">
+            let storySliderInstance = null;
+            let lastPostCount = null;
+
+            function initStorySlider() {
+                const storySlider = document.querySelector('.story__slider');
+                if (!storySlider || !window.Swiper) return;
+
+                if (storySliderInstance) {
+                    storySliderInstance.destroy();
+                }
+
+                storySliderInstance = new Swiper(storySlider, {
+                    slidesPerView: 1,
+                    spaceBetween: 24,
+                    loop: false,
+                    pagination: {
+                        el: storySlider.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: storySlider.querySelector('.story__next'),
+                        prevEl: storySlider.querySelector('.story__prev'),
+                    },
+                    breakpoints: {
+                        576: { slidesPerView: 2 },
+                        992: { slidesPerView: 3 },
+                        1200: { slidesPerView: 4 },
+                    },
+                });
+            }
+
+            function checkForNewPosts() {
+                fetch(window.location.href, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newPostCount = doc.querySelectorAll('.story__slider .swiper-slide').length;
+
+                    if (lastPostCount === null) {
+                        lastPostCount = newPostCount;
+                    } else if (newPostCount > lastPostCount) {
+                        const newSlider = doc.querySelector('.story__slider');
+                        const oldSlider = document.querySelector('.story__slider');
+                        
+                        if (newSlider && oldSlider) {
+                            oldSlider.innerHTML = newSlider.innerHTML;
+                            lastPostCount = newPostCount;
+                            if (window.Swiper) {
+                                initStorySlider();
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.debug('Post check skipped'));
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('[data-background]').forEach((el) => {
                     const bg = el.getAttribute('data-background');
@@ -245,27 +305,10 @@
                     el.style.backgroundImage = `url('${bg}')`;
                 });
 
-                const storySlider = document.querySelector('.story__slider');
-                if (storySlider && window.Swiper) {
-                    new Swiper(storySlider, {
-                        slidesPerView: 1,
-                        spaceBetween: 24,
-                        loop: false,
-                        pagination: {
-                            el: storySlider.querySelector('.swiper-pagination'),
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: storySlider.querySelector('.story__next'),
-                            prevEl: storySlider.querySelector('.story__prev'),
-                        },
-                        breakpoints: {
-                            576: { slidesPerView: 2 },
-                            992: { slidesPerView: 3 },
-                            1200: { slidesPerView: 4 },
-                        },
-                    });
-                }
+                initStorySlider();
+
+                // Check for new posts every 30 seconds
+                setInterval(checkForNewPosts, 30000);
             });
         </script>
     {% endblock %}
@@ -748,7 +791,7 @@
                                             </div>
                                             <div class="story__cta">
                                                 <a class="story__btn" href="{% url 'blog:blog_detail' slug=post.slug %}">
-                                                    {% trans "Lire l’article" %}
+                                                    {% trans "Lire la suite" %}
                                                     <i class="fa-solid fa-arrow-right"></i>
                                                 </a>
                                             </div>

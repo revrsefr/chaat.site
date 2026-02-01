@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 12:16+0000\n"
+"POT-Creation-Date: 2026-02-01 18:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/accounts/change_password.html:10
+#: templates/accounts/change_password.html:29
+#: templates/accounts/profile.html:222 templates/main/header.html:147
+msgid "Modifier le mot de passe"
+msgstr ""
+
+#: templates/accounts/change_password.html:16
+msgid "Ancien mot de passe"
+msgstr ""
+
+#: templates/accounts/change_password.html:20
+msgid "Nouveau mot de passe"
+msgstr ""
+
+#: templates/accounts/change_password.html:24
+msgid "Confirmer le nouveau mot de passe"
+msgstr ""
 
 #: templates/accounts/forgot_password.html:5
 msgid "Mot de passe oublié"
@@ -46,7 +64,8 @@ msgid "Envoyer le lien de réinitialisation"
 msgstr ""
 
 #: templates/accounts/login.html:24 templates/accounts/profile.html:23
-#: templates/accounts/profile.html:237 templates/accounts/verify_email.html:23
+#: templates/accounts/profile.html:237 templates/accounts/register.html:28
+#: templates/accounts/verify_email.html:23
 msgid "Retour à l'accueil"
 msgstr ""
 
@@ -124,12 +143,12 @@ msgid "Sexe"
 msgstr ""
 
 #: templates/accounts/login.html:51 templates/accounts/profile.html:150
-#: templates/main/home.html:237
+#: templates/accounts/register.html:72 templates/main/home.html:403
 msgid "Homme"
 msgstr ""
 
 #: templates/accounts/login.html:52 templates/accounts/profile.html:149
-#: templates/main/home.html:238
+#: templates/accounts/register.html:76 templates/main/home.html:404
 msgid "Femme"
 msgstr ""
 
@@ -142,6 +161,7 @@ msgid "Entrer votre email ou nom"
 msgstr ""
 
 #: templates/accounts/login.html:102 templates/accounts/profile.html:118
+#: templates/accounts/register.html:50
 msgid "Mot de passe"
 msgstr ""
 
@@ -161,6 +181,50 @@ msgstr ""
 msgid "Astuce : vous pouvez utiliser votre email ou votre pseudo."
 msgstr ""
 
+#: templates/accounts/password_reset_email.html:2
+#, python-format
+msgid "Bonjour %(username)s,"
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:4
+msgid ""
+"Nous avons reçu une demande de réinitialisation du mot de passe pour votre "
+"compte."
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:6
+msgid ""
+"Pour choisir un nouveau mot de passe, cliquez sur le lien ci-dessous (ou "
+"copiez/collez-le dans votre navigateur) :"
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:10
+msgid ""
+"Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet "
+"email : aucun changement ne sera effectué."
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:11
+msgid ""
+"Pour toute question, n’hésitez pas à nous contacter a rejoindre le salon #!"
+"aide sur notre serveur."
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:13
+msgid "Cordialement,"
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:14
+#, python-format
+msgid "Services@%(site_name)s"
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:15
+#, fuzzy, python-format
+#| msgid "Chaat.site Network"
+msgid "%(site_name)s Network"
+msgstr "Chaat.site Network"
+
 #: templates/accounts/profile.html:28 templates/accounts/profile.html:48
 msgid "Profil"
 msgstr ""
@@ -169,7 +233,7 @@ msgstr ""
 msgid "Gérez vos informations, votre sécurité et votre token IRC."
 msgstr ""
 
-#: templates/accounts/profile.html:51 templates/main/home.html:326
+#: templates/accounts/profile.html:51 templates/main/home.html:492
 msgid "Token IRC"
 msgstr ""
 
@@ -189,7 +253,7 @@ msgstr ""
 msgid "Changer la photo"
 msgstr ""
 
-#: templates/accounts/profile.html:97
+#: templates/accounts/profile.html:97 templates/accounts/register.html:101
 msgid "Aucun fichier"
 msgstr ""
 
@@ -213,7 +277,7 @@ msgstr ""
 msgid "Nom d'utilisateur"
 msgstr ""
 
-#: templates/accounts/profile.html:142
+#: templates/accounts/profile.html:142 templates/accounts/register.html:60
 msgid "Date de naissance"
 msgstr ""
 
@@ -271,10 +335,6 @@ msgstr ""
 msgid "Paramètres du compte"
 msgstr ""
 
-#: templates/accounts/profile.html:222 templates/main/header.html:147
-msgid "Modifier le mot de passe"
-msgstr ""
-
 #: templates/accounts/profile.html:223
 msgid "Réinitialiser le mot de passe par email"
 msgstr ""
@@ -291,8 +351,86 @@ msgstr ""
 msgid "Vous n'avez pas la permission d'accéder à ce profil."
 msgstr ""
 
-#: templates/accounts/profile.html:240 templates/main/home.html:340
+#: templates/accounts/profile.html:240 templates/main/home.html:506
 msgid "Se connecter"
+msgstr ""
+
+#: templates/accounts/register.html:5 templates/accounts/register.html:17
+#, fuzzy
+#| msgid "Illustration"
+msgid "Inscription"
+msgstr "Illustration"
+
+#: templates/accounts/register.html:33
+msgid "Créez votre compte"
+msgstr ""
+
+#: templates/accounts/register.html:34
+msgid "Inscrivez-vous en moins d’une minute."
+msgstr ""
+
+#: templates/accounts/register.html:40 templates/main/home.html:380
+msgid "Pseudo"
+msgstr ""
+
+#: templates/accounts/register.html:41 templates/main/home.html:388
+msgid "Entrer un pseudo"
+msgstr ""
+
+#: templates/accounts/register.html:45 templates/accounts/verify_email.html:47
+msgid "Email"
+msgstr ""
+
+#: templates/accounts/register.html:46
+msgid "Entrer votre email"
+msgstr ""
+
+#: templates/accounts/register.html:51
+msgid "Entrez votre mot de passe"
+msgstr ""
+
+#: templates/accounts/register.html:55
+msgid "Confirmer le mot de passe"
+msgstr ""
+
+#: templates/accounts/register.html:56
+msgid "Confirmez votre mot de passe"
+msgstr ""
+
+#: templates/accounts/register.html:62
+msgid "JJ/MM/AAAA"
+msgstr ""
+
+#: templates/accounts/register.html:68
+msgid "Je suis un/e*"
+msgstr ""
+
+#: templates/accounts/register.html:82
+msgid "Ville*"
+msgstr ""
+
+#: templates/accounts/register.html:83
+msgid "Entrez votre ville"
+msgstr ""
+
+#: templates/accounts/register.html:87
+msgid "Avatar"
+msgstr ""
+
+#: templates/accounts/register.html:92
+msgid "Aperçu avatar"
+msgstr ""
+
+#: templates/accounts/register.html:99
+msgid "Choisir une photo"
+msgstr ""
+
+#: templates/accounts/register.html:104
+msgid "Formats: JPG/PNG/WebP. Taille max recommandée: 2MB."
+msgstr ""
+
+#: templates/accounts/register.html:122
+msgid "Créer mon compte"
 msgstr ""
 
 #: templates/accounts/verify_email.html:5
@@ -307,10 +445,6 @@ msgstr ""
 msgid ""
 "Nous vous avons envoyé un code à 6 chiffres. Entrez-le ci-dessous pour "
 "activer votre compte."
-msgstr ""
-
-#: templates/accounts/verify_email.html:47
-msgid "Email"
 msgstr ""
 
 #: templates/accounts/verify_email.html:51
@@ -352,6 +486,163 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
+#: templates/blog/blog-create.html:11
+msgid "Créer un article"
+msgstr ""
+
+#: templates/blog/blog-create.html:18
+msgid "Titre"
+msgstr ""
+
+#: templates/blog/blog-create.html:18
+msgid "Ex: Mon Premier Article"
+msgstr ""
+
+#: templates/blog/blog-create.html:21
+msgid "Écrivez votre article..."
+msgstr ""
+
+#: templates/blog/blog-create.html:21
+msgid "Commencez à rédiger le contenu de votre article ici."
+msgstr ""
+
+#: templates/blog/blog-create.html:26
+msgid "Image de couverture"
+msgstr ""
+
+#: templates/blog/blog-create.html:30
+msgid "Formats acceptés"
+msgstr ""
+
+#: templates/blog/blog-create.html:37
+msgid "Catégorie"
+msgstr ""
+
+#: templates/blog/blog-create.html:40
+msgid "Sélectionner une catégorie"
+msgstr ""
+
+#: templates/blog/blog-create.html:48
+msgid "Étiquettes (séparées par des virgules)"
+msgstr ""
+
+#: templates/blog/blog-create.html:48
+msgid "Ex: Python, JavaScript, Web"
+msgstr ""
+
+#: templates/blog/blog-create.html:51
+msgid "Mots-clés SEO (optionnel)"
+msgstr ""
+
+#: templates/blog/blog-create.html:51
+msgid "Ex: python, web, développement"
+msgstr ""
+
+#: templates/blog/blog-create.html:56
+msgid "Publier immédiatement"
+msgstr ""
+
+#: templates/blog/blog-create.html:60
+msgid "Créer l'article"
+msgstr ""
+
+#: templates/blog/blog-single.html:48 templates/blog/blog-single.html:81
+#, python-format
+msgid "%(comment_count)s commentaire"
+msgid_plural "%(comment_count)s commentaires"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/blog/blog-single.html:52
+msgid "Source"
+msgstr ""
+
+#: templates/blog/blog-single.html:65 templates/blog/blog-single.html:214
+msgid "Aucune étiquette disponible"
+msgstr ""
+
+#: templates/blog/blog-single.html:97
+msgid "Supprimer ce commentaire ?"
+msgstr ""
+
+#: templates/blog/blog-single.html:97
+msgid "Supprimer"
+msgstr ""
+
+#: templates/blog/blog-single.html:107
+msgid "Aucun commentaire pour le moment."
+msgstr ""
+
+#: templates/blog/blog-single.html:113
+msgid "Laisser un commentaire"
+msgstr ""
+
+#: templates/blog/blog-single.html:119
+msgid "Écrivez votre commentaire ici..."
+msgstr ""
+
+#: templates/blog/blog-single.html:122
+msgid "Envoyer le commentaire"
+msgstr ""
+
+#: templates/blog/blog-single.html:126
+#, python-format
+msgid ""
+"\n"
+"\t\t\t\t\t\t\t\t\t   You must be <a href=\"%(login_url)s\">logged in</a> to "
+"leave a comment.\n"
+"\t\t\t\t\t\t\t\t\t   "
+msgstr ""
+
+#: templates/blog/blog-single.html:141 templates/blog/blog.html:103
+msgid "Rechercher"
+msgstr ""
+
+#: templates/blog/blog-single.html:144 templates/blog/blog.html:106
+msgid "Rechercher ici..."
+msgstr ""
+
+#: templates/blog/blog-single.html:152 templates/blog/blog.html:114
+msgid "Catégories"
+msgstr ""
+
+#: templates/blog/blog-single.html:158 templates/blog/blog.html:119
+msgid "Afficher tous"
+msgstr ""
+
+#: templates/blog/blog-single.html:170 templates/blog/blog.html:131
+msgid "Aucune catégorie disponible"
+msgstr ""
+
+#: templates/blog/blog-single.html:178 templates/blog/blog.html:139
+#: templates/main/footer.html:144
+msgid "Articles récents"
+msgstr ""
+
+#: templates/blog/blog-single.html:200
+msgid "Aucun article récent disponible"
+msgstr ""
+
+#: templates/blog/blog-single.html:208
+msgid "Nos étiquettes populaires"
+msgstr ""
+
+#: templates/blog/blog.html:30
+msgid "Nouveau Post"
+msgstr ""
+
+#: templates/blog/blog.html:84 templates/main/home.html:794
+msgid "Lire la suite"
+msgstr ""
+
+#: templates/blog/blog.html:92
+msgid "Aucun article de blog disponible."
+msgstr ""
+
+#: templates/blog/blog.html:161
+msgid "Aucun article récent disponible."
+msgstr ""
+
 #: templates/irc/dashboard.html:5
 msgid "Network: irc telemetry"
 msgstr "Network: IRC telemetry"
@@ -368,7 +659,9 @@ msgstr "Live Network Telemetry"
 msgid ""
 "Track channel heat, operator presence, and server health directly from "
 "services stream."
-msgstr "Track channel heat, operator presence, and server health directly from the services stream."
+msgstr ""
+"Track channel heat, operator presence, and server health directly from the "
+"services stream."
 
 #: templates/irc/dashboard.html:20
 msgid "Launch KiwiIRC"
@@ -441,7 +734,9 @@ msgstr "Active channels"
 msgid ""
 "Top rooms ranked by population. Click the refresh control to pull fresh RPC "
 "stats on demand."
-msgstr "Top rooms ranked by population. Click the refresh control to pull fresh RPC stats on demand."
+msgstr ""
+"Top rooms ranked by population. Click the refresh control to pull fresh RPC "
+"stats on demand."
 
 #: templates/irc/dashboard.html:90
 msgid "Filter #channel or topic"
@@ -547,54 +842,50 @@ msgstr "Click a nickname to load live details."
 msgid "Awaiting user list…"
 msgstr "Awaiting user list…"
 
-#: templates/main/footer.html:13 templates/main/footer.html:24
+#: templates/main/footer.html:36 templates/main/footer.html:47
 #: templates/main/pages/about.html:4 templates/main/pages/about.html:83
 msgid "À propos"
 msgstr ""
 
-#: templates/main/footer.html:19 templates/main/pages/terms.html:4
+#: templates/main/footer.html:42 templates/main/pages/terms.html:4
 #: templates/main/pages/terms.html:138
 msgid "Conditions générales"
 msgstr ""
 
-#: templates/main/footer.html:29 templates/main/pages/legal.html:4
+#: templates/main/footer.html:52 templates/main/pages/legal.html:4
 #: templates/main/pages/legal.html:117
 msgid "Mentions légales"
 msgstr ""
 
-#: templates/main/footer.html:42
+#: templates/main/footer.html:65
 msgid "Informations"
 msgstr ""
 
-#: templates/main/footer.html:68 templates/main/footer.html:69
+#: templates/main/footer.html:91 templates/main/footer.html:92
 msgid "GitHub"
 msgstr ""
 
-#: templates/main/footer.html:74 templates/main/footer.html:109
+#: templates/main/footer.html:97 templates/main/footer.html:132
 msgid "Bientôt disponible"
 msgstr ""
 
-#: templates/main/footer.html:86
+#: templates/main/footer.html:109
 msgid "Liens utiles"
 msgstr ""
 
-#: templates/main/footer.html:121
-msgid "Articles récents"
-msgstr ""
-
-#: templates/main/footer.html:132
+#: templates/main/footer.html:155
 msgid "Aucun article récent"
 msgstr ""
 
-#: templates/main/footer.html:144
+#: templates/main/footer.html:167
 msgid "Derniers inscrits"
 msgstr ""
 
-#: templates/main/footer.html:172
+#: templates/main/footer.html:195
 msgid "Aucun membre récent"
 msgstr ""
 
-#: templates/main/footer.html:184
+#: templates/main/footer.html:207
 msgid "Tous droits réservés"
 msgstr ""
 
@@ -622,7 +913,7 @@ msgstr ""
 msgid "All Group"
 msgstr ""
 
-#: templates/main/header.html:64 templates/main/home.html:396
+#: templates/main/header.html:64 templates/main/home.html:562
 msgid "Membres"
 msgstr ""
 
@@ -659,129 +950,122 @@ msgstr ""
 msgid "Accueil"
 msgstr "Home"
 
-#: templates/main/home.html:94
-msgid "Logo chaat.site"
-msgstr "chaat.site logo"
+#: templates/main/home.html:196
+#, python-format
+msgid "Logo %(site_name)s"
+msgstr ""
 
-#: templates/main/home.html:99
+#: templates/main/home.html:201
 msgid "Le tchat IRC"
 msgstr "IRC chat"
 
-#: templates/main/home.html:99
+#: templates/main/home.html:201
 msgid "pour"
 msgstr "to"
 
-#: templates/main/home.html:99
+#: templates/main/home.html:201
 msgid "connecter tout le monde."
 msgstr "connect everyone."
 
-#: templates/main/home.html:100
+#: templates/main/home.html:202
 msgid ""
 "Discute gratuitement, en temps réel, avec des personnes près de chez toi — "
 "ou à l’autre bout du monde."
 msgstr ""
 
-#: templates/main/home.html:101
+#: templates/main/home.html:203
 msgid "Rejoindre le tchat en un clic"
 msgstr "Join the chat in one click"
 
-#: templates/main/home.html:115
+#: templates/main/home.html:217
 msgid "Illustration du tchat"
 msgstr "Chat illustration"
 
-#: templates/main/home.html:123
+#: templates/main/home.html:225
 msgid "Décoration"
 msgstr "Decoration"
 
-#: templates/main/home.html:127
+#: templates/main/home.html:229
 msgid "#!Accueil #!Musique #!Jeux"
 msgstr "#!Home #!Music #!Games"
 
-#: templates/main/home.html:158
+#: templates/main/home.html:324
 msgid ""
 "Un tchat IRC moderne pour discuter librement avec une communauté "
 "bienveillante, à tout âge."
 msgstr ""
 
-#: templates/main/home.html:163
+#: templates/main/home.html:329
 msgid "Nouveaux membres"
 msgstr ""
 
-#: templates/main/home.html:193
+#: templates/main/home.html:359
 msgid "Membre"
 msgstr "Member"
 
-#: templates/main/home.html:207
+#: templates/main/home.html:373
 msgid "Entre sur le tchat maintenant"
 msgstr ""
 
-#: templates/main/home.html:208
+#: templates/main/home.html:374
 msgid ""
 "Choisis un pseudo et discute tout de suite — sans inscription, sans appli, "
 "sans prise de tête."
 msgstr ""
 
-#: templates/main/home.html:214
-msgid "Pseudo"
-msgstr ""
-
-#: templates/main/home.html:222
-msgid "Entrer un pseudo"
-msgstr ""
-
-#: templates/main/home.html:225
+#: templates/main/home.html:391
 msgid "Saisis un pseudo (3 caractères minimum)."
 msgstr ""
 
-#: templates/main/home.html:230
+#: templates/main/home.html:396
 msgid "3 caractères minimum."
 msgstr ""
 
-#: templates/main/home.html:233
+#: templates/main/home.html:399
 msgid "Genre"
 msgstr ""
 
-#: templates/main/home.html:243
+#: templates/main/home.html:409
 msgid "Âge (optionnel)"
 msgstr ""
 
-#: templates/main/home.html:259
+#: templates/main/home.html:425
 msgid "Entre 18 et 99 ans."
 msgstr ""
 
-#: templates/main/home.html:262
+#: templates/main/home.html:428
 msgid "Ville (optionnel)"
 msgstr ""
 
-#: templates/main/home.html:270
+#: templates/main/home.html:436
 msgid "Tape ta ville (ex. : Paris)"
 msgstr "Type your city (e.g.: Paris)"
 
-#: templates/main/home.html:278
+#: templates/main/home.html:444
 msgid "Tape au moins 2 lettres pour voir des suggestions."
 msgstr ""
 
-#: templates/main/home.html:281
+#: templates/main/home.html:447
 msgid "Salon IRC"
 msgstr ""
 
-#: templates/main/home.html:289 templates/main/home.html:290
+#: templates/main/home.html:455 templates/main/home.html:456
 msgid "#!Accueil"
 msgstr "#!Home"
 
-#: templates/main/home.html:294
+#: templates/main/home.html:460
 msgid "Tu peux choisir un autre salon (ex. : #Tech, #Musique, #Gaming)."
 msgstr ""
 
-#: templates/main/home.html:301
+#: templates/main/home.html:467
 msgid "Option mot de passe"
 msgstr ""
 
-#: templates/main/home.html:304
+#: templates/main/home.html:470
 msgid "Connexion sécurisée (token IRC)"
 msgstr ""
 
-#: templates/main/home.html:305
+#: templates/main/home.html:471
 msgid ""
 "Active cette option pour générer un token IRC. Tu pourras le copier-coller "
 "dans le champ « mot de passe » du webchat."
@@ -789,217 +1073,217 @@ msgstr ""
 "Enable this option to generate an IRC token. You can paste it into the "
 "webchat \"password\" field."
 
-#: templates/main/home.html:322
+#: templates/main/home.html:488
 msgid "Ton token IRC (à copier)"
 msgstr ""
 
-#: templates/main/home.html:323
+#: templates/main/home.html:489
 msgid "Régénérer"
 msgstr ""
 
-#: templates/main/home.html:327
+#: templates/main/home.html:493
 msgid "Afficher/masquer le token"
 msgstr ""
 
-#: templates/main/home.html:327
+#: templates/main/home.html:493
 msgid "Afficher"
 msgstr ""
 
-#: templates/main/home.html:328
+#: templates/main/home.html:494
 msgid "Copier"
 msgstr ""
 
-#: templates/main/home.html:330
+#: templates/main/home.html:496
 msgid ""
 "Valable quelques instants et utilisable une seule fois. Colle-le dans le "
 "champ « mot de passe » du webchat une fois ouvert."
 msgstr ""
 
-#: templates/main/home.html:337
+#: templates/main/home.html:503
 msgid "Mot de passe (membres)"
 msgstr ""
 
-#: templates/main/home.html:338
+#: templates/main/home.html:504
 msgid "Disponible lorsque tu es connecté."
 msgstr ""
 
-#: templates/main/home.html:348
+#: templates/main/home.html:514
 msgid "Ouvrir le webchat"
 msgstr ""
 
-#: templates/main/home.html:364
+#: templates/main/home.html:530
 msgid "Tout commence dans un salon…"
 msgstr ""
 
-#: templates/main/home.html:365
+#: templates/main/home.html:531
 msgid ""
 "Un message, un sujet, une discussion. Ici, on vient pour échanger, "
 "apprendre, rire et créer du lien — entre jeunes, moins jeunes, et tout le "
 "monde entre les deux."
 msgstr ""
 
-#: templates/main/home.html:375
+#: templates/main/home.html:541
 msgid "Icône serveur"
 msgstr "Server icon"
 
-#: templates/main/home.html:380
+#: templates/main/home.html:546
 msgid "Serveurs IRC"
 msgstr ""
 
-#: templates/main/home.html:391
+#: templates/main/home.html:557
 msgid "Icône utilisateurs"
 msgstr "Users icon"
 
-#: templates/main/home.html:407
+#: templates/main/home.html:573
 msgid "Icône opérateurs"
 msgstr "Operators icon"
 
-#: templates/main/home.html:412
+#: templates/main/home.html:578
 msgid "Opérateurs IRC"
 msgstr ""
 
-#: templates/main/home.html:423
+#: templates/main/home.html:589
 msgid "Icône salons"
 msgstr "Channels icon"
 
-#: templates/main/home.html:428
+#: templates/main/home.html:594
 msgid "Salons"
 msgstr ""
 
-#: templates/main/home.html:443
+#: templates/main/home.html:609
 msgid "La communauté"
 msgstr ""
 
-#: templates/main/home.html:444
+#: templates/main/home.html:610
 msgid ""
 "Des profils, des centres d’intérêt et des salons pour discuter. Ici, on "
 "privilégie les échanges simples, humains et respectueux."
 msgstr ""
 
-#: templates/main/home.html:470
+#: templates/main/home.html:636
 msgid "Dernière activité"
 msgstr ""
 
-#: templates/main/home.html:470
+#: templates/main/home.html:636
 #, python-format
 msgid "il y a %(m.last_login|timesince)s"
 msgstr ""
 
-#: templates/main/home.html:472
+#: templates/main/home.html:638
 msgid "Nouveau membre"
 msgstr ""
 
-#: templates/main/home.html:479
+#: templates/main/home.html:645
 msgid "Aucun profil à afficher pour le moment."
 msgstr ""
 
-#: templates/main/home.html:483
+#: templates/main/home.html:649
 msgid "Voir la communauté"
 msgstr ""
 
-#: templates/main/home.html:497
+#: templates/main/home.html:663
 #, python-format
 msgid "Pourquoi choisir %(site_name)s ?"
 msgstr ""
 
-#: templates/main/home.html:505 templates/main/home.html:506
-#: templates/main/home.html:507 templates/main/home.html:508
-#: templates/main/home.html:515 templates/main/home.html:530
-#: templates/main/home.html:544 templates/main/home.html:557
-#: templates/main/home.html:646 templates/main/home.html:660
-#: templates/main/home.html:674 templates/main/home.html:688
+#: templates/main/home.html:671 templates/main/home.html:672
+#: templates/main/home.html:673 templates/main/home.html:674
+#: templates/main/home.html:681 templates/main/home.html:696
+#: templates/main/home.html:710 templates/main/home.html:723
+#: templates/main/home.html:831 templates/main/home.html:845
+#: templates/main/home.html:859 templates/main/home.html:873
 msgid "Illustration"
 msgstr "Illustration"
 
-#: templates/main/home.html:505 templates/main/home.html:518
+#: templates/main/home.html:671 templates/main/home.html:684
 msgid "Choisis ton pseudo"
 msgstr ""
 
-#: templates/main/home.html:506 templates/main/home.html:534
+#: templates/main/home.html:672 templates/main/home.html:700
 msgid "Des gens, pas des bots"
 msgstr ""
 
-#: templates/main/home.html:507 templates/main/home.html:547
+#: templates/main/home.html:673 templates/main/home.html:713
 msgid "Trouve ton salon"
 msgstr ""
 
-#: templates/main/home.html:508 templates/main/home.html:560
+#: templates/main/home.html:674 templates/main/home.html:726
 msgid "Crée des liens"
 msgstr ""
 
-#: templates/main/home.html:519
+#: templates/main/home.html:685
 #, python-format
 msgid ""
 "Avec %(site_name)s, tu entres dans le tchat en quelques secondes : un "
 "pseudo, un salon, et c’est parti. Simple, rapide, efficace."
 msgstr ""
 
-#: templates/main/home.html:535
+#: templates/main/home.html:701
 #, python-format
 msgid ""
 "Sur %(site_name)s, on favorise les vraies discussions : moins de bruit, plus "
 "d’échanges. Anti-spam et modération pour garder une ambiance saine."
 msgstr ""
 
-#: templates/main/home.html:548
+#: templates/main/home.html:714
 msgid ""
 "Du général aux passions : musique, tech, jeux, entraide… Rejoins un salon, "
 "ou crée le tien en 10 secondes."
 msgstr ""
 
-#: templates/main/home.html:561
+#: templates/main/home.html:727
 msgid ""
 "Des discussions simples, des gens de tous âges, des sujets qui rassemblent. "
 "Viens pour parler, reste pour la vibe."
 msgstr ""
 
-#: templates/main/home.html:577
+#: templates/main/home.html:743
 msgid "Le blog"
 msgstr ""
 
-#: templates/main/home.html:578
+#: templates/main/home.html:744
 msgid "Actus, coulisses, guides et idées de salons — pour mieux discuter."
 msgstr ""
 
-#: templates/main/home.html:629
+#: templates/main/home.html:815
 msgid "Aucun article de blog disponible pour le moment."
 msgstr ""
 
-#: templates/main/home.html:649
+#: templates/main/home.html:834
 msgid "Confiance & sécurité"
 msgstr ""
 
-#: templates/main/home.html:650
+#: templates/main/home.html:835
 msgid ""
 "Les échanges sont chiffrés (TLS/SSL) pour protéger tes données en transit. "
 "On préfère la simplicité, pas la surveillance."
 msgstr ""
 
-#: templates/main/home.html:663
+#: templates/main/home.html:848
 msgid "Des salons pour tous"
 msgstr ""
 
-#: templates/main/home.html:664
+#: templates/main/home.html:849
 msgid ""
 "Des salons variés, des sujets du quotidien aux passions. Tu peux aussi créer "
 "ton propre salon et lancer la discussion."
 msgstr ""
 
-#: templates/main/home.html:677
+#: templates/main/home.html:862
 msgid "Du monde à toute heure"
 msgstr ""
 
-#: templates/main/home.html:678
+#: templates/main/home.html:863
 msgid ""
 "Le tchat ne dort jamais : viens dire bonjour le matin, à la pause, ou tard "
 "le soir. Il y a toujours quelqu’un pour échanger."
 msgstr ""
 
-#: templates/main/home.html:691
+#: templates/main/home.html:876
 msgid "Gratuit, simple, sans friction"
 msgstr ""
 
-#: templates/main/home.html:692
+#: templates/main/home.html:877
 msgid ""
 "Un espace pour discuter tranquillement 24/7. Rapide, simple, sans "
 "inscription obligatoire : tu entres, tu parles, tu restes si tu veux."
@@ -1015,3 +1299,6 @@ msgstr ""
 #: templates/main/pages/about.html:99
 msgid "Besoin d'aide ? Rejoignez le salon"
 msgstr ""
+
+#~ msgid "Logo chaat.site"
+#~ msgstr "chaat.site logo"

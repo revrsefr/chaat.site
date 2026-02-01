@@ -3,6 +3,7 @@
 {% load sanitize_html %}
 {% load static %}
 {% load querystring %}
+{% load i18n %}
 {% block content %}
 
 <!-- preloader start here -->
@@ -20,21 +21,6 @@
 <a href="#" class="scrollToTop"><i class="fa-solid fa-angle-up"></i></a>
 <!-- scrollToTop ending here -->
 
-<!-- ================> Page Header section start here <================== -->
-<div class="pageheader bg_img" style="background-image: url('{% static "images/bg-img/pageheader.jpg" %}');">
-	<div class="container">
-		<div class="pageheader__content text-center">
-			<h2>Blog</h2>
-			<nav aria-label="breadcrumb">
-				<ol class="breadcrumb justify-content-center mb-0">
-				  <li class="breadcrumb-item"><a href="{% url 'main:home' %}">home</a></li>
-				  <li class="breadcrumb-item active" aria-current="page">Blog</li>
-				</ol>
-			</nav>
-		</div>
-	</div>
-</div>
-<!-- ================> Page Header section end here <================== -->
 <!-- ================> Blog section start here <================== -->
 <div class="blog blog--style2 padding-top padding-bottom aside-bg">
 	<div class="container">
@@ -59,11 +45,11 @@
 									<ul class="blog__date text-center">
 										<li><span><i class="fa-solid fa-calendar-days"></i> {{ post.created_at|date:"d F Y" }}</span></li>
 										<li><span><i class="fa-solid fa-user"></i> <a href="#">{{ post.author }}</a></span></li>
-										<li><span><i class="fa-solid fa-comments"></i> <a href="#"> {{ comments.count }} Comments</a></span></li>
+															<li><span><i class="fa-solid fa-comments"></i> <a href="#"> {% blocktrans count comment_count=comments.count %}{{ comment_count }} commentaire{% plural %}{{ comment_count }} commentaires{% endblocktrans %}</a></span></li>
 									</ul>
 									{% if post.source_url %}
 										<div class="mb-3">
-											<a href="{{ post.source_url }}" target="_blank" rel="nofollow noopener">Source</a>
+											<a href="{{ post.source_url }}" target="_blank" rel="nofollow noopener">{% trans "Source" %}</a>
 										</div>
 									{% endif %}
 									<div class="blog__post-body">
@@ -76,7 +62,7 @@
 											{% for tag in post_tags %}
 												<li><a href="#">{{ tag }}</a></li>
 											{% empty %}
-												<li>No tags available</li>
+											<li>{% trans "Aucune étiquette disponible" %}</li>
 											{% endfor %}
 										</ul>
 										<ul class="share lab-ul justify-content-center">
@@ -92,7 +78,7 @@
 					</article>
 					<!-- ✅ COMMENTS SECTION -->
 					<div class="comments">
-						<h4 class="comment-title">{{ comments.count }} Comments</h4>
+								<h4 class="comment-title">{% blocktrans count comment_count=comments.count %}{{ comment_count }} commentaire{% plural %}{{ comment_count }} commentaires{% endblocktrans %}</h4>
 						<ul class="lab-ul comment-list">
 							{% for comment in comments %}
 								<li class="comment">
@@ -108,7 +94,7 @@
 													{% if user.is_authenticated and user.pk == post.author_id %}
 														<form action="{% url 'blog:delete_comment' slug=post.slug comment_id=comment.id %}" method="POST" style="display:inline; margin-left: 10px;">
 															{% csrf_token %}
-															<button type="submit" class="btn btn-sm btn-danger" data-confirm="Delete this comment?">Delete</button>
+															<button type="submit" class="btn btn-sm btn-danger" data-confirm="{% trans "Supprimer ce commentaire ?" %}">{% trans "Supprimer" %}</button>
 														</form>
 													{% endif %}
 												</div>
@@ -118,26 +104,28 @@
 									</div>
 								</li>
 							{% empty %}
-								<li>No comments yet.</li>
+								<li>{% trans "Aucun commentaire pour le moment." %}</li>
 							{% endfor %}
 						</ul>
 					</div>
 					   <!-- ✅ COMMENT FORM -->
 					   <div class="comment-respond">
-						   <h4>Leave a Comment</h4>
-						   <div class="add-comment">
-							   {% if user.is_authenticated %}
-								   <form action="{% url 'blog:add_comment' slug=post.slug %}" method="POST" class="comment-form">
-									   {% csrf_token %}
-									   {{ form.non_field_errors }}
-									   <textarea name="content" rows="7" placeholder="Type Here Your Comment*" required>{{ form.content.value|default_if_none:'' }}</textarea>
-									   <!-- ✅ reCAPTCHA widget -->
-									   <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
-									   <button type="submit" class="default-btn reverse"><span>Send Comment</span></button>
+							   <h4>{% trans "Laisser un commentaire" %}</h4>
+							   <div class="add-comment">
+								   {% if user.is_authenticated %}
+									   <form action="{% url 'blog:add_comment' slug=post.slug %}" method="POST" class="comment-form">
+										   {% csrf_token %}
+										   {{ form.non_field_errors }}
+										   <textarea name="content" rows="7" placeholder="{% trans "Écrivez votre commentaire ici..." %}" required>{{ form.content.value|default_if_none:'' }}</textarea>
+										   <!-- ✅ reCAPTCHA widget -->
+										   <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+										   <button type="submit" class="default-btn reverse"><span>{% trans "Envoyer le commentaire" %}</span></button>
 								   </form>
 							   {% else %}
 								   <div class="alert alert-info text-center mt-3">
-									   You must be <a href="{% url 'login' %}?next={{ request.path }}">logged in</a> to leave a comment.
+									   {% blocktrans %}
+									   You must be <a href="{{ login_url }}">logged in</a> to leave a comment.
+									   {% endblocktrans %}
 								   </div>
 							   {% endif %}
 						   </div>
@@ -150,10 +138,10 @@
 						<!-- ✅ Search Bar -->
 						<div class="widget widget-search">
 							<div class="widget-header">
-								<h5>Search keywords</h5>
+								<h5>{% trans "Rechercher" %}</h5>
 							</div>
 							<form action="{% url 'blog:blog_list' %}" method="GET" class="search-wrapper">
-								<input type="text" name="q" placeholder="Search Here..." value="{{ query }}">
+								<input type="text" name="q" placeholder="{% trans "Rechercher ici..." %}" value="{{ query }}">
 								<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
 							</form>
 						</div>
@@ -161,13 +149,13 @@
 						<!-- ✅ Post Categories (SHOW ALL FIXED) -->
 						<div class="widget widget-category">
 							<div class="widget-header">
-								<h5>Post Categories</h5>
+								<h5>{% trans "Catégories" %}</h5>
 							</div>
 							<ul class="lab-ul widget-wrapper list-bg-none">
 								<!-- ✅ "Show All" at the top -->
 								<li>
 									<a href="{% url 'blog:blog_list' %}?{% qs category=None %}" class="d-flex flex-wrap justify-content-between">
-										<span><i class="fa-solid fa-angles-right"></i> Show all</span>
+									<span><i class="fa-solid fa-angles-right"></i> {% trans "Afficher tous" %}</span>
 										<span>{{ categories|length }}</span>
 									</a>
 								</li>
@@ -179,7 +167,7 @@
 										</a>
 									</li>
 								{% empty %}
-									<li>No categories available</li>
+								<li>{% trans "Aucune catégorie disponible" %}</li>
 								{% endfor %}
 							</ul>							
 						</div>
@@ -187,7 +175,7 @@
 						<!-- ✅ Recent Posts -->
 						<div class="widget widget-post">
 							<div class="widget-header">
-								<h5>Recent Posts</h5>
+								<h5>{% trans "Articles récents" %}</h5>
 							</div>
 							<ul class="lab-ul widget-wrapper">
 								{% for recent in recent_posts %}
@@ -209,7 +197,7 @@
 									</div>
 								</li>
 								{% empty %}
-									<li>No recent posts available</li>
+								<li>{% trans "Aucun article récent disponible" %}</li>
 								{% endfor %}
 							</ul>
 						</div>
@@ -217,13 +205,13 @@
 						<!-- ✅ Tags -->
 						<div class="widget widget-tags">
 							<div class="widget-header">
-								<h5>Our Popular tags</h5>
+								<h5>{% trans "Nos étiquettes populaires" %}</h5>
 							</div>
 							<ul class="lab-ul widget-wrapper">
 								{% for tag in post_tags %}
 									<li><a href="#">{{ tag }}</a></li>
 								{% empty %}
-									<li>No tags available</li>
+								<li>{% trans "Aucune étiquette disponible" %}</li>
 								{% endfor %}
 							</ul>
 						</div>
