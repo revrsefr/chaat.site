@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-01 21:33+0000\n"
+"POT-Creation-Date: 2026-02-02 02:54+0000\n"
 "PO-Revision-Date: 2026-01-25 15:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1545,79 +1545,83 @@ msgstr "¿Necesitas ayuda? Únete a la sala"
 
 #: templates/main/pages/terms.html:137
 msgid "Conditions & utilisation"
-msgstr "Condiciones y uso"
+msgstr ""
 
 #: templates/main/pages/terms.html:140
+#, fuzzy
+#| msgid "Dernière mise à jour"
 msgid "Dernière mise à jour :"
-msgstr "Ultima actualizacion:"
+msgstr "Ultima actualizacion"
 
 #: templates/main/pages/terms.html:156
 msgid "Sommaire"
-msgstr "Indice"
+msgstr ""
 
 #: templates/main/pages/terms.html:162
+#, fuzzy
+#| msgid "Renvoyer le code"
 msgid "Ouvrir le sommaire"
-msgstr "Abrir el indice"
+msgstr "Enviar comentario"
 
 #: templates/main/pages/terms.html:164 templates/main/pages/terms.html:181
 #: templates/main/pages/terms.html:202
 msgid "1. Préambule"
-msgstr "1. Preambulo"
+msgstr ""
 
 #: templates/main/pages/terms.html:165 templates/main/pages/terms.html:182
 #: templates/main/pages/terms.html:215
 msgid "2. Définitions"
-msgstr "2. Definiciones"
+msgstr ""
 
 #: templates/main/pages/terms.html:166 templates/main/pages/terms.html:183
 #: templates/main/pages/terms.html:227
 msgid "3. Accès au service"
-msgstr "3. Acceso al servicio"
+msgstr ""
 
 #: templates/main/pages/terms.html:167 templates/main/pages/terms.html:184
 #: templates/main/pages/terms.html:241
 msgid "4. Compte & pseudo"
-msgstr "4. Cuenta y apodo"
+msgstr ""
 
 #: templates/main/pages/terms.html:168 templates/main/pages/terms.html:185
 #: templates/main/pages/terms.html:257
 msgid "5. Règles de conduite"
-msgstr "5. Reglas de conducta"
+msgstr ""
 
 #: templates/main/pages/terms.html:169 templates/main/pages/terms.html:186
 #: templates/main/pages/terms.html:269
 msgid "6. Contenus publiés"
-msgstr "6. Contenidos publicados"
+msgstr ""
 
 #: templates/main/pages/terms.html:170 templates/main/pages/terms.html:187
 #: templates/main/pages/terms.html:285
 msgid "7. Modération & sanctions"
-msgstr "7. Moderacion y sanciones"
+msgstr ""
 
 #: templates/main/pages/terms.html:171 templates/main/pages/terms.html:188
 #: templates/main/pages/terms.html:301
 msgid "8. Sécurité & signalement"
-msgstr "8. Seguridad y reportes"
+msgstr ""
 
 #: templates/main/pages/terms.html:172 templates/main/pages/terms.html:189
 #: templates/main/pages/terms.html:316
 msgid "9. Données personnelles & cookies"
-msgstr "9. Datos personales y cookies"
+msgstr ""
 
 #: templates/main/pages/terms.html:173 templates/main/pages/terms.html:190
 #: templates/main/pages/terms.html:329
 msgid "10. Propriété intellectuelle"
-msgstr "10. Propiedad intelectual"
+msgstr ""
 
 #: templates/main/pages/terms.html:174 templates/main/pages/terms.html:191
 #: templates/main/pages/terms.html:342
 msgid "11. Responsabilité"
-msgstr "11. Responsabilidad"
+msgstr ""
 
 #: templates/main/pages/terms.html:175 templates/main/pages/terms.html:192
 #: templates/main/pages/terms.html:355
 msgid "12. Droit applicable & contact"
-msgstr "12. Derecho aplicable y contacto"
+msgstr ""
 
 #: templates/main/pages/terms.html:204
 #, python-format
@@ -1627,60 +1631,46 @@ msgid ""
 "site, rejoignez un salon, publiez un message ou interagissez avec d’autres "
 "utilisateurs."
 msgstr ""
-"Bienvenido a %(site_name)s. Esta pagina reune las reglas de uso del sitio y "
-"del chat (las «CGU»). Se aplican desde que consulta el sitio, se une a una "
-"sala, publica un mensaje o interactua con otros usuarios."
 
 #: templates/main/pages/terms.html:210
 msgid "Si vous n’êtes pas d’accord avec ces règles, n’utilisez pas le Service."
-msgstr "Si no esta de acuerdo con estas reglas, no utilice el Servicio."
+msgstr ""
 
 #: templates/main/pages/terms.html:217
 msgid ""
 "<strong>Service</strong> : le site et ses fonctionnalités (salons, messages, "
 "profils éventuels, pages d’aide, etc.)."
 msgstr ""
-"<strong>Servicio</strong> : el sitio y sus funcionalidades (salas, mensajes, "
-"perfiles opcionales, paginas de ayuda, etc.)."
 
 #: templates/main/pages/terms.html:218
 msgid ""
 "<strong>Utilisateur</strong> : toute personne qui visite le site ou utilise "
 "le tchat."
 msgstr ""
-"<strong>Usuario</strong> : toda persona que visita el sitio o usa el chat."
 
 #: templates/main/pages/terms.html:219
 msgid ""
 "<strong>Compte</strong> : espace utilisateur (si l’inscription / connexion "
 "est proposée) permettant d’accéder à certaines fonctions."
 msgstr ""
-"<strong>Cuenta</strong> : espacio de usuario (si se ofrece registro/inicio de "
-"sesion) que permite acceder a ciertas funciones."
 
 #: templates/main/pages/terms.html:220
 msgid ""
 "<strong>Contenu</strong> : tout ce que vous publiez (message, pseudo, "
 "avatar, image, lien, description, etc.)."
 msgstr ""
-"<strong>Contenido</strong> : todo lo que publica (mensaje, apodo, avatar, "
-"imagen, enlace, descripcion, etc.)."
 
 #: templates/main/pages/terms.html:221
 msgid ""
 "<strong>Signalement</strong> : action permettant d’alerter l’équipe sur un "
 "abus ou un risque."
 msgstr ""
-"<strong>Reporte</strong> : accion que permite alertar al equipo sobre un "
-"abuso o un riesgo."
 
 #: templates/main/pages/terms.html:222
 msgid ""
 "<strong>Modération</strong> : moyens (humains et/ou techniques) visant à "
 "limiter les abus et à appliquer les règles."
 msgstr ""
-"<strong>Moderacion</strong> : medios (humanos y/o tecnicos) para limitar los "
-"abusos y aplicar las reglas."
 
 #: templates/main/pages/terms.html:229
 msgid ""
@@ -1690,11 +1680,6 @@ msgid ""
 "indisponible ou modifié (maintenance, incident, mise à jour, lutte anti-"
 "spam, etc.)."
 msgstr ""
-"El acceso al Servicio requiere una conexion a Internet y un dispositivo "
-"compatible. Usted sigue siendo responsable de su equipo, su navegador y la "
-"seguridad de sus dispositivos. El Servicio puede ralentizarse, no estar "
-"disponible o modificarse (mantenimiento, incidente, actualizacion, lucha "
-"anti-spam, etc.)."
 
 #: templates/main/pages/terms.html:235
 msgid ""
@@ -1703,9 +1688,6 @@ msgid ""
 "réservées à un public majeur, vous vous engagez à ne pas y accéder si ce "
 "n’est pas votre cas."
 msgstr ""
-"<strong>Edad / capacidad :</strong> confirma tener la edad requerida y la "
-"capacidad legal para usar este tipo de servicio. Si algunas zonas estan "
-"reservadas a un publico adulto, se compromete a no acceder si no es su caso."
 
 #: templates/main/pages/terms.html:243
 msgid ""
@@ -1713,9 +1695,6 @@ msgid ""
 "existe, vous devez protéger vos identifiants et éviter tout partage. Les "
 "actions effectuées depuis votre Compte sont réputées réalisées par vous."
 msgstr ""
-"Segun las paginas, el acceso puede hacerse con o sin cuenta. Si existe una "
-"Cuenta, debe proteger sus credenciales y evitar cualquier comparticion. Las "
-"acciones realizadas desde su Cuenta se consideran realizadas por usted."
 
 #: templates/main/pages/terms.html:249
 msgid ""
@@ -1723,52 +1702,40 @@ msgid ""
 "autre personne, une marque ou un service officiel. Il ne doit pas non plus "
 "contenir d’insultes, de propos haineux ou de contenu illégal."
 msgstr ""
-"Su apodo (y eventualmente avatar/descripcion) no debe imitar a otra "
-"persona, una marca o un servicio oficial. Tampoco debe contener insultos, "
-"comentarios de odio o contenido ilegal."
 
 #: templates/main/pages/terms.html:258
 msgid ""
 "Le tchat est un espace public/communautaire : restez respectueux, prudent, "
 "et conforme à la loi."
 msgstr ""
-"El chat es un espacio publico/comunitario: sea respetuoso, prudente y "
-"conforme a la ley."
 
 #: templates/main/pages/terms.html:260
 msgid "Pas de harcèlement, menaces, humiliation, ni propos discriminatoires."
-msgstr "No acoso, amenazas, humillacion ni comentarios discriminatorios."
+msgstr ""
 
 #: templates/main/pages/terms.html:261
 msgid ""
 "Pas de contenus illégaux ou dangereux (ex. : exploitation de mineurs, "
 "incitation à la violence, diffusion d’images sans droit, etc.)."
 msgstr ""
-"No contenidos ilegales o peligrosos (ej.: explotacion de menores, "
-"incitacion a la violencia, difusion de imagenes sin derecho, etc.)."
 
 #: templates/main/pages/terms.html:262
 msgid ""
 "Pas de diffusion des données personnelles d’un tiers (adresse, téléphone, "
 "réseaux sociaux, etc.) sans accord explicite."
 msgstr ""
-"No difusion de datos personales de terceros (direccion, telefono, redes "
-"sociales, etc.) sin acuerdo explicito."
 
 #: templates/main/pages/terms.html:263
 msgid ""
 "Pas de spam, flood, publicité agressive, liens malveillants, arnaques, "
 "phishing."
 msgstr ""
-"No spam, flood, publicidad agresiva, enlaces maliciosos, estafas, phishing."
 
 #: templates/main/pages/terms.html:264
 msgid ""
 "Pas de scripts, bots ou tentatives de contournement (multi-comptes abusifs, "
 "surcharge, attaques, etc.)."
 msgstr ""
-"No scripts, bots o intentos de elusion (multi-cuentas abusivas, sobrecarga, "
-"ataques, etc.)."
 
 #: templates/main/pages/terms.html:271
 msgid ""
@@ -1776,9 +1743,6 @@ msgid ""
 "contenus que vous avez le droit de partager (droits d’auteur, droit à "
 "l’image, autorisation des personnes concernées, etc.)."
 msgstr ""
-"Usted es el unico responsable de lo que publica. Publique solo contenidos "
-"que tenga derecho a compartir (derechos de autor, derecho de imagen, "
-"autorizacion de las personas involucradas, etc.)."
 
 #: templates/main/pages/terms.html:277
 #, python-format
@@ -1788,10 +1752,6 @@ msgid ""
 "héberger et afficher vos Contenus. Cette autorisation est limitée aux "
 "besoins du Service."
 msgstr ""
-"Para hacer funcionar el Servicio (visualizacion en las salas, almacenamiento "
-"tecnico, moderacion, lucha anti-spam), autoriza a %(site_name)s a alojar y "
-"mostrar sus Contenidos. Esta autorizacion se limita a las necesidades del "
-"Servicio."
 
 #: templates/main/pages/terms.html:287
 msgid ""
@@ -1800,10 +1760,6 @@ msgid ""
 "message, bloquer un lien, limiter certaines actions ou restreindre l’accès "
 "au Service en cas d’abus ou de non-respect des CGU."
 msgstr ""
-"Para proteger la comunidad, puede establecerse una moderacion (automatica "
-"y/o manual). Podemos retirar un contenido, ocultar un mensaje, bloquear un "
-"enlace, limitar ciertas acciones o restringir el acceso al Servicio en caso "
-"de abuso o incumplimiento de las CGU."
 
 #: templates/main/pages/terms.html:293
 msgid ""
@@ -1812,10 +1768,6 @@ msgid ""
 "d’éléments techniques utiles (ex. logs) et transmission aux autorités sur "
 "demande légale."
 msgstr ""
-"Las medidas posibles incluyen: advertencia, limitacion (""slow mode""), "
-"silenciamiento, suspension, expulsion y, en su caso, conservacion de "
-"elementos tecnicos utiles (ej. logs) y transmision a las autoridades por "
-"solicitud legal."
 
 #: templates/main/pages/terms.html:303
 msgid ""
@@ -1824,10 +1776,6 @@ msgid ""
 "publics. Si vous envisagez une rencontre, faites-le avec prudence (lieu "
 "public, informer un proche, etc.)."
 msgstr ""
-"En caso de abuso, use las herramientas de reporte (si estan disponibles) o "
-"contacte al equipo. No comparta informacion sensible en salas publicas. Si "
-"planea un encuentro, hagalo con prudencia (lugar publico, informar a un "
-"cercano, etc.)."
 
 #: templates/main/pages/terms.html:309
 #, python-format
@@ -1835,8 +1783,6 @@ msgid ""
 "En cas de danger immédiat, contactez les services d’urgence. %(site_name)s "
 "ne peut pas garantir l’identité réelle des utilisateurs."
 msgstr ""
-"En caso de peligro inmediato, contacte a los servicios de emergencia. "
-"%(site_name)s no puede garantizar la identidad real de los usuarios."
 
 #: templates/main/pages/terms.html:318
 msgid ""
@@ -1845,13 +1791,12 @@ msgid ""
 "consentement, des outils de mesure d’audience et/ou publicitaires peuvent "
 "être activés."
 msgstr ""
-"Usamos datos estrictamente necesarios para el funcionamiento (ej. seguridad, "
-"anti-spam, estabilidad, preferencias). Segun sus opciones de consentimiento, "
-"pueden activarse herramientas de medicion de audiencia y/o publicitarias."
 
 #: templates/main/pages/terms.html:324
+#, fuzzy
+#| msgid "Politique de confidentialité"
 msgid "Consultez : <a href=\"/privacy/\">Politique de confidentialité</a>."
-msgstr "Consulte: <a href=\"/privacy/\">Politica de privacidad</a>."
+msgstr "Politica de privacidad"
 
 #: templates/main/pages/terms.html:331
 msgid ""
@@ -1859,17 +1804,12 @@ msgid ""
 "Toute réutilisation non autorisée (copie, extraction, scraping massif, "
 "reproduction du design ou des contenus éditoriaux) est interdite."
 msgstr ""
-"El sitio, su diseno, sus logotipos y sus elementos tecnicos estan protegidos. "
-"Cualquier reutilizacion no autorizada (copia, extraccion, scraping masivo, "
-"reproduccion del diseno o de contenidos editoriales) esta prohibida."
 
 #: templates/main/pages/terms.html:337
 msgid ""
 "Les marques, contenus et médias appartenant à des tiers restent la propriété "
 "de leurs titulaires."
 msgstr ""
-"Las marcas, contenidos y medios pertenecientes a terceros siguen siendo "
-"propiedad de sus titulares."
 
 #: templates/main/pages/terms.html:344
 #, python-format
@@ -1878,9 +1818,6 @@ msgid ""
 "disponibilité 100%% continue ne peut être garantie. Le Service peut évoluer, "
 "être limité, ou subir des interruptions."
 msgstr ""
-"Hacemos lo posible por mantener un servicio estable, pero no se puede "
-"garantizar una disponibilidad 100%% continua. El Servicio puede evolucionar, "
-"ser limitado o sufrir interrupciones."
 
 #: templates/main/pages/terms.html:350
 msgid ""
@@ -1888,9 +1825,6 @@ msgid ""
 "responsabilité. Restez vigilant(e), notamment en cas de demandes d’argent ou "
 "de liens suspects."
 msgstr ""
-"Los intercambios y encuentros entre Usuarios se realizan bajo su "
-"responsabilidad. Mantengase vigilante, especialmente ante solicitudes de "
-"dinero o enlaces sospechosos."
 
 #: templates/main/pages/terms.html:357
 msgid ""
@@ -1898,146 +1832,202 @@ msgid ""
 "celle applicable. Le droit applicable et les informations d’éditeur (et/ou "
 "d’hébergeur) sont indiqués dans les mentions légales lorsque disponibles."
 msgstr ""
-"Estas CGU pueden actualizarse. La version mostrada en esta pagina es la "
-"aplicable. El derecho aplicable y la informacion del editor (y/o del "
-"proveedor de alojamiento) se indican en las menciones legales cuando estan "
-"disponibles."
 
 #: templates/main/pages/terms.html:363
 msgid "Une question ou un signalement : <a href=\"/contact/\">Contact</a>."
-msgstr "Una pregunta o un reporte: <a href=\"/contact/\">Contacto</a>."
+msgstr ""
 
 # Cookie consent
-#~ msgid "Consentement cookies"
-#~ msgstr "Consentimiento de cookies"
+#: templates/main/partials/cookie-consent.html:3
+msgid "Consentement cookies"
+msgstr "Consentimiento de cookies"
 
-#~ msgid "Cookies"
-#~ msgstr "Cookies"
+#: templates/main/partials/cookie-consent.html:23
+msgid "demande votre consentement"
+msgstr "solicita su consentimiento"
 
-#~ msgid "Ouvrir les préférences cookies"
-#~ msgstr "Abrir preferencias de cookies"
+#: templates/main/partials/cookie-consent.html:25
+msgid "Cookies"
+msgstr "Cookies"
 
-#~ msgid ""
-#~ "Nous utilisons des cookies pour faire fonctionner le site, mesurer "
-#~ "l’audience et (si vous l’autorisez) proposer des contenus/publicités plus "
-#~ "pertinents.\n"
-#~ "        Vous pouvez modifier vos préférences à tout moment."
-#~ msgstr ""
-#~ "Utilizamos cookies para hacer funcionar el sitio, medir la audiencia y "
-#~ "(si lo autoriza) ofrecer contenidos/publicidad más relevantes.\n"
-#~ "        Puede modificar sus preferencias en cualquier momento."
+#: templates/main/partials/cookie-consent.html:29
+msgid "Ouvrir les préférences cookies"
+msgstr "Abrir preferencias de cookies"
 
-#~ msgid "Accepter"
-#~ msgstr "Aceptar"
+#: templates/main/partials/cookie-consent.html:37
+msgid ""
+"\n"
+"        Nous utilisons des cookies pour faire fonctionner le site, mesurer "
+"l’audience et (si vous l’autorisez) proposer des contenus/publicités plus "
+"pertinents.\n"
+"        Vous pouvez modifier vos préférences à tout moment.\n"
+"        "
+msgstr ""
+"Utilizamos cookies para hacer funcionar el sitio, medir la audiencia y (si "
+"lo autoriza) ofrecer contenidos/publicidad más relevantes.\n"
+"        Puede modificar sus preferencias en cualquier momento."
 
-#~ msgid "Personnaliser"
-#~ msgstr "Personalizar"
+#: templates/main/partials/cookie-consent.html:43
+msgid "Accepter"
+msgstr "Aceptar"
 
-#~ msgid "Refuser"
-#~ msgstr "Rechazar"
+#: templates/main/partials/cookie-consent.html:44
+msgid "Personnaliser"
+msgstr "Personalizar"
 
-#~ msgid "Préférences des cookies"
-#~ msgstr "Preferencias de cookies"
+#: templates/main/partials/cookie-consent.html:45
+msgid "Refuser"
+msgstr "Rechazar"
 
-#~ msgid ""
-#~ "Choisissez ce que vous autorisez. Les cookies strictement nécessaires au "
-#~ "fonctionnement du site peuvent être utilisés même en cas de refus.\n"
-#~ "                Les chiffres ci-dessous reflètent uniquement les cookies "
-#~ "1ère partie détectés dans votre navigateur."
-#~ msgstr ""
-#~ "Elija lo que autoriza. Las cookies estrictamente necesarias para el "
-#~ "funcionamiento del sitio pueden usarse incluso si se rechazan.\n"
-#~ "                Las cifras a continuacion reflejan solo las cookies de "
-#~ "primera parte detectadas en su navegador."
+#: templates/main/partials/cookie-consent.html:48
+#: templates/main/partials/cookie-consent.html:170
+msgid "Politique de confidentialité"
+msgstr "Politica de privacidad"
 
-#~ msgid "Fermer"
-#~ msgstr "Cerrar"
+#: templates/main/partials/cookie-consent.html:55
+#: templates/main/partials/cookie-consent.html:58
+msgid "Préférences des cookies"
+msgstr "Preferencias de cookies"
 
-#~ msgid "État actuel"
-#~ msgstr "Estado actual"
+#: templates/main/partials/cookie-consent.html:60
+msgid ""
+"\n"
+"                Choisissez ce que vous autorisez. Les cookies strictement "
+"nécessaires au fonctionnement du site peuvent être utilisés même en cas de "
+"refus.\n"
+"                Les chiffres ci-dessous reflètent uniquement les cookies "
+"1ère partie détectés dans votre navigateur.\n"
+"                "
+msgstr ""
+"Elija lo que autoriza. Las cookies estrictamente necesarias para el "
+"funcionamiento del sitio pueden usarse incluso si se rechazan.\n"
+"                Las cifras a continuacion reflejan solo las cookies de "
+"primera parte detectadas en su navegador."
 
-#~ msgid "Cookies détectés (1ère partie)"
-#~ msgstr "Cookies detectadas (primera parte)"
+#: templates/main/partials/cookie-consent.html:66
+msgid "Fermer"
+msgstr "Cerrar"
 
-#~ msgid ""
-#~ "Le compteur liste uniquement les cookies <strong>1ère partie</strong> "
-#~ "visibles via <code>document.cookie</code>. Selon votre navigateur/"
-#~ "adblock, il peut rester à 0 tant qu’aucun cookie n’a été posé (souvent "
-#~ "après consentement + rechargement). Les cookies <strong>tiers</strong> ne "
-#~ "sont pas détectables ici."
-#~ msgstr ""
-#~ "El contador solo lista las cookies de <strong>primera parte</strong> "
-#~ "visibles via <code>document.cookie</code>. Segun su navegador o "
-#~ "bloqueador, puede permanecer en 0 mientras no se haya creado ninguna "
-#~ "cookie (a menudo despues del consentimiento y la recarga). Las cookies de "
-#~ "<strong>terceros</strong> no se pueden detectar aqui."
+#: templates/main/partials/cookie-consent.html:73
+msgid "État actuel"
+msgstr "Estado actual"
 
-#~ msgid "Mesure d’audience"
-#~ msgstr "Medicion de audiencia"
+#: templates/main/partials/cookie-consent.html:77
+msgid "Cookies détectés (1ère partie)"
+msgstr "Cookies detectadas (primera parte)"
 
-#~ msgid "détecté(s)"
-#~ msgstr "detectado(s)"
+#: templates/main/partials/cookie-consent.html:81
+msgid ""
+"\n"
+"            Le compteur liste uniquement les cookies <strong>1ère partie</"
+"strong> visibles via <code>document.cookie</code>. Selon votre navigateur/"
+"adblock, il peut rester à 0 tant qu’aucun cookie n’a été posé (souvent après "
+"consentement + rechargement). Les cookies <strong>tiers</strong> ne sont pas "
+"détectables ici.\n"
+"            "
+msgstr ""
+"El contador solo lista las cookies de <strong>primera parte</strong> "
+"visibles via <code>document.cookie</code>. Segun su navegador o bloqueador, "
+"puede permanecer en 0 mientras no se haya creado ninguna cookie (a menudo "
+"despues del consentimiento y la recarga). Las cookies de <strong>terceros</"
+"strong> no se pueden detectar aqui."
 
-#~ msgid "connu(s)"
-#~ msgstr "conocido(s)"
+#: templates/main/partials/cookie-consent.html:86
+msgid "Dernière mise à jour"
+msgstr "Ultima actualizacion"
 
-#~ msgid ""
-#~ "Permet de mesurer la fréquentation (pages vues, temps de visite, erreurs) "
-#~ "afin d’améliorer le site. Exemple : Google Analytics / tags équivalents."
-#~ msgstr ""
-#~ "Permite medir el trafico (paginas vistas, tiempo de visita, errores) para "
-#~ "mejorar el sitio. Ejemplo: Google Analytics o etiquetas equivalentes."
+#: templates/main/partials/cookie-consent.html:95
+#: templates/main/partials/cookie-consent.html:99
+msgid "Mesure d’audience"
+msgstr "Medicion de audiencia"
 
-#~ msgid "Voir les cookies détectés"
-#~ msgstr "Ver las cookies detectadas"
+#: templates/main/partials/cookie-consent.html:96
+#: templates/main/partials/cookie-consent.html:115
+#: templates/main/partials/cookie-consent.html:134
+msgid "détecté(s)"
+msgstr "detectado(s)"
 
-#~ msgid "Fonctionnels"
-#~ msgstr "Funcionales"
+#: templates/main/partials/cookie-consent.html:96
+#: templates/main/partials/cookie-consent.html:115
+#: templates/main/partials/cookie-consent.html:134
+msgid "connu(s)"
+msgstr "conocido(s)"
 
-#~ msgid ""
-#~ "Mémorise vos choix et améliore l’expérience (préférences, sécurité, "
-#~ "sessions). La désactivation peut dégrader certaines fonctionnalités."
-#~ msgstr ""
-#~ "Guarda sus elecciones y mejora la experiencia (preferencias, seguridad, "
-#~ "sesiones). La desactivacion puede degradar algunas funciones."
+#: templates/main/partials/cookie-consent.html:103
+msgid ""
+"Permet de mesurer la fréquentation (pages vues, temps de visite, erreurs) "
+"afin d’améliorer le site. Exemple : Google Analytics / tags équivalents."
+msgstr ""
+"Permite medir el trafico (paginas vistas, tiempo de visita, errores) para "
+"mejorar el sitio. Ejemplo: Google Analytics o etiquetas equivalentes."
 
-#~ msgid "Publicitaires"
-#~ msgstr "Publicitarias"
+#: templates/main/partials/cookie-consent.html:106
+#: templates/main/partials/cookie-consent.html:125
+#: templates/main/partials/cookie-consent.html:144
+msgid "Voir les cookies détectés"
+msgstr "Ver las cookies detectadas"
 
-#~ msgid ""
-#~ "Utilisés pour mesurer des campagnes, limiter la répétition, et proposer "
-#~ "des publicités plus pertinentes (selon votre consentement)."
-#~ msgstr ""
-#~ "Se usan para medir campanas, limitar la repeticion y ofrecer publicidad "
-#~ "mas relevante (segun su consentimiento)."
+#: templates/main/partials/cookie-consent.html:114
+#: templates/main/partials/cookie-consent.html:118
+msgid "Fonctionnels"
+msgstr "Funcionales"
 
-#~ msgid "Sécurité (toujours actif)"
-#~ msgstr "Seguridad (siempre activo)"
+#: templates/main/partials/cookie-consent.html:122
+msgid ""
+"Mémorise vos choix et améliore l’expérience (préférences, sécurité, "
+"sessions). La désactivation peut dégrader certaines fonctionnalités."
+msgstr ""
+"Guarda sus elecciones y mejora la experiencia (preferencias, seguridad, "
+"sesiones). La desactivacion puede degradar algunas funciones."
 
-#~ msgid "Protection anti-abus, sécurité du site"
-#~ msgstr "Proteccion contra abusos, seguridad del sitio"
+#: templates/main/partials/cookie-consent.html:133
+#: templates/main/partials/cookie-consent.html:137
+msgid "Publicitaires"
+msgstr "Publicitarias"
 
-#~ msgid "Activé"
-#~ msgstr "Activo"
+#: templates/main/partials/cookie-consent.html:141
+msgid ""
+"Utilisés pour mesurer des campagnes, limiter la répétition, et proposer des "
+"publicités plus pertinentes (selon votre consentement)."
+msgstr ""
+"Se usan para medir campanas, limitar la repeticion y ofrecer publicidad mas "
+"relevante (segun su consentimiento)."
 
-#~ msgid ""
-#~ "Certains stockages strictement nécessaires peuvent être utilisés pour "
-#~ "protéger le site (ex. prévention des fraudes / sécurité)."
-#~ msgstr ""
-#~ "Algunos almacenamientos estrictamente necesarios pueden utilizarse para "
-#~ "proteger el sitio (por ejemplo, prevencion de fraudes y seguridad)."
+#: templates/main/partials/cookie-consent.html:152
+msgid "Sécurité (toujours actif)"
+msgstr "Seguridad (siempre activo)"
 
-#~ msgid "Tout accepter"
-#~ msgstr "Aceptar todo"
+#: templates/main/partials/cookie-consent.html:153
+msgid "Protection anti-abus, sécurité du site"
+msgstr "Proteccion contra abusos, seguridad del sitio"
 
-#~ msgid "Tout refuser"
-#~ msgstr "Rechazar todo"
+#: templates/main/partials/cookie-consent.html:155
+msgid "Activé"
+msgstr "Activo"
 
-#~ msgid "Sauvegarder"
-#~ msgstr "Guardar"
+#: templates/main/partials/cookie-consent.html:158
+msgid ""
+"Certains stockages strictement nécessaires peuvent être utilisés pour "
+"protéger le site (ex. prévention des fraudes / sécurité)."
+msgstr ""
+"Algunos almacenamientos estrictamente necesarios pueden utilizarse para "
+"proteger el sitio (por ejemplo, prevencion de fraudes y seguridad)."
 
-#~ msgid "Modifier plus tard"
-#~ msgstr "Modificar mas tarde"
+#: templates/main/partials/cookie-consent.html:164
+msgid "Tout accepter"
+msgstr "Aceptar todo"
+
+#: templates/main/partials/cookie-consent.html:165
+msgid "Tout refuser"
+msgstr "Rechazar todo"
+
+#: templates/main/partials/cookie-consent.html:166
+msgid "Sauvegarder"
+msgstr "Guardar"
+
+#: templates/main/partials/cookie-consent.html:172
+msgid "Modifier plus tard"
+msgstr "Modificar mas tarde"
 
 #~ msgid "Home"
 #~ msgstr "Inicio"
