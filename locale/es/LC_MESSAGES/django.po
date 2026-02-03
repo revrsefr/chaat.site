@@ -185,6 +185,64 @@ msgstr "Crear una cuenta"
 msgid "Astuce : vous pouvez utiliser votre email ou votre pseudo."
 msgstr "Consejo: puedes usar tu correo o tu apodo."
 
+#: templates/reports/report_user.html:4
+#: templates/reports/report_user.html:20
+msgid "Report a user"
+msgstr "Reportar a un usuario"
+
+#: templates/reports/report_user.html:21
+msgid "Send a report to the staff team."
+msgstr "Envia un reporte al equipo de moderacion."
+
+#: templates/reports/report_user.html:27
+msgid "Please describe what happened and include any useful context (nicknames, channel, time)."
+msgstr "Describe lo ocurrido e incluye cualquier contexto util (nicks, canal, hora)."
+
+#: templates/reports/report_user.html:48
+msgid "User reported"
+msgstr "Usuario reportado"
+
+#: templates/reports/report_user.html:55
+msgid "Motif"
+msgstr "Motivo"
+
+#: templates/reports/report_user.html:56
+msgid "What happened?"
+msgstr "Que paso?"
+
+#: templates/reports/report_user.html:64
+msgid "Security check"
+msgstr "Verificacion de seguridad"
+
+#: templates/reports/report_user.html:71
+msgid "Send report"
+msgstr "Enviar reporte"
+
+#: templates/reports/report_user.html:73
+msgid "Reports are reviewed by staff and kept confidential."
+msgstr "Los reportes son revisados por el equipo y se mantienen confidenciales."
+
+#: templates/reports/report_user.html:88
+msgid "Please complete the reCAPTCHA."
+msgstr "Completa el reCAPTCHA."
+
+#: reports/views.py:20
+msgid "Please complete the reCAPTCHA challenge."
+msgstr "Completa el desafio de reCAPTCHA."
+
+#: reports/views.py:21
+#, python-format
+msgid "reCAPTCHA failed: %(detail)s"
+msgstr "reCAPTCHA fallo: %(detail)s"
+
+#: reports/views.py:24
+msgid "You cannot report yourself."
+msgstr "No puedes reportarte a ti mismo."
+
+#: reports/views.py:30
+msgid "Your report has been sent to the staff."
+msgstr "Tu reporte ha sido enviado al equipo."
+
 #: templates/accounts/password_reset_email.html:2
 #, python-format
 msgid "Bonjour %(username)s,"
