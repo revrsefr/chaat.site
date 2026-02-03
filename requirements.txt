@@ -11,7 +11,7 @@ charset-normalizer==3.4.1
 constantly==23.10.4
 cryptography==44.0.1
 daphne==4.1.2
-Django==6.0.1
+Django>=6.0.2
 django-appconf==1.1.0
 django-compressor==4.5.1
 django-cors-headers==4.6.0
