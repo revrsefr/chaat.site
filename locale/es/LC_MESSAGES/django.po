@@ -1211,6 +1211,10 @@ msgstr "Decoración"
 msgid "#!Accueil #!Musique #!Jeux"
 msgstr "#!Inicio #!Música #!Juegos"
 
+#: templates/main/home.html:322
+msgid "j'adore le tchat.."
+msgstr "me encanta el chat.."
+
 #: templates/main/home.html:324
 msgid ""
 "Un tchat IRC moderne pour discuter librement avec une communauté "

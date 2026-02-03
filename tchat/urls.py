@@ -64,6 +64,7 @@ urlpatterns = [
     path('community/', include('community.urls')),
     path('blog/', include('blog.urls')),
     path('locations/', include('locations.urls')),
+    path('report/', include('reports.urls')),
     path('recaptcha/', include(('recaptcha.urls', 'recaptcha'), namespace='recaptcha')),
     # Sitemap index + per-section sitemaps
     path('sitemap.xml', sitemap_index, name='sitemap-index'),
