@@ -44,7 +44,7 @@
           <h3 style="margin:0 0 0.5rem;color:var(--accent);">Documentation</h3>
           <nav style="display:flex;flex-direction:column;gap:0.25rem;">
             <a href="{% url 'helpdocs:help_index' %}" class="recaptcha-ui__nav-link">Présentation</a>
-            <a href="{% url 'helpdocs:ircd' %}" class="recaptcha-ui__nav-link">Administration</a>
+            <a href="{% url 'helpdocs:ircd' %}" class="recaptcha-ui__nav-link">IRCd</a>
             <a href="{% url 'helpdocs:nickserv' %}" class="recaptcha-ui__nav-link">NickServ</a>
             <a href="{% url 'helpdocs:chanserv' %}" class="recaptcha-ui__nav-link">ChanServ</a>
             <a href="{% url 'helpdocs:memoserv' %}" class="recaptcha-ui__nav-link">MemoServ</a>
@@ -56,8 +56,8 @@
       <main>
         <div class="recaptcha-ui__card main-card" style="padding:1.5rem;">
           <div class="doc-header">
-            <div class="doc-breadcrumb"><a href="{% url 'helpdocs:help_index' %}">Aide</a> / <span>{{ title|default:'Wiki: Commandes IRCD et Services' }}</span></div>
-            <h1 class="recaptcha-ui__title">{{ title|default:'Wiki: Commandes IRCD et Services' }}</h1>
+            <div class="doc-breadcrumb"><a href="{% url 'helpdocs:help_index' %}">Aide</a> / <span>{{ title|default:'Wiki: IRCd & Services' }}</span></div>
+            <h1 class="recaptcha-ui__title">{{ title|default:'Wiki: docs' }}</h1>
             {% if subtitle %}<p class="recaptcha-ui__subtitle">{{ subtitle }}</p>{% endif %}
           </div>
           <section id="help-content">

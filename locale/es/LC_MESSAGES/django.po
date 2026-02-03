@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-02 02:54+0000\n"
+"POT-Creation-Date: 2026-02-02 09:53+0000\n"
 "PO-Revision-Date: 2026-01-25 15:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -391,6 +391,7 @@ msgid "Entrer un pseudo"
 msgstr "Introduce un apodo"
 
 #: templates/accounts/register.html:45 templates/accounts/verify_email.html:47
+#: templates/main/pages/legal.html:139
 msgid "Email"
 msgstr "Correo"
 
@@ -1543,6 +1544,243 @@ msgstr ""
 msgid "Besoin d'aide ? Rejoignez le salon"
 msgstr "¿Necesitas ayuda? Únete a la sala"
 
+#: templates/main/pages/legal.html:116
+msgid "Informations légales & conformité"
+msgstr "Informacion legal y cumplimiento"
+
+#: templates/main/pages/legal.html:119
+#, python-format
+msgid ""
+"\n"
+"                Conformément à l’article 6 de la loi n°2004-575 du 21 juin "
+"2004 pour la confiance dans l’économie numérique (LCEN),\n"
+"                il est précisé aux utilisateurs du site "
+"<strong>%(site_name)s</strong> (%(domain)s) l’identité des différents "
+"intervenants.\n"
+"                "
+msgstr ""
+"De conformidad con el articulo 6 de la ley n.°2004-575 del 21 de junio de "
+"2004 para la confianza en la economia digital (LCEN), se informa a los "
+"usuarios del sitio <strong>%(site_name)s</strong> (%(domain)s) de la "
+"identidad de los distintos intervinientes."
+
+#: templates/main/pages/legal.html:127
+#, python-format
+msgid "Maj : %(updated)s"
+msgstr "Actualizacion: %(updated)s"
+
+#: templates/main/pages/legal.html:134
+msgid "1) Éditeur du site"
+msgstr "1) Editor del sitio"
+
+#: templates/main/pages/legal.html:136
+msgid "Nom / Raison sociale"
+msgstr "Nombre / Razon social"
+
+#: templates/main/pages/legal.html:137
+msgid "Domaine"
+msgstr "Dominio"
+
+#: templates/main/pages/legal.html:138 templates/main/pages/legal.html:163
+msgid "Adresse"
+msgstr "Direccion"
+
+#: templates/main/pages/legal.html:138 templates/main/pages/legal.html:139
+#: templates/main/pages/legal.html:153 templates/main/pages/legal.html:163
+#: templates/main/pages/legal.html:192 templates/main/pages/legal.html:195
+msgid "À compléter"
+msgstr "Por completar"
+
+#: templates/main/pages/legal.html:140 templates/main/pages/legal.html:164
+msgid "Téléphone"
+msgstr "Telefono"
+
+#: templates/main/pages/legal.html:140 templates/main/pages/legal.html:164
+msgid "À compléter (optionnel)"
+msgstr "Por completar (opcional)"
+
+#: templates/main/pages/legal.html:141
+msgid "Statut"
+msgstr "Estatus"
+
+#: templates/main/pages/legal.html:141
+msgid "À compléter (ex: particulier / association / société)"
+msgstr "Por completar (ej.: particular / asociacion / sociedad)"
+
+#: templates/main/pages/legal.html:142
+msgid "SIREN/SIRET"
+msgstr "SIREN/SIRET"
+
+#: templates/main/pages/legal.html:142 templates/main/pages/legal.html:143
+#: templates/main/pages/legal.html:144
+msgid "À compléter si applicable"
+msgstr "Por completar si aplica"
+
+#: templates/main/pages/legal.html:143
+msgid "RCS"
+msgstr "RCS"
+
+#: templates/main/pages/legal.html:144
+msgid "N° TVA intracommunautaire"
+msgstr "N.° IVA intracomunitario"
+
+#: templates/main/pages/legal.html:151
+msgid "2) Directeur de la publication"
+msgstr "2) Director de la publicacion"
+
+#: templates/main/pages/legal.html:153
+msgid "Nom"
+msgstr "Nombre"
+
+#: templates/main/pages/legal.html:160
+msgid "3) Hébergeur"
+msgstr "3) Proveedor de alojamiento"
+
+#: templates/main/pages/legal.html:162
+msgid "Hébergeur"
+msgstr "Proveedor de alojamiento"
+
+#: templates/main/pages/legal.html:162
+msgid "À compléter (ex: OVHcloud / Scaleway / Hetzner / etc.)"
+msgstr "Por completar (ej.: OVHcloud / Scaleway / Hetzner / etc.)"
+
+#: templates/main/pages/legal.html:171
+msgid "4) Propriété intellectuelle"
+msgstr "4) Propiedad intelectual"
+
+#: templates/main/pages/legal.html:173
+msgid ""
+"\n"
+"            Le site, sa structure et ses contenus (textes, images, "
+"graphismes, logos, icônes, sons, logiciels) sont protégés par le droit de la "
+"propriété intellectuelle.\n"
+"            Toute reproduction, représentation, modification, publication, "
+"adaptation, totale ou partielle, de tout élément du site, quel que soit le "
+"moyen ou le procédé utilisé,\n"
+"            est interdite sans autorisation écrite préalable de l’éditeur, "
+"sauf exceptions légales.\n"
+"            "
+msgstr ""
+"El sitio, su estructura y sus contenidos (textos, imagenes, graficos, "
+"logotipos, iconos, sonidos, software) estan protegidos por el derecho de "
+"propiedad intelectual. Toda reproduccion, representacion, modificacion, "
+"publicacion, adaptacion, total o parcial, de cualquier elemento del sitio, "
+"cualquiera sea el medio o procedimiento utilizado, esta prohibida sin la "
+"autorizacion escrita previa del editor, salvo excepciones legales."
+
+#: templates/main/pages/legal.html:184
+msgid "5) Données personnelles (RGPD)"
+msgstr "5) Datos personales (RGPD)"
+
+#: templates/main/pages/legal.html:186
+msgid ""
+"\n"
+"            Des données personnelles peuvent être collectées lors de la "
+"création d’un compte, de la connexion et de l’utilisation des services.\n"
+"            Les traitements sont réalisés pour permettre le fonctionnement "
+"du service, la sécurité, la modération, ainsi que la gestion des comptes.\n"
+"            "
+msgstr ""
+"Se pueden recopilar datos personales durante la creacion de una cuenta, el "
+"inicio de sesion y el uso de los servicios. Los tratamientos se realizan "
+"para permitir el funcionamiento del servicio, la seguridad, la moderacion y "
+"la gestion de las cuentas."
+
+#: templates/main/pages/legal.html:192
+msgid "Responsable de traitement"
+msgstr "Responsable del tratamiento"
+
+#: templates/main/pages/legal.html:193
+msgid "Contact RGPD"
+msgstr "Contacto RGPD"
+
+#: templates/main/pages/legal.html:193
+msgid "À compléter (email)"
+msgstr "Por completar (correo)"
+
+#: templates/main/pages/legal.html:194
+msgid "Base légale"
+msgstr "Base legal"
+
+#: templates/main/pages/legal.html:194
+msgid ""
+"exécution du contrat (service), intérêt légitime (sécurité/modération), "
+"consentement (cookies non essentiels si applicable)"
+msgstr ""
+"ejecucion del contrato (servicio), interes legitimo (seguridad/moderacion), "
+"consentimiento (cookies no esenciales si aplica)"
+
+#: templates/main/pages/legal.html:195
+msgid "Durées de conservation"
+msgstr "Plazos de conservacion"
+
+#: templates/main/pages/legal.html:196
+msgid "Droits"
+msgstr "Derechos"
+
+#: templates/main/pages/legal.html:196
+msgid ""
+"accès, rectification, effacement, limitation, opposition, portabilité, "
+"conformément au RGPD"
+msgstr ""
+"acceso, rectificacion, supresion, limitacion, oposicion, portabilidad, "
+"conforme al RGPD"
+
+#: templates/main/pages/legal.html:197
+msgid "Réclamation"
+msgstr "Reclamacion"
+
+#: templates/main/pages/legal.html:197
+msgid "vous pouvez introduire une réclamation auprès de la CNIL (www.cnil.fr)"
+msgstr "puede presentar una reclamacion ante la CNIL (www.cnil.fr)"
+
+#: templates/main/pages/legal.html:204
+msgid "6) Cookies"
+msgstr "6) Cookies"
+
+#: templates/main/pages/legal.html:206
+msgid ""
+"\n"
+"            Le site peut utiliser des cookies et/ou traceurs pour assurer "
+"son fonctionnement (ex: session, préférences) et, le cas échéant, pour la "
+"mesure d’audience.\n"
+"            Vous pouvez configurer votre navigateur pour refuser tout ou "
+"partie des cookies.\n"
+"            "
+msgstr ""
+"El sitio puede utilizar cookies y/o rastreadores para asegurar su "
+"funcionamiento (ej.: sesion, preferencias) y, en su caso, para la medicion "
+"de audiencia. Puede configurar su navegador para rechazar todas o parte de "
+"las cookies."
+
+#: templates/main/pages/legal.html:216
+msgid "7) Responsabilité"
+msgstr "7) Responsabilidad"
+
+#: templates/main/pages/legal.html:218
+msgid ""
+"\n"
+"            L’éditeur s’efforce d’assurer au mieux l’exactitude et la mise à "
+"jour des informations diffusées.\n"
+"            Toutefois, il ne peut garantir l’exactitude, la complétude ou "
+"l’actualité des informations.\n"
+"            L’utilisateur est seul responsable de l’utilisation qu’il fait "
+"du site et des services.\n"
+"            "
+msgstr ""
+"El editor se esfuerza por garantizar la exactitud y la actualizacion de la "
+"informacion difundida. Sin embargo, no puede garantizar la exactitud, la "
+"integridad ni la actualidad de la informacion. El usuario es el unico "
+"responsable del uso que haga del sitio y de los servicios."
+
+#: templates/main/pages/legal.html:229
+msgid "8) Contact"
+msgstr "8) Contacto"
+
+#: templates/main/pages/legal.html:231
+msgid "Pour toute question, vous pouvez nous contacter à l’adresse suivante :"
+msgstr "Para cualquier consulta, puede contactarnos en la siguiente direccion:"
+
 #: templates/main/pages/terms.html:137
 msgid "Conditions & utilisation"
 msgstr ""
@@ -2123,12 +2361,6 @@ msgstr "Modificar mas tarde"
 #, python-format
 #~ msgid "%(site_name)s is a friendly community experience for everyone."
 #~ msgstr "%(site_name)s es una experiencia comunitaria amigable para todos."
-
-#~ msgid "Address"
-#~ msgstr "Dirección"
-
-#~ msgid "Contact"
-#~ msgstr "Contacto"
 
 #~ msgid "Featured Members"
 #~ msgstr "Miembros destacados"

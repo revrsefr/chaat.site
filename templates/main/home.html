@@ -61,67 +61,119 @@
         .story__slider .swiper-slide {
             height: auto;
         }
-        .story__slider .story__item {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+        .story-card-wrap {
+            container-type: inline-size;
+            container-name: story-card;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
             box-shadow: 0 18px 40px rgba(8, 12, 30, 0.22);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             overflow: hidden;
             height: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
-        .story__slider .story__inner {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        .story__slider .story__item:hover {
+        .story-card-wrap:hover {
             transform: translateY(-6px);
             box-shadow: 0 22px 46px rgba(8, 12, 30, 0.3);
-            border-color: rgba(255, 255, 255, 0.45);
+            border-color: rgba(255, 255, 255, 0.35);
         }
-        .story__slider .story__thumb img {
-            border-radius: 16px;
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            object-fit: cover;
-        }
-        .story__slider .story__content {
-            padding: 20px 18px 22px;
+        .story-card {
+            background: #0f172a;
+            color: #e2e8f0;
+            height: 100%;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+        }
+        .story-card__image {
+            position: relative;
+            width: 100%;
+        }
+        .story-card__image a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .story-card__image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .story-card__content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             flex: 1 1 auto;
         }
-        .story__content--author {
+        .story-card__badge {
+            background: rgba(56, 189, 248, 0.18);
+            color: #7dd3fc;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            align-self: flex-start;
+        }
+        .story-card__title {
+            margin: 0;
+            line-height: 1.15;
+            font-size: clamp(1.25rem, 6cqi, 2.6rem);
+            font-weight: 800;
+            color: #f8fafc;
+            transition: font-size 0.2s ease;
+        }
+        .story-card__desc {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin: 0;
+        }
+        .story-card__footer {
             margin-top: auto;
-            min-height: 56px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(148, 163, 184, 0.35);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        .story__cta {
-            margin-top: 12px;
+        .story-card__author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
         }
-        .story__cta {
-            margin-top: 16px;
+        .story-card__author img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
         }
-        .story__btn {
+        .story-card__btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            background: #0ea5e9;
+            color: #fff;
+            border: none;
             padding: 10px 18px;
-            border-radius: 999px;
-            background: #17a34a;
-            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
             font-weight: 700;
-            box-shadow: 0 12px 24px rgba(23, 163, 74, 0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-size: 14px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            white-space: nowrap;
         }
-        .story__btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 28px rgba(23, 163, 74, 0.4);
-            background: #15803d;
+        .story-card__btn:hover {
+            background: #0284c7;
             color: #fff;
+            transform: translateY(-1px);
         }
         .story__nav {
             display: inline-flex;
@@ -155,6 +207,44 @@
         }
         .story__slider .swiper-pagination-bullet-active {
             background: #ff9b3f;
+        }
+        @container story-card (min-width: 480px) {
+            .story-card {
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .story-card__image {
+                flex: 0 0 40%;
+            }
+            .story-card__image img {
+                height: 100%;
+            }
+            .story-card__content {
+                justify-content: center;
+                padding: 26px;
+            }
+        }
+        @container story-card (min-width: 750px) {
+            .story-card {
+                background: linear-gradient(to right, #0f172a, #111e36);
+            }
+            .story-card__image {
+                flex: 0 0 50%;
+            }
+            .story-card__title {
+                font-size: 5cqi;
+                color: #7dd3fc;
+            }
+            .story-card__desc {
+                font-size: 1.125rem;
+            }
+            .story-card__btn {
+                background: #38bdf8;
+                padding: 12px 22px;
+            }
+            .story-card__btn:hover {
+                background: #0ea5e9;
+            }
         }
     </style>
 
@@ -452,8 +542,8 @@
                                                     id="webchat-channel"
                                                     name="channel"
                                                     class="home-webchat-input"
-                                                    value="{% trans "#!Accueil" %}"
-                                                    placeholder="{% trans "#!Accueil" %}"
+                                                    value="#amistad,#general"
+                                                    placeholder="#amistad,#general"
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -749,9 +839,9 @@
                     <div class="swiper-wrapper">
                         {% for post in posts %}
                             <div class="swiper-slide">
-                                <div class="story__item">
-                                    <div class="story__inner">
-                                        <div class="story__thumb">
+                                <div class="story-card-wrap">
+                                    <article class="story-card">
+                                        <div class="story-card__image">
                                             <a href="{% url 'blog:blog_detail' slug=post.slug %}">
                                                 <img
                                                     src="{{ post.image_thumb_326_url|default:post.image.url }}"
@@ -764,39 +854,43 @@
                                                     decoding="async"
                                                 >
                                             </a>
-                                            <span class="member__activity member__activity--offline">{{ post.category }}</span>
                                         </div>
-                                        <div class="story__content">
+                                        <div class="story-card__content">
+                                            <span class="story-card__badge">{{ post.category }}</span>
                                             <a href="{% url 'blog:blog_detail' slug=post.slug %}">
-									<p class="h4 mb-0">{{ post.title }}</p>
+                                                <h3 class="story-card__title">{{ post.title }}</h3>
                                             </a>
-                                            <div class="story__content--author">
-                                                <div class="story__content--thumb">
+                                            <p class="story-card__desc">
+                                                {% if post.excerpt %}
+                                                    {{ post.excerpt|striptags|truncatechars:140 }}
+                                                {% elif post.content %}
+                                                    {{ post.content|striptags|truncatechars:140 }}
+                                                {% else %}
+                                                    {% trans "Lire la suite pour decouvrir l'article." %}
+                                                {% endif %}
+                                            </p>
+                                            <div class="story-card__footer">
+                                                <div class="story-card__author">
                                                     <img
                                                         src="{% if post.author.avatar_thumb_100_url %}{{ post.author.avatar_thumb_100_url }}{% elif post.author.avatar_url %}{{ post.author.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
                                                         srcset="{{ post.author.avatar_thumb_100_url }} 100w, {{ post.author.avatar_thumb_320_url }} 320w, {{ post.author.avatar_url }} 1024w"
-                                                        sizes="42px"
-                                                        width="42"
-                                                        height="42"
+                                                        sizes="32px"
+                                                        width="32"
+                                                        height="32"
                                                         alt="{{ post.author.username }}"
                                                         loading="lazy"
                                                         decoding="async"
                                                         data-fallback-src="{% static 'images/default-avatar.svg' %}"
                                                     >
+                                                    <span>{{ post.author.username }}</span>
                                                 </div>
-                                                <div class="story__content--content">
-										<p class="mb-0 fw-semibold">{{ post.author.username }}</p>
-                                                    <p>{{ post.created_at|date:"F j, Y" }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="story__cta">
-                                                <a class="story__btn" href="{% url 'blog:blog_detail' slug=post.slug %}">
+                                                <a class="story-card__btn" href="{% url 'blog:blog_detail' slug=post.slug %}">
                                                     {% trans "Lire la suite" %}
                                                     <i class="fa-solid fa-arrow-right"></i>
                                                 </a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </article>
                                 </div>
                             </div>
                         {% endfor %}

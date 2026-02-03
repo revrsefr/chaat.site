@@ -113,112 +113,122 @@
         <div class="legal-hero p-4 p-md-5 mb-4">
           <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
             <div>
-              <p class="legal-kicker mb-2">Informations légales & conformité</p>
+              <p class="legal-kicker mb-2">{% trans "Informations légales & conformité" %}</p>
               <h1 class="legal-title h2 mb-2">{% trans "Mentions légales" %}</h1>
               <p class="legal-note mb-0">
+                {% blocktrans with site_name=site_brand.site_name domain=site_brand.domain %}
                 Conformément à l’article 6 de la loi n°2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique (LCEN),
-                il est précisé aux utilisateurs du site <strong>{{ site_brand.site_name }}</strong> ({{ site_brand.domain }}) l’identité des différents intervenants.
+                il est précisé aux utilisateurs du site <strong>{{ site_name }}</strong> ({{ domain }}) l’identité des différents intervenants.
+                {% endblocktrans %}
               </p>
             </div>
             <div class="legal-badge">
               <i class="fa-solid fa-scale-balanced"></i>
-              <span>Maj : {{ legal.last_updated|date:"d/m/Y" }}</span>
+              <span>{% blocktrans with updated=legal.last_updated|date:"d/m/Y" %}Maj : {{ updated }}{% endblocktrans %}</span>
             </div>
           </div>
         </div>
 
       <div class="card legal-card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">1) Éditeur du site</h2>
+          <h2 class="h5 mb-3">{% trans "1) Éditeur du site" %}</h2>
           <ul class="legal-kv">
-            <li><div class="legal-k">Nom / Raison sociale</div><div class="legal-v">{{ legal.publisher_name|default:site_brand.site_name }}</div></li>
-            <li><div class="legal-k">Domaine</div><div class="legal-v">{{ site_brand.domain }}</div></li>
-            <li><div class="legal-k">Adresse</div><div class="legal-v">{% if legal.publisher_address %}{{ legal.publisher_address|linebreaksbr }}{% else %}<em>À compléter</em>{% endif %}</div></li>
-            <li><div class="legal-k">Email</div><div class="legal-v">{% if legal.publisher_email %}{{ legal.publisher_email }}{% else %}<em>À compléter</em>{% endif %}</div></li>
-            <li><div class="legal-k">Téléphone</div><div class="legal-v">{% if legal.publisher_phone %}{{ legal.publisher_phone }}{% else %}<em>À compléter (optionnel)</em>{% endif %}</div></li>
-            <li><div class="legal-k">Statut</div><div class="legal-v">{% if legal.publisher_status %}{{ legal.publisher_status }}{% else %}<em>À compléter (ex: particulier / association / société)</em>{% endif %}</div></li>
-            <li><div class="legal-k">SIREN/SIRET</div><div class="legal-v">{% if legal.publisher_siren_siret %}{{ legal.publisher_siren_siret }}{% else %}<em>À compléter si applicable</em>{% endif %}</div></li>
-            <li><div class="legal-k">RCS</div><div class="legal-v">{% if legal.publisher_rcs %}{{ legal.publisher_rcs }}{% else %}<em>À compléter si applicable</em>{% endif %}</div></li>
-            <li><div class="legal-k">N° TVA intracommunautaire</div><div class="legal-v">{% if legal.publisher_vat_number %}{{ legal.publisher_vat_number }}{% else %}<em>À compléter si applicable</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Nom / Raison sociale" %}</div><div class="legal-v">{{ legal.publisher_name|default:site_brand.site_name }}</div></li>
+            <li><div class="legal-k">{% trans "Domaine" %}</div><div class="legal-v">{{ site_brand.domain }}</div></li>
+            <li><div class="legal-k">{% trans "Adresse" %}</div><div class="legal-v">{% if legal.publisher_address %}{{ legal.publisher_address|linebreaksbr }}{% else %}<em>{% trans "À compléter" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Email" %}</div><div class="legal-v">{% if legal.publisher_email %}{{ legal.publisher_email }}{% else %}<em>{% trans "À compléter" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Téléphone" %}</div><div class="legal-v">{% if legal.publisher_phone %}{{ legal.publisher_phone }}{% else %}<em>{% trans "À compléter (optionnel)" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Statut" %}</div><div class="legal-v">{% if legal.publisher_status %}{{ legal.publisher_status }}{% else %}<em>{% trans "À compléter (ex: particulier / association / société)" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "SIREN/SIRET" %}</div><div class="legal-v">{% if legal.publisher_siren_siret %}{{ legal.publisher_siren_siret }}{% else %}<em>{% trans "À compléter si applicable" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "RCS" %}</div><div class="legal-v">{% if legal.publisher_rcs %}{{ legal.publisher_rcs }}{% else %}<em>{% trans "À compléter si applicable" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "N° TVA intracommunautaire" %}</div><div class="legal-v">{% if legal.publisher_vat_number %}{{ legal.publisher_vat_number }}{% else %}<em>{% trans "À compléter si applicable" %}</em>{% endif %}</div></li>
           </ul>
         </div>
       </div>
 
       <div class="card legal-card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">2) Directeur de la publication</h2>
+          <h2 class="h5 mb-3">{% trans "2) Directeur de la publication" %}</h2>
           <ul class="legal-kv">
-            <li><div class="legal-k">Nom</div><div class="legal-v">{% if legal.publication_director %}{{ legal.publication_director }}{% else %}<em>À compléter</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Nom" %}</div><div class="legal-v">{% if legal.publication_director %}{{ legal.publication_director }}{% else %}<em>{% trans "À compléter" %}</em>{% endif %}</div></li>
           </ul>
         </div>
       </div>
 
       <div class="card legal-card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">3) Hébergeur</h2>
+          <h2 class="h5 mb-3">{% trans "3) Hébergeur" %}</h2>
           <ul class="legal-kv">
-            <li><div class="legal-k">Hébergeur</div><div class="legal-v">{% if legal.host_name %}{{ legal.host_name }}{% else %}<em>À compléter (ex: OVHcloud / Scaleway / Hetzner / etc.)</em>{% endif %}</div></li>
-            <li><div class="legal-k">Adresse</div><div class="legal-v">{% if legal.host_address %}{{ legal.host_address|linebreaksbr }}{% else %}<em>À compléter</em>{% endif %}</div></li>
-            <li><div class="legal-k">Téléphone</div><div class="legal-v">{% if legal.host_phone %}{{ legal.host_phone }}{% else %}<em>À compléter (optionnel)</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Hébergeur" %}</div><div class="legal-v">{% if legal.host_name %}{{ legal.host_name }}{% else %}<em>{% trans "À compléter (ex: OVHcloud / Scaleway / Hetzner / etc.)" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Adresse" %}</div><div class="legal-v">{% if legal.host_address %}{{ legal.host_address|linebreaksbr }}{% else %}<em>{% trans "À compléter" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Téléphone" %}</div><div class="legal-v">{% if legal.host_phone %}{{ legal.host_phone }}{% else %}<em>{% trans "À compléter (optionnel)" %}</em>{% endif %}</div></li>
           </ul>
         </div>
       </div>
 
       <div class="card legal-card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">4) Propriété intellectuelle</h2>
+          <h2 class="h5 mb-3">{% trans "4) Propriété intellectuelle" %}</h2>
           <p class="mb-0">
+            {% blocktrans %}
             Le site, sa structure et ses contenus (textes, images, graphismes, logos, icônes, sons, logiciels) sont protégés par le droit de la propriété intellectuelle.
             Toute reproduction, représentation, modification, publication, adaptation, totale ou partielle, de tout élément du site, quel que soit le moyen ou le procédé utilisé,
             est interdite sans autorisation écrite préalable de l’éditeur, sauf exceptions légales.
+            {% endblocktrans %}
           </p>
         </div>
       </div>
 
       <div class="card legal-card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">5) Données personnelles (RGPD)</h2>
+          <h2 class="h5 mb-3">{% trans "5) Données personnelles (RGPD)" %}</h2>
           <p>
+            {% blocktrans %}
             Des données personnelles peuvent être collectées lors de la création d’un compte, de la connexion et de l’utilisation des services.
             Les traitements sont réalisés pour permettre le fonctionnement du service, la sécurité, la modération, ainsi que la gestion des comptes.
+            {% endblocktrans %}
           </p>
           <ul class="legal-kv">
-            <li><div class="legal-k">Responsable de traitement</div><div class="legal-v">{% if legal.rgpd_controller %}{{ legal.rgpd_controller }}{% else %}<em>À compléter</em>{% endif %}</div></li>
-            <li><div class="legal-k">Contact RGPD</div><div class="legal-v">{% if legal.rgpd_contact_email %}{{ legal.rgpd_contact_email }}{% else %}<em>À compléter (email)</em>{% endif %}</div></li>
-            <li><div class="legal-k">Base légale</div><div class="legal-v">exécution du contrat (service), intérêt légitime (sécurité/modération), consentement (cookies non essentiels si applicable)</div></li>
-            <li><div class="legal-k">Durées de conservation</div><div class="legal-v">{% if legal.retention_policy %}{{ legal.retention_policy|linebreaksbr }}{% else %}<em>À compléter</em>{% endif %}</div></li>
-            <li><div class="legal-k">Droits</div><div class="legal-v">accès, rectification, effacement, limitation, opposition, portabilité, conformément au RGPD</div></li>
-            <li><div class="legal-k">Réclamation</div><div class="legal-v">vous pouvez introduire une réclamation auprès de la CNIL (www.cnil.fr)</div></li>
+            <li><div class="legal-k">{% trans "Responsable de traitement" %}</div><div class="legal-v">{% if legal.rgpd_controller %}{{ legal.rgpd_controller }}{% else %}<em>{% trans "À compléter" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Contact RGPD" %}</div><div class="legal-v">{% if legal.rgpd_contact_email %}{{ legal.rgpd_contact_email }}{% else %}<em>{% trans "À compléter (email)" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Base légale" %}</div><div class="legal-v">{% trans "exécution du contrat (service), intérêt légitime (sécurité/modération), consentement (cookies non essentiels si applicable)" %}</div></li>
+            <li><div class="legal-k">{% trans "Durées de conservation" %}</div><div class="legal-v">{% if legal.retention_policy %}{{ legal.retention_policy|linebreaksbr }}{% else %}<em>{% trans "À compléter" %}</em>{% endif %}</div></li>
+            <li><div class="legal-k">{% trans "Droits" %}</div><div class="legal-v">{% trans "accès, rectification, effacement, limitation, opposition, portabilité, conformément au RGPD" %}</div></li>
+            <li><div class="legal-k">{% trans "Réclamation" %}</div><div class="legal-v">{% trans "vous pouvez introduire une réclamation auprès de la CNIL (www.cnil.fr)" %}</div></li>
           </ul>
         </div>
       </div>
 
       <div class="card legal-card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">6) Cookies</h2>
+          <h2 class="h5 mb-3">{% trans "6) Cookies" %}</h2>
           <p class="mb-0">
+            {% blocktrans %}
             Le site peut utiliser des cookies et/ou traceurs pour assurer son fonctionnement (ex: session, préférences) et, le cas échéant, pour la mesure d’audience.
             Vous pouvez configurer votre navigateur pour refuser tout ou partie des cookies.
+            {% endblocktrans %}
           </p>
         </div>
       </div>
 
       <div class="card legal-card mb-4">
         <div class="card-body">
-          <h2 class="h5 mb-3">7) Responsabilité</h2>
+          <h2 class="h5 mb-3">{% trans "7) Responsabilité" %}</h2>
           <p class="mb-0">
+            {% blocktrans %}
             L’éditeur s’efforce d’assurer au mieux l’exactitude et la mise à jour des informations diffusées.
             Toutefois, il ne peut garantir l’exactitude, la complétude ou l’actualité des informations.
             L’utilisateur est seul responsable de l’utilisation qu’il fait du site et des services.
+            {% endblocktrans %}
           </p>
         </div>
       </div>
 
       <div class="card legal-card">
         <div class="card-body">
-          <h2 class="h5 mb-3">8) Contact</h2>
+          <h2 class="h5 mb-3">{% trans "8) Contact" %}</h2>
           <p class="mb-0">
-            Pour toute question, vous pouvez nous contacter à l’adresse suivante :
+            {% trans "Pour toute question, vous pouvez nous contacter à l’adresse suivante :" %}
             <strong>{% if legal.publisher_email %}{{ legal.publisher_email }}{% else %}<em>À compléter</em>{% endif %}</strong>.
           </p>
         </div>

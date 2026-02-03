@@ -1,13 +1,15 @@
 {% extends "help/_help_base.html" %}
+{% load i18n %}
 
 {% block title %}Commandes ChanServ{% endblock %}
 
 {% block help_content %}
 <h2>ChanServ - Gestion du canal</h2>
 <div class="command-block" style="background:transparent;border:none;padding:0;margin:0;">
-  <code>/msg ChanServ REGISTER #channel &lt;description&gt;</code> — Enregistrer un canal<br>
-  <code>/msg ChanServ DROP #channel</code> — Annuler l'enregistrement du canal<br>
-  <code>/msg ChanServ ACCESS #channel ADD &lt;nick&gt; &lt;level&gt;</code> — Attribuer un accès
+  <code>/msg ChanServ REGISTER #channel &lt;description&gt;</code> — {% trans "Enregistrer un canal" %}<br>
+  <code>/msg ChanServ DROP #channel</code> — {% trans "Annuler l'enregistrement du canal" %}<br>
+  <code>/msg ChanServ ACCESS #channel ADD &lt;nick&gt; &lt;level&gt;</code> — {% trans "Attribuer un accès" %}<br>
+  <code>/msg ChanServ SET &lt;option &gt; &lt;#channel &gt; &lt;parameters&gt;</code> — {% trans "Définir une option" %}
 </div>
 
 {% endblock %}
