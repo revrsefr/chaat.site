@@ -26,6 +26,12 @@ class CustomUser(AbstractUser):
     email_verification_expires_at = models.DateTimeField(null=True, blank=True)
     email_verification_sent_at = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["public", "date_joined"], name="accounts_public_date_idx"),
+            models.Index(fields=["public", "last_login"], name="accounts_public_last_idx"),
+        ]
+
     # ✅ Fix conflicts with Django auth.User model
     groups = models.ManyToManyField(
         "auth.Group",

@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 class AnopeStatsService:
     """Cached helper around the Anope JSON-RPC surface."""
 
+    NETWORK_OVERVIEW_KEY = "network.overview"
+
     def __init__(
         self,
         rpc: Optional[AnopeRPC] = None,
@@ -118,23 +120,31 @@ class AnopeStatsService:
     # Public API
     # ------------------------------------------------------------------
 
-    def network_overview(self) -> Dict[str, Any]:
-        def fetch():
-            channels = self.rpc.list_channels("name") or []
-            users = self.rpc.list_users("name") or []
-            servers = self.rpc.list_servers("name") or []
-            operators = self.rpc.list_opers("name") or []
-            return {
-                "counts": {
-                    "channels": len(channels),
-                    "users": len(users),
-                    "servers": len(servers),
-                    "operators": len(operators),
-                },
-                "updated_at": timezone.now().isoformat(),
-            }
+    def _build_network_overview(self) -> Dict[str, Any]:
+        channels = self.rpc.list_channels("name") or []
+        users = self.rpc.list_users("name") or []
+        servers = self.rpc.list_servers("name") or []
+        operators = self.rpc.list_opers("name") or []
+        return {
+            "counts": {
+                "channels": len(channels),
+                "users": len(users),
+                "servers": len(servers),
+                "operators": len(operators),
+            },
+            "updated_at": timezone.now().isoformat(),
+        }
 
-        return self._cached("network.overview", fetch, ttl=10)
+    def network_overview(self) -> Dict[str, Any]:
+        return self._cached(self.NETWORK_OVERVIEW_KEY, self._build_network_overview, ttl=10)
+
+    def network_overview_cached(self) -> Optional[Dict[str, Any]]:
+        return cache.get(self._cache_key(self.NETWORK_OVERVIEW_KEY))
+
+    def refresh_network_overview_cache(self, ttl: Optional[int] = None) -> Dict[str, Any]:
+        payload = self._build_network_overview()
+        cache.set(self._cache_key(self.NETWORK_OVERVIEW_KEY), payload, ttl or self.default_ttl)
+        return payload
 
     def channel_listing(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         def fetch():

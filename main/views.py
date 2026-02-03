@@ -2,8 +2,9 @@ from django.shortcuts import render
 from accounts.models import CustomUser
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.core.cache import cache
 from django.contrib.sites.requests import RequestSite
-from irc.rpc_client import AnopeRPC
+from irc.services import AnopeStatsService
 from blog.models import BlogPost
 from django.http import JsonResponse  
 from django.conf import settings
@@ -22,29 +23,46 @@ def webirc(request):
 
 @ensure_csrf_cookie
 def home(request):
-    latest_members = (
-        CustomUser.objects.filter(public=True)
-        .order_by("-date_joined")
-        .only("username", "avatar", "last_login")[:9]
+    host = (request.get_host() or "").split(":", 1)[0].lower()
+    cache_ns = f"home.{host}" if host else "home"
+
+    latest_members = cache.get_or_set(
+        f"{cache_ns}.latest_members",
+        lambda: list(
+            CustomUser.objects.filter(public=True)
+            .order_by("-date_joined")
+            .only("username", "avatar", "last_login")[:9]
+        ),
+        settings.HOME_CACHE_TTL_MEMBERS,
     )
 
-    home_members = (
-        CustomUser.objects.filter(public=True)
-        .order_by("-last_login")
-        .only("username", "avatar", "last_login")[:8]
+    home_members = cache.get_or_set(
+        f"{cache_ns}.home_members",
+        lambda: list(
+            CustomUser.objects.filter(public=True)
+            .order_by("-last_login")
+            .only("username", "avatar", "last_login")[:8]
+        ),
+        settings.HOME_CACHE_TTL_MEMBERS,
     )
-    latest_posts = BlogPost.objects.filter(is_published=True).order_by("-created_at")[:6]  # ✅ Get latest 6 posts
 
-    rpc = AnopeRPC(token=settings.ANOPE_RPC_TOKEN)
-    users = rpc.list_users() or []
-    servers = rpc.run("anope.listServers") or []  # ✅ Get list of servers
-    opers = rpc.run("anope.listOpers") or []  # ✅ Get list of online operators
-    channels = rpc.list_channels() or []  # ✅ Get list of channels
+    latest_posts = cache.get_or_set(
+        f"{cache_ns}.latest_posts",
+        lambda: list(
+            BlogPost.objects.filter(is_published=True)
+            .select_related("author")
+            .order_by("-created_at")[:6]
+        ),
+        settings.HOME_CACHE_TTL_POSTS,
+    )
 
-    user_count = len(users)  # ✅ Count total connected users
-    server_count = len(servers)  # ✅ Count total servers online
-    oper_count = len(opers)  # ✅ Count total IRC operators online
-    channel_count = len(channels)  # ✅ Count total channels
+    stats_service = AnopeStatsService()
+    overview = stats_service.network_overview_cached() or {}
+    counts = overview.get("counts", {}) if isinstance(overview, dict) else {}
+    user_count = int(counts.get("users", 0))
+    server_count = int(counts.get("servers", 0))
+    oper_count = int(counts.get("operators", 0))
+    channel_count = int(counts.get("channels", 0))
 
     return render(request, 'main/home.html', {
         "latest_members": latest_members,

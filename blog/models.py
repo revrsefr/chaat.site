@@ -24,6 +24,11 @@ class BlogPost(models.Model):
     is_active = models.BooleanField(default=True)
     is_published = models.BooleanField(default=True)  # ✅ MUST EXIST
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["is_published", "created_at"], name="blogpost_pub_created_idx"),
+        ]
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)

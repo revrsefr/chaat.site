@@ -329,18 +329,18 @@
         <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/swiper.min.js' %}"></script>
         <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/counterup.js' %}"></script>
         <script nonce="{{ request.csp_nonce }}">
-            let storySliderInstance = null;
-            let lastPostCount = null;
+            window.storySliderInstance = window.storySliderInstance || null;
+            window.lastPostCount = window.lastPostCount ?? null;
 
             function initStorySlider() {
                 const storySlider = document.querySelector('.story__slider');
                 if (!storySlider || !window.Swiper) return;
 
-                if (storySliderInstance) {
-                    storySliderInstance.destroy();
+                if (window.storySliderInstance) {
+                    window.storySliderInstance.destroy();
                 }
 
-                storySliderInstance = new Swiper(storySlider, {
+                window.storySliderInstance = new Swiper(storySlider, {
                     slidesPerView: 1,
                     spaceBetween: 24,
                     loop: false,
@@ -370,15 +370,15 @@
                     const doc = parser.parseFromString(html, 'text/html');
                     const newPostCount = doc.querySelectorAll('.story__slider .swiper-slide').length;
 
-                    if (lastPostCount === null) {
-                        lastPostCount = newPostCount;
-                    } else if (newPostCount > lastPostCount) {
+                    if (window.lastPostCount === null) {
+                        window.lastPostCount = newPostCount;
+                    } else if (newPostCount > window.lastPostCount) {
                         const newSlider = doc.querySelector('.story__slider');
                         const oldSlider = document.querySelector('.story__slider');
                         
                         if (newSlider && oldSlider) {
                             oldSlider.innerHTML = newSlider.innerHTML;
-                            lastPostCount = newPostCount;
+                            window.lastPostCount = newPostCount;
                             if (window.Swiper) {
                                 initStorySlider();
                             }
@@ -542,8 +542,8 @@
                                                     id="webchat-channel"
                                                     name="channel"
                                                     class="home-webchat-input"
-                                                    value="#amistad,#general"
-                                                    placeholder="#amistad,#general"
+                                                    value="{{ request.webchat_channel_default }}"
+                                                    placeholder="{{ request.webchat_channel_default }}"
                                                     autocomplete="off"
                                                 >
                                             </div>
@@ -723,7 +723,13 @@
 								<a href="{% url 'member_profile' username=m.username %}"><span class="h5 d-inline-block mb-0">{{ m.username }}</span></a>
                                 <p>
                                     {% if m.last_login %}
-                                        {% trans "Dernière activité" %} {% blocktrans %}il y a {{ m.last_login|timesince }}{% endblocktrans %}
+                                        {% with last_seen=m.last_login|timesince %}
+                                            {% if last_seen %}
+                                                {% trans "Dernière activité" %} {% blocktrans %}il y a {{ last_seen }}{% endblocktrans %}
+                                            {% else %}
+                                                {% trans "Dernière activité" %} {% trans "à l'instant" %}
+                                            {% endif %}
+                                        {% endwith %}
                                     {% else %}
                                         {% trans "Nouveau membre" %}
                                     {% endif %}

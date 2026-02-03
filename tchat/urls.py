@@ -47,6 +47,8 @@ def sitemap_section(request, section):
     return HttpResponse(xml, content_type="application/xml")
 
 
+
+
 # Non-translated URLs (DO NOT use i18n_patterns for static!)
 urlpatterns = [
     path('admin/', admin.site.urls),

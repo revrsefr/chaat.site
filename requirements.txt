@@ -18,6 +18,7 @@ django-cors-headers==4.6.0
 django-extensions==3.2.3
 django-recaptcha==4.1.0
 django-redis==6.0.0
+django-rq==3.1.0
 django_csp==3.8
 djangorestframework==3.15.2
 djangorestframework_simplejwt==5.5.1
