@@ -1,10 +1,11 @@
+import hashlib
 import io
 import logging
 import mimetypes
 from urllib.parse import urljoin
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, FeatureNotFound
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.html import escape
@@ -17,18 +18,17 @@ from PIL import Image, ImageDraw, ImageFont
 
 logger = logging.getLogger(__name__)
 
-HN_API_BASE = "https://hacker-news.firebaseio.com/v0"
-HN_ITEM_URL = "https://news.ycombinator.com/item?id={item_id}"
-USER_AGENT = "chaat.site/hn-importer (+https://chaat.site)"
+FEED_URL = "https://feeds.feedburner.com/TheHackersNews"
+USER_AGENT = "chaat.site/hn-feed-importer (+https://chaat.site)"
 
 
 class Command(BaseCommand):
-    help = "Import Hacker News stories into BlogPost"
+    help = "Import The Hacker News feed items into BlogPost"
 
     def add_arguments(self, parser):
         parser.add_argument("--limit", type=int, default=25)
         parser.add_argument("--author-username", default="Administrator")
-        parser.add_argument("--category", default="Hacker News")
+        parser.add_argument("--category", default="The Hacker News")
         parser.add_argument("--timeout", type=int, default=7)
         parser.add_argument("--refresh-existing", action="store_true")
 
@@ -42,23 +42,26 @@ class Command(BaseCommand):
         session = requests.Session()
         session.headers.update({"User-Agent": USER_AGENT})
 
-        story_ids = self._fetch_json(session, f"{HN_API_BASE}/newstories.json", timeout)
-        if not story_ids:
-            self.stdout.write(self.style.WARNING("No HN stories returned."))
+        feed_items = self._fetch_feed(session, FEED_URL, timeout)
+        if not feed_items:
+            self.stdout.write(self.style.WARNING("No feed items returned."))
             return
 
         created = 0
         skipped = 0
 
-        for item_id in story_ids[:limit]:
-            item_id = str(item_id)
-            existing_post = BlogPost.objects.filter(source_id=item_id).first()
-            if existing_post and not refresh_existing:
+        for item in feed_items[:limit]:
+            source_raw = item.get("guid") or item.get("link") or item.get("title")
+            if not source_raw:
                 skipped += 1
                 continue
 
-            item = self._fetch_json(session, f"{HN_API_BASE}/item/{item_id}.json", timeout)
-            if not item or item.get("type") != "story":
+            source_raw = source_raw.strip()
+            source_key = self._source_key(source_raw)
+            short_id = self._short_id(source_raw)
+
+            existing_post = BlogPost.objects.filter(source_id=source_key).first()
+            if existing_post and not refresh_existing:
                 skipped += 1
                 continue
 
@@ -67,24 +70,25 @@ class Command(BaseCommand):
                 skipped += 1
                 continue
 
-            hn_link = HN_ITEM_URL.format(item_id=item_id)
-            source_url = (item.get("url") or "").strip() or hn_link
+            source_url = (item.get("link") or "").strip()
+            if not source_url:
+                skipped += 1
+                continue
 
             og_image, description = (None, "")
-            if source_url and source_url != hn_link:
-                og_image, description = self._extract_meta(session, source_url, timeout)
+            og_image, description = self._extract_meta(session, source_url, timeout)
 
-            summary = description or self._extract_text(item.get("text")) or ""
-            content_html = self._build_content_html(summary, source_url, hn_link)
+            summary = description or self._extract_text(item.get("description")) or ""
+            content_html = self._build_content_html(summary, source_url)
 
             image_content, image_name = self._resolve_image(
                 session=session,
-                item_id=item_id,
+                item_id=short_id,
                 og_image_url=og_image,
                 timeout=timeout,
             )
 
-            slug = self._build_slug(title, item_id)
+            slug = self._build_slug(title, source_raw)
 
             if existing_post:
                 post = existing_post
@@ -92,8 +96,8 @@ class Command(BaseCommand):
                 post.content = content_html
                 post.author = author
                 post.category = category
-                post.tags = "hacker news"
-                post.keywords = "hacker news"
+                post.tags = "the hacker news"
+                post.keywords = "the hacker news"
                 post.source_url = source_url
                 post.is_active = True
                 post.is_published = True
@@ -104,9 +108,9 @@ class Command(BaseCommand):
                     content=content_html,
                     author=author,
                     category=category,
-                    tags="hacker news",
-                    keywords="hacker news",
-                    source_id=item_id,
+                    tags="the hacker news",
+                    keywords="the hacker news",
+                    source_id=source_key,
                     source_url=source_url,
                     is_active=True,
                     is_published=True,
@@ -120,7 +124,7 @@ class Command(BaseCommand):
                 created += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f"HN import complete. Created: {created}, Skipped: {skipped}."
+            f"Feed import complete. Created: {created}, Skipped: {skipped}."
         ))
 
     def _resolve_author(self, username: str) -> CustomUser:
@@ -133,14 +137,32 @@ class Command(BaseCommand):
             raise CommandError("No users found to assign as author.")
         return user
 
-    def _fetch_json(self, session: requests.Session, url: str, timeout: int):
+    def _fetch_feed(self, session: requests.Session, url: str, timeout: int):
         try:
             resp = session.get(url, timeout=timeout)
             resp.raise_for_status()
-            return resp.json()
         except Exception:
-            logger.exception("HN fetch failed: %s", url)
+            logger.exception("Feed fetch failed: %s", url)
             return None
+
+        try:
+            soup = BeautifulSoup(resp.text or "", "xml")
+        except FeatureNotFound:
+            soup = BeautifulSoup(resp.text or "", "html.parser")
+        items = []
+        for entry in soup.find_all("item"):
+            title = entry.title.get_text(strip=True) if entry.title else ""
+            link = entry.link.get_text(strip=True) if entry.link else ""
+            guid = entry.guid.get_text(strip=True) if entry.guid else ""
+            description = entry.description.get_text(" ", strip=True) if entry.description else ""
+            items.append({
+                "title": title,
+                "link": link,
+                "guid": guid,
+                "description": description,
+            })
+
+        return items
 
     def _extract_meta(self, session: requests.Session, url: str, timeout: int):
         try:
@@ -181,22 +203,28 @@ class Command(BaseCommand):
         soup = BeautifulSoup(html_text, "html.parser")
         return " ".join(soup.get_text(" ").split())
 
-    def _build_content_html(self, summary: str, source_url: str, hn_link: str) -> str:
+    def _build_content_html(self, summary: str, source_url: str) -> str:
         summary_html = escape(summary) if summary else ""
-        links = (
-            f"<a href=\"{escape(source_url)}\" target=\"_blank\" rel=\"nofollow noopener\">Source</a>"
-            f" | <a href=\"{escape(hn_link)}\" target=\"_blank\" rel=\"nofollow noopener\">Hacker News discussion</a>"
-        )
+        links = f"<a href=\"{escape(source_url)}\" target=\"_blank\" rel=\"nofollow noopener\">Source</a>"
         if summary_html:
             return f"<p>{summary_html}</p><p>{links}</p>"
         return f"<p>{links}</p>"
 
-    def _build_slug(self, title: str, item_id: str) -> str:
+    def _build_slug(self, title: str, source_id: str) -> str:
         max_len = BlogPost._meta.get_field("slug").max_length or 50
-        suffix = f"-{item_id}"
+        suffix = f"-{self._short_id(source_id)}"
         base_len = max_len - len(suffix)
         base = slugify(title)[: max(base_len, 0)] or "hn"
         return f"{base}{suffix}"[:max_len]
+
+    def _short_id(self, source_id: str) -> str:
+        digest = hashlib.sha1(source_id.encode("utf-8"), usedforsecurity=False)
+        return digest.hexdigest()[:10]
+
+    def _source_key(self, source_id: str) -> str:
+        # Match BlogPost.source_id max_length=32 using a stable hash.
+        digest = hashlib.md5(source_id.encode("utf-8"), usedforsecurity=False)
+        return digest.hexdigest()
 
     def _resolve_image(self, session: requests.Session, item_id: str, og_image_url: str, timeout: int):
         if og_image_url and og_image_url.startswith("data:"):
@@ -228,7 +256,7 @@ class Command(BaseCommand):
         width, height = 1200, 630
         img = Image.new("RGB", (width, height), color=(18, 18, 18))
         draw = ImageDraw.Draw(img)
-        text = "Hacker News"
+        text = "The Hacker News"
         font = ImageFont.load_default()
         bbox = draw.textbbox((0, 0), text, font=font)
         text_width = bbox[2] - bbox[0]
