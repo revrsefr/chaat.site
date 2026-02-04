@@ -115,6 +115,11 @@
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul>
+                                        <li>
+                                            <a class="text-nowrap" href="{% url 'helpdocs:help_index' %}">
+                                                <i class="fa-solid fa-book-open"></i> {% trans "Wiki" %}
+                                            </a>
+                                        </li>
                                         {% for item in footer.useful_links %}
                                             <li>
                                                 <a class="text-nowrap" href="{{ item.url|safe_url }}">
