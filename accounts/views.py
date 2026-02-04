@@ -17,6 +17,7 @@ from django.contrib.auth.hashers import make_password
 import secrets
 from django.urls import reverse
 from django.core.mail import send_mail
+import base64
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
@@ -38,10 +39,60 @@ CustomUser = get_user_model()
 
 logger = logging.getLogger(__name__)
 
+
+def wants_json(request) -> bool:
+    accept = (request.headers.get("accept") or "").lower()
+    return "application/json" in accept
+
+
+def _encode_avatar_data_url(avatar):
+    if not avatar:
+        return None, None
+
+    max_bytes = getattr(settings, "AVATAR_MAX_UPLOAD_SIZE", 2 * 1024 * 1024)
+    content_type = getattr(avatar, "content_type", "") or ""
+    if avatar.size and avatar.size > max_bytes:
+        return None, "Avatar trop volumineux."
+    if content_type and not content_type.startswith("image/"):
+        return None, "Avatar invalide."
+
+    try:
+        raw = avatar.read()
+        if max_bytes and len(raw) > max_bytes:
+            return None, "Avatar trop volumineux."
+        b64 = base64.b64encode(raw).decode("ascii")
+    except Exception:
+        return None, "Avatar invalide."
+
+    return f"data:{content_type};base64,{b64}", None
+
 # ✅ Register View (Calls `register` API Directly)
 def register_view(request):
     if request.method == "POST":
-        api_request = factory.post("/accounts/api/register/", data=request.POST, files=request.FILES)
+        avatar_file = request.FILES.get("avatar")
+        avatar_data_url, avatar_error = _encode_avatar_data_url(avatar_file)
+        if avatar_error:
+            messages.error(request, avatar_error)
+            return render(request, "accounts/register.html")
+
+        payload = {
+            "username": request.POST.get("username"),
+            "email": request.POST.get("email"),
+            "password1": request.POST.get("password1"),
+            "password2": request.POST.get("password2"),
+            "birthday": request.POST.get("birthday"),
+            "gender": request.POST.get("gender"),
+            "city": request.POST.get("city"),
+            "g_recaptcha_response": request.POST.get("g_recaptcha_response") or request.POST.get("g-recaptcha-response"),
+        }
+        if avatar_data_url:
+            payload["avatar_data_url"] = avatar_data_url
+
+        api_request = factory.post(
+            "/accounts/api/register/",
+            data=payload,
+            format="json",
+        )
         api_request = Request(api_request)
 
         response = register(api_request)  # Call API function directly
@@ -56,7 +107,7 @@ def register_view(request):
     return render(request, "accounts/register.html")
 
 def login_view(request):
-    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
+    json_response = wants_json(request)
 
     def get_safe_next_url() -> Optional[str]:
         next_url = (request.POST.get("next") or request.GET.get("next") or "").strip()
@@ -72,7 +123,7 @@ def login_view(request):
 
     if request.user.is_authenticated:
         next_url = get_safe_next_url()
-        if wants_json:
+        if json_response:
             return JsonResponse({
                 "ok": True,
                 "redirect_url": next_url or reverse("profile", kwargs={"username": request.user.username}),
@@ -85,7 +136,11 @@ def login_view(request):
         password = request.POST.get("password")
 
         # ✅ Call the API Directly Without Wrapping `Request`
-        api_request = factory.post("/accounts/api/login/", data={"username": username, "password": password})
+        api_request = factory.post(
+            "/accounts/api/login/",
+            data={"username": username, "password": password},
+            format="json",
+        )
         response = login_api(api_request)
         data = response.data
 
@@ -100,7 +155,7 @@ def login_view(request):
                 request.session["refresh_token"] = data["refresh_token"]
 
                 redirect_url = get_safe_next_url() or reverse("profile", kwargs={"username": user.username})
-                if wants_json:
+                if json_response:
                     return JsonResponse({
                         "ok": True,
                         "redirect_url": redirect_url,
@@ -111,7 +166,7 @@ def login_view(request):
                 messages.success(request, "Login successful!")
                 return redirect(redirect_url)  # ✅ Django Redirect (No JS)
             except CustomUser.DoesNotExist:
-                if wants_json:
+                if json_response:
                     return JsonResponse({
                         "ok": False,
                         "error": {
@@ -131,7 +186,7 @@ def login_view(request):
         elif error_code == "bad_password" or field == "password":
             field_errors["password"] = error_message
 
-        if wants_json:
+        if json_response:
             return JsonResponse({
                 "ok": False,
                 "error": {"code": error_code or "invalid_credentials", "message": error_message},
@@ -268,7 +323,11 @@ def register_validate_view(request):
 @login_required
 def change_password_view(request):
     if request.method == "POST":
-        api_request = factory.post("/accounts/api/change_password/", data=request.POST)
+        api_request = factory.post(
+            "/accounts/api/change_password/",
+            data=request.POST,
+            format="json",
+        )
         api_request = Request(api_request)
         api_request.user = request.user  # Attach logged-in user to request
 
@@ -287,7 +346,11 @@ def change_password_view(request):
 @login_required
 def change_email_view(request):
     if request.method == "POST":
-        api_request = factory.post("/accounts/api/change_email/", data=request.POST)
+        api_request = factory.post(
+            "/accounts/api/change_email/",
+            data=request.POST,
+            format="json",
+        )
         api_request = Request(api_request)
         api_request.user = request.user  # Attach logged-in user
 
@@ -412,17 +475,16 @@ def verify_email_view(request):
 @login_required
 def profile_view(request, username):
     user_profile = get_object_or_404(CustomUser, username=username)
-
-    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
+    json_response = wants_json(request)
 
     # ✅ Restrict access: Only the owner can access & update their profile
     if request.user != user_profile:
-        if wants_json:
+        if json_response:
             return JsonResponse({"ok": False, "error": "forbidden"}, status=403)
         messages.error(request, "Vous n'avez pas la permission d'accéder à ce profil.")
         return redirect("home")  # Redirect unauthorized users
 
-    if request.method == "GET" and wants_json:
+    if request.method == "GET" and json_response:
         return JsonResponse({
             "ok": True,
             "profile": {
@@ -441,7 +503,7 @@ def profile_view(request, username):
         form = ProfileUpdateForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
-            if wants_json:
+            if json_response:
                 user_profile.refresh_from_db()
                 return JsonResponse({
                     "ok": True,
@@ -456,7 +518,7 @@ def profile_view(request, username):
                 })
             messages.success(request, "Votre profil a été mis à jour avec succès.")
             return redirect("profile", username=user_profile.username)
-        if wants_json:
+        if json_response:
             return JsonResponse({"ok": False, "errors": form.errors.get_json_data()}, status=400)
     else:
         form = ProfileUpdateForm(instance=user_profile)
@@ -487,15 +549,15 @@ def profile_view(request, username):
 @login_required
 def generate_irc_app_password_view(request, username):
     user_profile = get_object_or_404(CustomUser, username=username)
-    wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
+    json_response = wants_json(request)
     if request.user != user_profile:
-        if wants_json:
+        if json_response:
             return JsonResponse({"error": "Forbidden"}, status=403)
         messages.error(request, "Vous n'avez pas la permission d'effectuer cette action.")
         return redirect("home")
 
     if request.method != "POST":
-        if wants_json:
+        if json_response:
             return JsonResponse({"error": "Method not allowed"}, status=405)
         return redirect("profile", username=user_profile.username)
 
@@ -504,7 +566,7 @@ def generate_irc_app_password_view(request, username):
 
     plain = secrets.token_urlsafe(24)
     IrcAppPassword.objects.create(user=user_profile, password=make_password(plain))
-    if wants_json:
+    if json_response:
         resp = JsonResponse({"token": plain, "active": 1})
         resp["Cache-Control"] = "no-store, max-age=0"
         resp["Pragma"] = "no-cache"
@@ -524,8 +586,8 @@ def revoke_irc_app_password_view(request, username):
 
     if request.method == "POST":
         IrcAppPassword.objects.filter(user=user_profile, revoked_at__isnull=True).update(revoked_at=timezone.now())
-        wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in (request.headers.get("accept") or "")
-        if wants_json:
+        json_response = wants_json(request)
+        if json_response:
             return JsonResponse({"revoked": True, "active": 0})
         messages.success(request, "Mot de passe IRC révoqué.")
 

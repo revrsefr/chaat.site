@@ -101,7 +101,7 @@
                                             <span id="registerAvatarFileName" style="font-size: 12px; opacity: 0.85;">{% trans "Aucun fichier" %}</span>
                                         </div>
                                         <div style="font-size: 12px; opacity: 0.75;">
-                                            {% trans "Formats: JPG/PNG/WebP. Taille max recommandée: 2MB." %}
+                                            {% trans "Formats: JPG/PNG/WebP. Taille max: 2 MB." %}
                                         </div>
                                     </div>
 
@@ -110,6 +110,7 @@
                                         id="avatar"
                                         name="avatar"
                                         accept="image/*"
+                                        data-max-bytes="2097152"
                                         style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;"
                                     >
                                 </div>
@@ -132,5 +133,5 @@
 
 {% block page_scripts %}
 <script nonce="{{ request.csp_nonce }}" src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script nonce="{{ request.csp_nonce }}" src="{% static 'js/register-modern.js' %}" defer></script>
+<script nonce="{{ request.csp_nonce }}" src="{% static 'js/register-modern.js' %}?v={{ static_version }}" defer></script>
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.core.validators import EmailValidator
 from django.utils.dateparse import parse_date
 
@@ -37,6 +38,49 @@ from .utils import verify_recaptcha
 
 irc_api_logger = logging.getLogger("accounts.irc_api")
 auth_api_logger = logging.getLogger("accounts.auth_api")
+
+
+def _require_json_content(request):
+    content_type = (request.content_type or "").split(";", 1)[0].strip().lower()
+    if content_type != "application/json":
+        return Response(
+            {"error": "Content-Type must be application/json."},
+            status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        )
+    return None
+
+
+def _decode_avatar_data_url(data_url: str, max_bytes: int):
+    if not data_url:
+        return None, None
+
+    if not data_url.startswith("data:") or ";base64," not in data_url:
+        return None, "Avatar invalide."
+
+    header, b64data = data_url.split(";base64,", 1)
+    mime = header[5:].strip().lower()
+    if not mime.startswith("image/"):
+        return None, "Avatar invalide."
+
+    try:
+        raw = base64.b64decode(b64data, validate=True)
+    except Exception:
+        return None, "Avatar invalide."
+
+    if max_bytes and len(raw) > max_bytes:
+        return None, "Avatar trop volumineux."
+
+    ext = mime.split("/", 1)[-1].lower()
+    ext = ext.split("+", 1)[0]
+    if ext == "jpeg":
+        ext = "jpg"
+    elif ext == "svg+xml":
+        ext = "svg"
+    elif ext == "x-icon":
+        ext = "ico"
+
+    filename = f"avatar.{ext or 'bin'}"
+    return ContentFile(raw, name=filename), None
 
 
 def _safe_scram_salt(*, saltlen: int) -> bytes:
@@ -146,6 +190,10 @@ def _make_scram_sha256_verifier(password: str, *, iterations: int = 4096, saltle
 @throttle_classes([ScopedRateThrottle])
 def register(request):
     try:
+        err = _require_json_content(request)
+        if err:
+            return err
+
         if request.user.is_authenticated:
             return Response({"error": "You are already registered"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -157,7 +205,7 @@ def register(request):
         gender = (request.data.get("gender") or "").strip()
         city = (request.data.get("city") or "").strip()
         recaptcha_token = request.data.get("g_recaptcha_response") or request.data.get("g-recaptcha-response")
-        avatar = request.FILES.get("avatar")  # ✅ Get uploaded avatar file
+        avatar_data_url = request.data.get("avatar_data_url") or request.data.get("avatar")
 
         if not username or not email or not password1 or not password2:
             return Response({"error": "Champs requis manquants."}, status=status.HTTP_400_BAD_REQUEST)
@@ -215,15 +263,14 @@ def register(request):
         user.save(update_fields=["email_verified"])  # Ensure flag is persisted.
 
         # ✅ Save avatar AFTER user is created
-        if avatar:
+        if avatar_data_url:
             max_bytes = getattr(settings, "AVATAR_MAX_UPLOAD_SIZE", 2 * 1024 * 1024)
-            content_type = getattr(avatar, "content_type", "") or ""
-            if avatar.size and avatar.size > max_bytes:
-                return Response({"error": "Avatar trop volumineux."}, status=status.HTTP_400_BAD_REQUEST)
-            if content_type and not content_type.startswith("image/"):
-                return Response({"error": "Avatar invalide."}, status=status.HTTP_400_BAD_REQUEST)
-            user.avatar = avatar
-            user.save(update_fields=["avatar"])  # ✅ Save the user with avatar
+            avatar, avatar_error = _decode_avatar_data_url(avatar_data_url, max_bytes)
+            if avatar_error:
+                return Response({"error": avatar_error}, status=status.HTTP_400_BAD_REQUEST)
+            if avatar:
+                user.avatar = avatar
+                user.save(update_fields=["avatar"])  # ✅ Save the user with avatar
 
         # Email verification code
         try:
@@ -258,6 +305,10 @@ register.throttle_scope = "register"
 @throttle_classes([ScopedRateThrottle])
 def login_api(request):
     try:
+        err = _require_json_content(request)
+        if err:
+            return err
+
         identifier = (request.data.get("username") or "").strip()
         password = request.data.get("password")
 
@@ -460,6 +511,10 @@ login_token.throttle_scope = "irc_api"
 def verify_email(request):
     """Verify an email address using a short code sent by email."""
 
+    err = _require_json_content(request)
+    if err:
+        return err
+
     email = (request.data.get("email") or "").strip().lower()
     code = (request.data.get("code") or "").strip()
 
@@ -485,6 +540,10 @@ verify_email.throttle_scope = "verify_email"
 @permission_classes([AllowAny])
 @throttle_classes([ScopedRateThrottle])
 def resend_email_verification(request):
+    err = _require_json_content(request)
+    if err:
+        return err
+
     email = (request.data.get("email") or "").strip().lower()
     if not email:
         return Response({"error": "Email requis."}, status=status.HTTP_400_BAD_REQUEST)
@@ -512,6 +571,10 @@ resend_email_verification.throttle_scope = "resend_email"
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def change_password(request):
+    err = _require_json_content(request)
+    if err:
+        return err
+
     old_password = request.data.get("old_password")
     new_password = request.data.get("new_password")
 
@@ -527,6 +590,10 @@ def change_password(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def change_email(request):
+    err = _require_json_content(request)
+    if err:
+        return err
+
     new_email = request.data.get("new_email")
 
     UserModel = get_user_model()

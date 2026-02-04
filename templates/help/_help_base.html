@@ -128,7 +128,7 @@
     async function loadUrl(url, push) {
       try {
         showLoader(true);
-        var res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        var res = await fetch(url);
         if (!res.ok) {
           // fallback to full navigation on error
           window.location.href = url;

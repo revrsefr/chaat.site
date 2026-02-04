@@ -279,7 +279,7 @@
                 var currentEl = document.querySelector(".counter");
                 if (!currentEl) return;
 
-                fetch(window.location.href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                fetch(window.location.href)
                     .then(function(response) { return response.text(); })
                     .then(function(html) {
                         var parser = new DOMParser();
