@@ -56,26 +56,24 @@
 
             <div class="row g-0 justify-content-center mx-12-none">
                 {% for member in members %}
-                <div class="member__item">
-                    <div class="member__inner">
-                        <div class="member__thumb">
-                            <img src="{% if member.avatar_url %}{{ member.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ member.username }}" loading="lazy" decoding="async" data-fallback-src="{% static 'images/default-avatar.svg' %}">
-                            <span class="member__activity 
-                                {% if member.last_login and member.last_login > active_threshold %} online 
-                                {% else %} member__activity--ofline 
-                                {% endif %}">
-                            </span>
-                        </div>
-                        <div class="member__content">
-                            <a href="{% url 'member_profile' username=member.username %}"><h5>{{ member.username }}</h5></a>
-                            <p>
-                                {% if member.last_login %}
-                                    {% blocktrans with last_seen=member.last_login|timesince %}{{ last_seen }} ago{% endblocktrans %}
-                                {% else %}
-                                    {% trans "Inactive" %}
-                                {% endif %}
-                            </p>
-                        </div>
+                <div class="member__item member__inner">
+                    <div class="member__thumb">
+                        <img src="{% if member.avatar_url %}{{ member.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ member.username }}" loading="lazy" decoding="async" data-fallback-src="{% static 'images/default-avatar.svg' %}">
+                        <span class="member__activity 
+                            {% if member.last_login and member.last_login > active_threshold %} online 
+                            {% else %} member__activity--ofline 
+                            {% endif %}">
+                        </span>
+                    </div>
+                    <div class="member__content">
+                        <a href="{% url 'member_profile' username=member.username %}"><h5>{{ member.username }}</h5></a>
+                        <p>
+                            {% if member.last_login %}
+                                {% blocktrans with last_seen=member.last_login|timesince %}{{ last_seen }} ago{% endblocktrans %}
+                            {% else %}
+                                {% trans "Inactive" %}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
                 {% empty %}

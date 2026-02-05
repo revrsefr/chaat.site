@@ -160,7 +160,7 @@
                                     <h6 class="mb-3">{% trans "Dernières images" %}</h6>
                                     <div class="row g-2">
                                         {% if recent_media_posts %}
-                                            {% for post in recent_media_posts %}
+                                            {% for post in recent_media_posts|slice:":6" %}
                                                 <div class="col-4">
                                                     <a href="{% url 'blog:blog_detail' slug=post.slug %}" title="{{ post.title }}">
                                                         <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px;">
@@ -208,7 +208,7 @@
                                     <div class="story__content--author mt-3 pb-2">
                                         <h6 class="d-block w-100 mb-3">{% trans "Photos récentes" %}</h6>
                                         <div class="row g-2">
-                                            {% for post in recent_media_posts %}
+                                            {% for post in recent_media_posts|slice:":6" %}
                                                 <div class="col-4">
                                                     <a href="{% url 'blog:blog_detail' slug=post.slug %}">
                                                         <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100%; height: 60px; object-fit: cover; border-radius: 8px;">
@@ -243,7 +243,7 @@
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active" id="newest" role="tabpanel" aria-labelledby="newest-tab">
                                         <ul>
-                                            {% for u in newest_members %}
+                                            {% for u in newest_members|slice:":6" %}
                                                 <li>
                                                     <div class="d-flex align-items-center" style="gap: 10px;">
                                                         <img src="{% if u.avatar_url %}{{ u.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" loading="lazy" decoding="async" data-fallback-src="{% static 'images/default-avatar.svg' %}">
@@ -266,7 +266,7 @@
                                     </div>
                                     <div class="tab-pane fade" id="popular" role="tabpanel" aria-labelledby="popular-tab">
                                         <ul>
-                                            {% for u in popular_members %}
+                                            {% for u in popular_members|slice:":6" %}
                                                 <li>
                                                     <div class="d-flex align-items-center" style="gap: 10px;">
                                                         <img src="{% if u.avatar_url %}{{ u.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}" alt="{{ u.username }}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" loading="lazy" decoding="async" data-fallback-src="{% static 'images/default-avatar.svg' %}">

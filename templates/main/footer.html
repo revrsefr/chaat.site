@@ -182,7 +182,7 @@
                                 </div>
                                 <div class="footer__content--desc">
                                     <ul class="footer__latest-list">
-                                        {% for member in footer.latest_users %}
+                                        {% for member in footer.latest_users|slice:":8" %}
                                             <li>
                                                 <a class="footer__latest-link" href="{% url 'member_profile' member.username %}" aria-label="{{ member.username }}">
                                                     <img

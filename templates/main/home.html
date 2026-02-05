@@ -373,9 +373,10 @@
                     } else if (newPostCount > window.lastPostCount) {
                         const newSlider = doc.querySelector('.story__slider');
                         const oldSlider = document.querySelector('.story__slider');
-                        
-                        if (newSlider && oldSlider) {
-                            oldSlider.innerHTML = newSlider.innerHTML;
+
+                        if (newSlider && oldSlider && oldSlider.parentNode) {
+                            const freshSlider = newSlider.cloneNode(true);
+                            oldSlider.parentNode.replaceChild(freshSlider, oldSlider);
                             window.lastPostCount = newPostCount;
                             if (window.Swiper) {
                                 initStorySlider();
@@ -423,7 +424,7 @@
 								<div class="about__bottom--body">
 									<div class="ragi__slider overflow-hidden">
 										<div class="swiper-wrapper">
-                                            {% for m in latest_members %}
+                                            {% for m in latest_members|slice:":12" %}
                                                 <div class="swiper-slide">
                                                     <div class="ragi__thumb">
                                                         <a href="{% url 'member_profile' username=m.username %}" title="{{ m.username }}">
@@ -699,40 +700,38 @@
             </div>
             <div class="section__wrapper">
                 <div class="row g-0 mx-12-none justify-content-center wow fadeInUp" data-wow-duration="1.5s">
-                    {% for m in home_members %}
-                    <div class="member__item">
-                        <div class="member__inner">
-                            <div class="member__thumb">
-                                <a href="{% url 'member_profile' username=m.username %}" title="{{ m.username }}">
-                                    <img
-                                        src="{% if m.avatar_thumb_320_url %}{{ m.avatar_thumb_320_url }}{% elif m.avatar_url %}{{ m.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
-                                        srcset="{{ m.avatar_thumb_100_url }} 100w, {{ m.avatar_thumb_320_url }} 320w, {{ m.avatar_url }} 1024w"
-                                        sizes="(max-width: 991px) 45vw, 261px"
-                                        width="261"
-                                        height="261"
-                                        alt="{{ m.username }}"
-                                        loading="lazy"
-                                        decoding="async"
-                                        data-fallback-src="{% static 'images/default-avatar.svg' %}"
-                                    >
-                                </a>
-                            </div>
-                            <div class="member__content">
-								<a href="{% url 'member_profile' username=m.username %}"><span class="h5 d-inline-block mb-0">{{ m.username }}</span></a>
-                                <p>
-                                    {% if m.last_login %}
-                                        {% with last_seen=m.last_login|timesince %}
-                                            {% if last_seen %}
-                                                {% trans "Dernière activité" %} {% blocktrans %}il y a {{ last_seen }}{% endblocktrans %}
-                                            {% else %}
-                                                {% trans "Dernière activité" %} {% trans "à l'instant" %}
-                                            {% endif %}
-                                        {% endwith %}
-                                    {% else %}
-                                        {% trans "Nouveau membre" %}
-                                    {% endif %}
-                                </p>
-                            </div>
+                    {% for m in home_members|slice:":12" %}
+                    <div class="member__item member__inner">
+                        <div class="member__thumb">
+                            <a href="{% url 'member_profile' username=m.username %}" title="{{ m.username }}">
+                                <img
+                                    src="{% if m.avatar_thumb_320_url %}{{ m.avatar_thumb_320_url }}{% elif m.avatar_url %}{{ m.avatar_url }}{% else %}{% static 'images/default-avatar.svg' %}{% endif %}"
+                                    srcset="{{ m.avatar_thumb_100_url }} 100w, {{ m.avatar_thumb_320_url }} 320w, {{ m.avatar_url }} 1024w"
+                                    sizes="(max-width: 991px) 45vw, 261px"
+                                    width="261"
+                                    height="261"
+                                    alt="{{ m.username }}"
+                                    loading="lazy"
+                                    decoding="async"
+                                    data-fallback-src="{% static 'images/default-avatar.svg' %}"
+                                >
+                            </a>
+                        </div>
+                        <div class="member__content">
+                        	<a href="{% url 'member_profile' username=m.username %}"><span class="h5 d-inline-block mb-0">{{ m.username }}</span></a>
+                            <p>
+                                {% if m.last_login %}
+                                    {% with last_seen=m.last_login|timesince %}
+                                        {% if last_seen %}
+                                            {% trans "Dernière activité" %} {% blocktrans %}il y a {{ last_seen }}{% endblocktrans %}
+                                        {% else %}
+                                            {% trans "Dernière activité" %} {% trans "à l'instant" %}
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    {% trans "Nouveau membre" %}
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                     {% empty %}
@@ -841,7 +840,7 @@
             {% if posts %}
                 <div class="swiper story__slider">
                     <div class="swiper-wrapper">
-                        {% for post in posts %}
+                        {% for post in posts|slice:":8" %}
                             <div class="swiper-slide">
                                 <div class="story-card-wrap">
                                     <article class="story-card">
