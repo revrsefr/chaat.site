@@ -272,6 +272,14 @@
     <script nonce="{{ request.csp_nonce }}" defer src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
     <script nonce="{{ request.csp_nonce }}" defer src="{% static 'js/cookie-consent.js' %}?v={{ static_version }}&cb=20260116"></script>
     {% endif %}
+
+    <script nonce="{{ request.csp_nonce }}">
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("{% static 'sw.js' %}?v={{ static_version }}");
+            });
+        }
+    </script>
     
     <script nonce="{{ request.csp_nonce }}">
         (function() {

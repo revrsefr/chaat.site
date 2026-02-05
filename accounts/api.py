@@ -83,6 +83,14 @@ def _decode_avatar_data_url(data_url: str, max_bytes: int):
     return ContentFile(raw, name=filename), None
 
 
+def _get_custom_avatar_url(user: CustomUser) -> str | None:
+    if not user.avatar or not getattr(user.avatar, "name", ""):
+        return None
+    if user.avatar.name == "avatars/default.jpg":
+        return None
+    return user.avatar_url()
+
+
 def _safe_scram_salt(*, saltlen: int) -> bytes:
     """Generate a SCRAM salt whose *standard* base64 encoding avoids '+' and '/'.
 
@@ -604,3 +612,17 @@ def change_email(request):
     request.user.save()
 
     return Response({"message": "Email updated successfully"}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_avatar(request):
+    account = (request.query_params.get("account") or "").strip()
+    if not account:
+        return Response({"avatar_url": None}, status=status.HTTP_200_OK)
+
+    user = CustomUser.objects.filter(username__iexact=account, public=True).only("avatar").first()
+    if not user:
+        return Response({"avatar_url": None}, status=status.HTTP_200_OK)
+
+    return Response({"avatar_url": _get_custom_avatar_url(user)}, status=status.HTTP_200_OK)
